@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Puzzle</string>
+    <string name="mine_tab">我的</string>
+    <string name="cross_tab">变装</string>
+    <string name="video_tab">做视频</string>
+    <string name="photo_tab">相册</string>
+    <string name="edit_image_tab">修图</string>
+</resources>
