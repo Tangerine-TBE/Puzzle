@@ -1,36 +1,31 @@
 package com.weilai.jigsawpuzzle.activity;
 
-import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.FragmentAdapter;
 import com.weilai.jigsawpuzzle.base.BaseActivity;
-import com.weilai.jigsawpuzzle.adapter.ImageBannerAdapter;
-import com.weilai.jigsawpuzzle.bean.TabEntity;
 import com.weilai.jigsawpuzzle.fragment.CrossDressFragment;
 import com.weilai.jigsawpuzzle.fragment.EditImageFragment;
-import com.weilai.jigsawpuzzle.fragment.MakeVideoFragment;
 import com.weilai.jigsawpuzzle.fragment.MineFragment;
-import com.weilai.jigsawpuzzle.fragment.PhotoFragment;
-import com.weilai.jigsawpuzzle.util.L;
-import com.weilai.jigsawpuzzle.weight.MyTabLayout;
-import com.weilai.library.listener.CustomTabEntity;
-import com.weilai.library.listener.OnTabSelectListener;
-import com.youth.banner.Banner;
-import com.youth.banner.indicator.CircleIndicator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-    private MyTabLayout mMyTabLayout;
+    private TabLayout mTabLayout;
     private ViewPager mViewPager;
+    private int[] tableSelectedIcon = {R.mipmap.bb, R.mipmap.bb, R.mipmap.bb};
+    private int[] tableUnSelectedIcon = {R.mipmap.bb, R.mipmap.bb, R.mipmap.bb};
 
     @Override
     protected Object setLayout() {
@@ -39,45 +34,20 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView(View view) {
-        mMyTabLayout = view.findViewById(R.id.tab_layout);
+        mTabLayout = view.findViewById(R.id.tl_layout);
         initTabLayout();
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new CrossDressFragment());
         fragments.add(new EditImageFragment());
-        fragments.add(new MakeVideoFragment());
-        fragments.add(new PhotoFragment());
         fragments.add(new MineFragment());
         mViewPager = view.findViewById(R.id.layout_content);
         mViewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, fragments));
+        mTabLayout.setupWithViewPager(mViewPager);
+        initTabLayout();
     }
 
     @Override
     protected void initListener(View view) {
-        mMyTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position) {
-                mViewPager.setCurrentItem(position);
-            }
-
-            @Override
-            public void onTabReselect(int position) {
-                //do not thing
-            }
-        });
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                mMyTabLayout.setCurrentTab(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
 
     }
 
@@ -87,16 +57,20 @@ public class MainActivity extends BaseActivity {
      * * Description: Here need @String file
      **/
     private void initTabLayout() {
-        String[] tabLable = {getString(R.string.cross_tab),
+        String[] tableString = {getString(R.string.cross_tab),
                 getString(R.string.edit_image_tab),
-                getString(R.string.video_tab),
-                getString(R.string.photo_tab),
                 getString(R.string.mine_tab)};
-        ArrayList<CustomTabEntity> title = new ArrayList<>();
-        for (String s : tabLable) {
-            title.add(new TabEntity(s));
+        int tabCount = mTabLayout.getTabCount();
+        for (int i = 0; i < tabCount; i++) {
+            TabLayout.Tab tabChild = mTabLayout.getTabAt(i);
+            final View view = LayoutInflater.from(this).inflate(R.layout.item_main_tab, mTabLayout, false);
+            ImageView imageView = view.findViewById(R.id.image);
+            imageView.setImageResource(tableSelectedIcon[i]);
+            TextView textView = view.findViewById(R.id.text);
+            textView.setText(tableString[i]);
+            tabChild.setCustomView(view);
         }
-        mMyTabLayout.setTabData(title);
+
     }
 
 }

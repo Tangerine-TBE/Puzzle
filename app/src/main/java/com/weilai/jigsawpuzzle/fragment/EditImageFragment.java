@@ -15,7 +15,7 @@ import com.weilai.jigsawpuzzle.R;
 /**
  ** DATE: 2022/9/13
  ** Author:tangerine
- ** Description:修圖
+ ** Description:特效
  **/
 public class EditImageFragment extends Fragment {
     @Nullable

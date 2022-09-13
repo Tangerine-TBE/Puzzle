@@ -43,7 +43,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 view = LayoutInflater.from(this).inflate((Integer) setLayout(), null, false);
             } else {
                 throw new RuntimeException("the Activity can't access kind of view");
-            }setTitle();
+            }
+            setTitle();
             initStatusBar();
             super.onCreate(savedInstanceState);
             setContentView(view);

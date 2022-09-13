@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows= "true"
     android:layout_height="0dp"
     android:layout_weight="1"
     tools:context=".activity.MainActivity">
@@ -12,23 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-    <com.weilai.jigsawpuzzle.weight.MyTabLayout
-        android:layout_gravity="center"
-        android:id="@+id/tab_layout"
-        android:background="@color/white"
-        app:tl_textSelectColor="@color/black"
-        app:tl_textUnselectColor="#9c9c9c"
-        app:tl_underline_color="@color/white"
-        app:tl_indicator_color="#8FC32B"
-        android:paddingTop="2dp"
-        app:tl_underline_height="2dp"
-        app:tl_textsize="17dp"
-        app:tl_iconVisible="false"
-        app:tl_tab_padding="0dp"
-        app:tl_indicator_corner_radius="8dp"
-        app:tl_indicator_width="30dp"
-        app:tl_indicator_margin_top="2dp"
-        android:layout_marginBottom = "10dp"
+    <com.google.android.material.tabs.TabLayout
+        android:id ="@+id/tl_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </androidx.appcompat.widget.LinearLayoutCompat>
