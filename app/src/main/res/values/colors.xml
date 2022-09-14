@@ -13,4 +13,5 @@
     <color name ="bg_cross_gray" >#F5F5F5F5</color>
     <color name = "sel_text_main_color">#05B4E6</color>
     <color name="unl_text_main_color">#86909C</color>
+    <color name="card_view_color">#F5F9FF</color>
 </resources>

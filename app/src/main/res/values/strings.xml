@@ -15,4 +15,5 @@
     <string name="item_screen_shot">網址截圖</string>
     <string name="special_title">特效圖片</string>
     <string name="mine_title">我的</string>
+    <string name="template">模板</string>
 </resources>

@@ -8,18 +8,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.activity.MainActivity;
-import com.weilai.jigsawpuzzle.activity.TemplateActivity;
+import com.weilai.jigsawpuzzle.activity.template.TemplateActivity;
 import com.weilai.jigsawpuzzle.adapter.ImageBannerAdapter;
 import com.youth.banner.Banner;
 import com.youth.banner.config.IndicatorConfig;
-import com.youth.banner.indicator.CircleIndicator;
 import com.youth.banner.indicator.RectangleIndicator;
-import com.youth.banner.indicator.RoundLinesIndicator;
 
 import java.util.Arrays;
 
