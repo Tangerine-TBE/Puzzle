@@ -8,4 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name = "trans">#00000000</color>
+
+    <!--for app view-->
+    <color name ="bg_cross_gray" >#F5F5F5F5</color>
+    <color name = "sel_text_main_color">#05B4E6</color>
+    <color name="unl_text_main_color">#86909C</color>
 </resources>

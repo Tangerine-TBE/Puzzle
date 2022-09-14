@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 32
     buildToolsVersion "31.0.0"
 
     defaultConfig {
         applicationId "com.weilai.jigsawpuzzle"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 

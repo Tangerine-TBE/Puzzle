@@ -34,7 +34,7 @@ public class ImageBannerAdapter extends BannerAdapter<String,ImageBannerAdapter.
 /**
  ** DATE: 2022/9/13
  ** Author:tangerine
- ** Description: test three images
+ ** Description: test three images .the pic might be from the service;
  **/
     @Override
     public void onBindView(BannerViewHolder holder, String data, int position, int size) {
