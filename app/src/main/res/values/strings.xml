@@ -13,4 +13,6 @@
     <string name="item_lines">拼臺詞</string>
     <string name="item_lattice">九宮格</string>
     <string name="item_screen_shot">網址截圖</string>
+    <string name="special_title">特效圖片</string>
+    <string name="mine_title">我的</string>
 </resources>
