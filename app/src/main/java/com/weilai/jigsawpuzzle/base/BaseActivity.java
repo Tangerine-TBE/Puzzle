@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.util.StatusBarUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -28,7 +29,7 @@ import java.lang.reflect.Method;
  **/
 public abstract class BaseActivity extends AppCompatActivity {
     protected abstract Object setLayout();
-
+    protected abstract void setStatusBar();
     protected abstract void initView(View view);
 
     protected abstract void initListener(View view);
@@ -44,8 +45,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             } else {
                 throw new RuntimeException("the Activity can't access kind of view");
             }
-            setTitle();
-            initStatusBar();
             super.onCreate(savedInstanceState);
             setContentView(view);
             initView(view);
@@ -54,36 +53,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         throw new NullPointerException("Resource by " + this.getLocalClassName() + " is null");
     }
-
-    private void initStatusBar() {
-
-        Window window = getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            View decorView = window.getDecorView();
-            int option = View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(option);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        } else {
-            WindowManager.LayoutParams layoutParams = window.getAttributes();
-            int flagTranslucentStatus = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-            layoutParams.flags |= flagTranslucentStatus;
-            window.setAttributes(layoutParams);
-
-        }
-
-//        ViewGroup rootView = getWindow().getDecorView().findViewById(android.R.id.content);
-//        rootView.setPadding(0,getStatusBarHeight(),);
-//    private int getStatusBarHeight(){
-//        int result = 0;
-//        int resourceId = getResources().getIdentifier("status_bar_height","dimen","android");
-//        if (resourceId > 0){
-//            result = getResources().getDimensionPixelOffset(resourceId);
-//        }
-//        return result;
-//    }
+    /**
+     ** DATE: 2022/9/14
+     ** Author:tangerine
+     ** Description:For change the statusBar
+     **/
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(view);
+        setStatusBar();
     }
+
     public void setTitle() {
         if (MIUISetStatusBarLightMode(this, true) || FlymeSetStatusBarLightMode(this, true)) {
             //设置状态栏为指定颜色

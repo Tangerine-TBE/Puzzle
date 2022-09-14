@@ -17,6 +17,7 @@ import com.weilai.jigsawpuzzle.base.BaseActivity;
 import com.weilai.jigsawpuzzle.fragment.CrossDressFragment;
 import com.weilai.jigsawpuzzle.fragment.EditImageFragment;
 import com.weilai.jigsawpuzzle.fragment.MineFragment;
+import com.weilai.jigsawpuzzle.util.StatusBarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,11 @@ public class MainActivity extends BaseActivity {
     @Override
     protected Object setLayout() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    protected void setStatusBar() {
+        StatusBarUtil.setTranslucentForImageViewInFragment(MainActivity.this,null);
     }
 
     @Override
