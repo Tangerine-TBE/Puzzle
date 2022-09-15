@@ -18,6 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.template.TemplateActivity"/>
+        <activity android:name=".activity.template.TemplateEditActivity"/>
+        <activity android:name=".activity.template.TemplateShowActivity"/>
     </application>
 
 </manifest>

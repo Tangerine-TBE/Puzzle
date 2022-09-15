@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.activity.template.TemplateActivity;
+import com.weilai.jigsawpuzzle.activity.template.TemplateShowActivity;
 import com.weilai.jigsawpuzzle.adapter.ImageBannerAdapter;
 import com.youth.banner.Banner;
 import com.youth.banner.config.IndicatorConfig;
@@ -59,7 +60,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tv_template){
-            startActivity(new Intent(getContext(), TemplateActivity.class));
+            startActivity(new Intent(getContext(), TemplateShowActivity.class));
         }else if (view.getId() == R.id.tv_pic){
 
         }else if (view.getId() == R.id.tv_splic_health){

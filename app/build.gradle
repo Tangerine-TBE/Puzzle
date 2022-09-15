@@ -14,6 +14,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags ''
+                abiFilters 'arm64-v8a','armeabi-v7a'
+            }
+        }
     }
 
     buildTypes {
@@ -26,6 +32,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    sourceSets{
+        main{
+            jniLibs.srcDirs=['libs']
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.10.2'
+        }
+    }
 }
 
 dependencies {
@@ -33,7 +50,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    /*banner*/
     implementation 'io.github.youth5201314:banner:2.2.2'
+    /*RxJava For Android*/
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    /*TabLayout*/
     implementation project(path: ':library')
 
 }

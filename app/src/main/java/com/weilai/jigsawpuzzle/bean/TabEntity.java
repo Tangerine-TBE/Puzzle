@@ -1,5 +1,6 @@
 package com.weilai.jigsawpuzzle.bean;
 
+import com.weilai.jigsawpuzzle.keep.IBean;
 import com.weilai.library.listener.CustomTabEntity;
 
 /**
@@ -7,7 +8,7 @@ import com.weilai.library.listener.CustomTabEntity;
  ** Author:tangerine
  ** Description:
  **/
-public class TabEntity implements CustomTabEntity {
+public class TabEntity implements CustomTabEntity, IBean {
     public String title;
     public int selectedIcon;
     public int unSelectedIcon;

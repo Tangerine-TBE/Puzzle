@@ -1,11 +1,13 @@
 package com.weilai.jigsawpuzzle.bean;
 
+import com.weilai.jigsawpuzzle.keep.IBean;
+
 /**
  ** DATE: 2022/9/14
  ** Author:tangerine
  ** Description:
  **/
-public class TemplateEntity {
+public class TemplateEntity implements IBean {
     private String img;
     private String name;
 
