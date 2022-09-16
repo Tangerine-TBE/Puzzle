@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
     <include layout="@layout/layout_title_back"/>
-    <com.weilai.jigsawpuzzle.weight.template.TemplateEditView
+    <com.weilai.jigsawpuzzle.weight.template.TemplateView
         android:id="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -1,10 +1,13 @@
 package com.weilai.jigsawpuzzle.activity;
 
+import android.Manifest;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -21,25 +24,28 @@ import com.weilai.jigsawpuzzle.util.StatusBarUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class MainActivity extends BaseActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private int[] tableSelectedIcon = {R.mipmap.icon_sel_home, R.mipmap.icon_sel_special, R.mipmap.icon_sel_mine};
     private int[] tableUnSelectedIcon = {R.mipmap.icon_unl_home, R.mipmap.icon_unl_special, R.mipmap.icon_unl_mine};
     private int mCurrentPosition;
+
     @Override
     protected Object setLayout() {
         return R.layout.activity_main;
     }
 
     /**
-     ** DATE: 2022/9/14
-     ** Author:tangerine
-     ** Description:@statusBarAlpha: 0 ~ 255  alpha change options  if you need
+     * * DATE: 2022/9/14
+     * * Author:tangerine
+     * * Description:@statusBarAlpha: 0 ~ 255  alpha change options  if you need
      **/
     @Override
     protected void setStatusBar() {
-        StatusBarUtil.setTranslucentForImageViewInFragment(MainActivity.this,0,null);
+        StatusBarUtil.setTranslucentForImageViewInFragment(MainActivity.this, 0, null);
     }
 
     @Override
@@ -54,11 +60,27 @@ public class MainActivity extends BaseActivity {
         mViewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, fragments));
         mTabLayout.setupWithViewPager(mViewPager);
         initTabLayout();
+        /*申请读写权限*/
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this,permissions)){
+
+        }else {
+            EasyPermissions.requestPermissions(this,"申请读写权限",0,permissions);
+        }
+
+
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+    }
+
     /**
-     ** DATE: 2022/9/14
-     ** Author:tangerine
-     ** Description:For listen the page changed or not
+     * * DATE: 2022/9/14
+     * * Author:tangerine
+     * * Description:For listen the page changed or not
      **/
     @Override
     protected void initListener(View view) {
@@ -99,10 +121,10 @@ public class MainActivity extends BaseActivity {
             ImageView imageView = view.findViewById(R.id.image);
             TextView textView = view.findViewById(R.id.text);
             textView.setText(tableString[i]);
-            if (i == 0 ){
+            if (i == 0) {
                 imageView.setImageResource(tableSelectedIcon[0]);
                 textView.setTextColor(getResources().getColor(R.color.sel_text_main_color));
-            }else{
+            } else {
                 imageView.setImageResource(tableUnSelectedIcon[i]);
                 textView.setTextColor(getResources().getColor(R.color.unl_text_main_color));
 
@@ -112,13 +134,14 @@ public class MainActivity extends BaseActivity {
         }
 
     }
+
     /**
-     ** DATE: 2022/9/14
-     ** Author:tangerine
-     ** Description: For selected tabView
+     * * DATE: 2022/9/14
+     * * Author:tangerine
+     * * Description: For selected tabView
      **/
-    private void resumeTabStatus(){
-        TabLayout.Tab tabChild =  mTabLayout.getTabAt(mCurrentPosition);
+    private void resumeTabStatus() {
+        TabLayout.Tab tabChild = mTabLayout.getTabAt(mCurrentPosition);
         assert tabChild != null;
         View view = tabChild.getCustomView();
         assert view != null;
@@ -127,8 +150,9 @@ public class MainActivity extends BaseActivity {
         textView.setTextColor(getResources().getColor(R.color.unl_text_main_color));
         imageView.setImageResource(tableUnSelectedIcon[mCurrentPosition]);
     }
-    private void resumeTabStatus(int position){
-        TabLayout.Tab tabChild =  mTabLayout.getTabAt(position);
+
+    private void resumeTabStatus(int position) {
+        TabLayout.Tab tabChild = mTabLayout.getTabAt(position);
         assert tabChild != null;
         View view = tabChild.getCustomView();
         assert view != null;

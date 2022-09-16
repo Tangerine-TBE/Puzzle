@@ -10,11 +10,16 @@ import android.widget.ImageView;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseActivity;
+import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.StatusBarUtil;
+import com.weilai.jigsawpuzzle.weight.template.BitMapInfo;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * * DATE: 2022/9/14
@@ -39,16 +44,22 @@ public class TemplateShowActivity extends BaseActivity {
     protected void initView(View view) {
         AppCompatImageView imageView = view.findViewById(R.id.iv_img);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+//
+        FileUtil.saveBitmapToCache("template",bitmap);
+        BitMapInfo bitMapInfo = new BitMapInfo();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-
+        bitMapInfo.setBitmap("template");
+        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.16f,0.23f,0,0.46f,0.28f);
+        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.53f,0.23f,0,0.46f,0.28f);
+        List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
+        sizeInfos.add(sizeInfo1);
+        sizeInfos.add(sizeInfo2);
+        bitMapInfo.setSizeInfos(sizeInfos);
         imageView.setImageBitmap(bitmap);
-        view.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getBaseContext(), TemplateEditActivity.class).putExtra("template",baos.toByteArray() ));
-            }
-        });
+        String jsonString = JSONObject.toJSONString(bitMapInfo);
+//
+        view.findViewById(R.id.tv_confirm).setOnClickListener(view1 -> startActivity(new Intent(getBaseContext(), TemplateEditActivity.class).putExtra("bitmapInfo",jsonString)));
     }
 
     @Override
