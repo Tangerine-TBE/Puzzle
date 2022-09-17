@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.weight.template;
+package com.weilai.jigsawpuzzle.net.netInfo;
 
 import com.weilai.jigsawpuzzle.keep.IBean;
 

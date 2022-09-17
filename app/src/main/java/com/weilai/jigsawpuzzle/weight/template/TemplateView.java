@@ -15,6 +15,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 
 import java.util.ArrayList;
@@ -139,6 +140,7 @@ public class TemplateView extends View {
         /*用戶設置圖片進View中*/
         int[] picArea = mAreaTouch.get(position);
         picArea[5] = 2;
+
     }
 
     private boolean hasTarget;

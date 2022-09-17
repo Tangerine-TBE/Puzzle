@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -15,7 +14,7 @@ import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseActivity;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.StatusBarUtil;
-import com.weilai.jigsawpuzzle.weight.template.BitMapInfo;
+import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
