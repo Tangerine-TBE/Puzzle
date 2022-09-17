@@ -47,7 +47,12 @@ public class TemplateEditActivity extends BaseActivity implements TemplateView.O
     }
 
     @Override
-    public void onRectClick(int position) {
-        L.e("clicked");
+    public void onRectClick(int position,boolean hasPic) {
+        if (hasPic){
+            //show dialog
+        }else{
+            //startToCameraActivity To select a pic
+
+        }
     }
 }

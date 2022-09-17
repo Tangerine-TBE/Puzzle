@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -75,12 +74,12 @@ public class TemplateView extends View {
             //计算真实的x坐标与y坐标
             //根据角度，x,y比例绘制底层图
             List<BitMapInfo.SizeInfo> sizeInfos = mBitmapInfo.getSizeInfos();
-            for (int i = 0 ; i < mBitmapInfo.getSizeInfos().size() ; i ++){
+            for (int i = 0; i < mBitmapInfo.getSizeInfos().size(); i++) {
                 //获取旋转角度
                 float angle = sizeInfos.get(i).getAngle();
                 //中心点位置计算
-                float width = sizeInfos.get(i).getWidth();//目標的中心点x占比
-                float height = sizeInfos.get(i).getHeight();//目標的中心点y 占比
+                float width = sizeInfos.get(i).getCenterX();//目標的中心点x占比
+                float height = sizeInfos.get(i).getCenterY();//目標的中心点y 占比
                 int centerY = (int) (mTemplateHeight * height); //目標在原圖上的中心点高度
                 int centerX = (int) (mTemplateWidth * width);//目標在原圖上的中心点寬度
                 //在图片上初始的左上角坐标计算
@@ -89,7 +88,7 @@ public class TemplateView extends View {
                 int x = (int) (mTemplateWidth * scaleX);//在圖片上的x 起始
                 int y = (int) (mTemplateHeight * scaleY);//在圖片上的y 起始
                 //根据比例以及偏移量计算左上 右下 坐标
-                int outAreaLeftX = templateX+x;
+                int outAreaLeftX = templateX + x;
                 int outAreaLeftY = templateY + y;
                 int outAreaRightX = templateX + x + centerX * 2;
                 int outAreaRightY = templateY + y + centerY * 2;
@@ -98,29 +97,29 @@ public class TemplateView extends View {
                 //逆时针旋转30度  -30
                 //那么我要复原就是 +30 顺时针旋转
                 //已经知旋转前点的位置(x1,y1)和旋转的角度(a)，求旋转后点的新位置(x2,y2)
-                double degrees =30;
+                double degrees = 30;
                 double radians = Math.toRadians(degrees);
                 //获取逆时针旋转前的坐标
-                int beforeRotateLeftX = (int) ((outAreaLeftX-centerX) * Math.cos(radians) -(outAreaLeftY-centerY) * Math.sin(radians) + centerX);
-                int beforeRotateLeftY = (int) ((outAreaLeftY - centerY) * Math.cos(radians) + (outAreaLeftX-centerX) * Math.sin(radians) + centerY);
-                int beforeRotateRightX = (int) ((outAreaRightX - centerX) * Math.cos(radians) - (outAreaRightY-centerY) *Math.sin(radians)+centerX);
-                int beforeRotateRightY = (int) ((outAreaRightY-centerY) * Math.cos(radians)-(outAreaRightX-centerX) *Math.sin(radians)+centerY);
-                if (angle == 0){
+                int beforeRotateLeftX = (int) ((outAreaLeftX - centerX) * Math.cos(radians) - (outAreaLeftY - centerY) * Math.sin(radians) + centerX);
+                int beforeRotateLeftY = (int) ((outAreaLeftY - centerY) * Math.cos(radians) + (outAreaLeftX - centerX) * Math.sin(radians) + centerY);
+                int beforeRotateRightX = (int) ((outAreaRightX - centerX) * Math.cos(radians) - (outAreaRightY - centerY) * Math.sin(radians) + centerX);
+                int beforeRotateRightY = (int) ((outAreaRightY - centerY) * Math.cos(radians) - (outAreaRightX - centerX) * Math.sin(radians) + centerY);
+                if (angle == 0) {
                     @SuppressLint("DrawAllocation")
                     RectF rectF = new RectF(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY);
                     canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
                     //收录一下绘制范围，做监听使用,是否有圖片等
-                    int[] touchArea = {outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY,i,1};
+                    int[] touchArea = {outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY, i, 1};
                     mAreaTouch.add(touchArea);
-                }else{
+                } else {
                     @SuppressLint("DrawAllocation")
-                    RectF rectF = new RectF(beforeRotateLeftX,beforeRotateLeftY,beforeRotateRightX,beforeRotateRightY);
+                    RectF rectF = new RectF(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY);
                     Matrix matrix = new Matrix();
-                    matrix.setRotate(angle,centerX,centerY);
+                    matrix.setRotate(angle, centerX, centerY);
                     matrix.mapRect(rectF);
-                    canvas.drawBitmap(mTouchBitmap,matrix, mPaint);
+                    canvas.drawBitmap(mTouchBitmap, matrix, mPaint);
                     //收录一下绘制范围，做监听使用,是否有圖片等
-                    int[] touchArea = {beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY,i,1};
+                    int[] touchArea = {beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, 1};
                     mAreaTouch.add(touchArea);
                 }
 
@@ -135,17 +134,17 @@ public class TemplateView extends View {
     public final void setOutRectClickListener(OutRectClickListener listener) {
         this.listener = listener;
     }
-    public final Bitmap setBitMapFromClient(Bitmap bitmap){
+
+    public final void setBitMapFromClient(Bitmap bitmap, int position) {
         /*用戶設置圖片進View中*/
-
-
-        return null;
+        int[] picArea = mAreaTouch.get(position);
+        picArea[5] = 2;
     }
 
     private boolean hasTarget;
 
     public interface OutRectClickListener {
-        void onRectClick(int position);
+        void onRectClick(int position, boolean hasPic);
     }
 
     @Override
@@ -165,7 +164,7 @@ public class TemplateView extends View {
                         }
                         //如果本次up的位置也对,则进行事件监听回调
                         if (listener != null) {
-                            listener.onRectClick(area[4]);
+                            listener.onRectClick(area[4], area[5] != 1);
                         }
                         hasTarget = false;
                         break;
