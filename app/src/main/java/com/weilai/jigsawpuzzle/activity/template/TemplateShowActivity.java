@@ -50,8 +50,8 @@ public class TemplateShowActivity extends BaseActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         bitMapInfo.setBitmap("template");
-        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.16f,0.23f,0,0.46f,0.28f);
-        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.53f,0.23f,0,0.46f,0.28f);
+        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.16f,0.23f,0,0.23f,0.14f);
+        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.53f,0.23f,0,0.23f,0.14f);
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
         sizeInfos.add(sizeInfo1);
         sizeInfos.add(sizeInfo2);

@@ -16,11 +16,11 @@ public class BitMapInfo implements IBean {
     private String bitmap;
     private List<SizeInfo> sizeInfos;
     public static class SizeInfo {
-        private float x;
-        private float y;
-        private int angle;
-        private float height;
-        private float width;
+        private float x;//左上角x 占比
+        private float y;//左上角y 占比
+        private int angle;//旋转角度
+        private float height;//中心点 占比
+        private float width;//中心点 占比
 
         public SizeInfo() {
 
