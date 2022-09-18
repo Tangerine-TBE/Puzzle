@@ -105,6 +105,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
     }
 
     private void startToSelectCropper() {
+        SelectedManager.clearSelectResult();
         mSelector.openGallery(SelectMimeType.ofImage())
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setCropEngine(new ImageCropEngine())

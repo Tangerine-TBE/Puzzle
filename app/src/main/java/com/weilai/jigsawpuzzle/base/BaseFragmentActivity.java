@@ -9,6 +9,8 @@ import androidx.appcompat.widget.ContentFrameLayout;
 import com.weilai.jigsawpuzzle.R;
 
 import me.yokeyword.fragmentation.SupportActivity;
+import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
+import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public abstract class BaseFragmentActivity extends SupportActivity {
     public abstract BaseFragment setRootFragment();
@@ -24,7 +26,7 @@ public abstract class BaseFragmentActivity extends SupportActivity {
         container.setId(R.id.fragment_container);
         setContentView(container);
         if (saveInstanceState == null) {
-            loadRootFragment(R.id.fragment_container, setRootFragment());
+            loadRootFragment(R.id.fragment_container, setRootFragment(),true,true);
         }
     }
     @Override
@@ -32,6 +34,10 @@ public abstract class BaseFragmentActivity extends SupportActivity {
         super.onDestroy();
         System.gc();
         System.runFinalization();
+    }
+    @Override
+    public FragmentAnimator onCreateFragmentAnimator() {
+        return new DefaultHorizontalAnimator();
     }
 
 }

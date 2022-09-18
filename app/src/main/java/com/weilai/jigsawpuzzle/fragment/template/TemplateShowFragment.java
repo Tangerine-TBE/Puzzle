@@ -52,7 +52,6 @@ public class TemplateShowFragment extends BaseFragment {
     protected void initView(View view) {
         AppCompatImageView imageView = view.findViewById(R.id.iv_img);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
-//
         FileUtil.saveBitmapToCache("template", bitmap);
         BitMapInfo bitMapInfo = new BitMapInfo();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -66,7 +65,6 @@ public class TemplateShowFragment extends BaseFragment {
         bitMapInfo.setSizeInfos(sizeInfos);
         imageView.setImageBitmap(bitmap);
         String jsonString = JSONObject.toJSONString(bitMapInfo);
-//
         view.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
