@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.fragment;
+package com.weilai.jigsawpuzzle.fragment.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,19 +8,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.weilai.jigsawpuzzle.R;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/13
- */
-public class MineFragment  extends Fragment {
+ ** DATE: 2022/9/13
+ ** Author:tangerine
+ ** Description:特效
+ **/
+public class EditImageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull  LayoutInflater inflater, @Nullable  ViewGroup container, @Nullable  Bundle savedInstanceState) {
-        final View view  = inflater.inflate(R.layout.fragment_mine,container,false);
+
+        final View view = inflater.inflate(R.layout.fragment_edit_image,container,false);
+
         return view;
     }
 }

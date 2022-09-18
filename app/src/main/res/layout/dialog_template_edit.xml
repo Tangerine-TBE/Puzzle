@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_replace"
+
+        android:padding="12dp"
+        android:textSize="18sp"
+        android:text="@string/replace"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <View
+        android:background="@color/bg_cross_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:padding="12dp"
+        android:textSize="18sp"
+        android:id="@+id/dialog_crop"
+        android:gravity="center"
+        android:text="@string/crop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <View
+        android:background="@color/bg_cross_gray"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_cancel"
+        android:padding="12dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@android:color/darker_gray"
+        android:text="@string/cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -8,18 +8,36 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.weilai.jigsawpuzzle.util.L;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import io.reactivex.rxjava3.internal.util.LinkedArrayList;
 
 /**
  * @description:
@@ -34,7 +52,8 @@ public class TemplateView extends View {
     private int mTemplateWidth;
     private boolean mDrawView;
     private BitMapInfo mBitmapInfo;
-    private final ArrayList<int[]> mAreaTouch = new ArrayList<>();//int 0 Left 1 Top 2 Right 3 Bottom ,4 position,5 hasPic(1 no 2 yes)
+    private Bitmap mTestBitmap;
+    private final LinkedList<TemplateViewInfo> mAreaTouch = new LinkedList<>();
 
 
     public TemplateView(Context context) {
@@ -67,6 +86,7 @@ public class TemplateView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        int mSize = mAreaTouch.size();
         if (mDrawView) {
             int scaleWidth = getWidth() / 2;
             int scaleHeight = getHeight() / 2;
@@ -101,29 +121,91 @@ public class TemplateView extends View {
                 double degrees = 30;
                 double radians = Math.toRadians(degrees);
                 //获取逆时针旋转前的坐标
-                int beforeRotateLeftX = (int) ((outAreaLeftX - centerX) * Math.cos(radians) - (outAreaLeftY - centerY) * Math.sin(radians) + centerX);
-                int beforeRotateLeftY = (int) ((outAreaLeftY - centerY) * Math.cos(radians) + (outAreaLeftX - centerX) * Math.sin(radians) + centerY);
-                int beforeRotateRightX = (int) ((outAreaRightX - centerX) * Math.cos(radians) - (outAreaRightY - centerY) * Math.sin(radians) + centerX);
-                int beforeRotateRightY = (int) ((outAreaRightY - centerY) * Math.cos(radians) - (outAreaRightX - centerX) * Math.sin(radians) + centerY);
+
                 if (angle == 0) {
                     @SuppressLint("DrawAllocation")
                     RectF rectF = new RectF(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY);
-                    canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
-                    //收录一下绘制范围，做监听使用,是否有圖片等
-                    int[] touchArea = {outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY, i, 1};
-                    mAreaTouch.add(touchArea);
-                } else {
-                    @SuppressLint("DrawAllocation")
-                    RectF rectF = new RectF(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY);
-                    Matrix matrix = new Matrix();
-                    matrix.setRotate(angle, centerX, centerY);
-                    matrix.mapRect(rectF);
-                    canvas.drawBitmap(mTouchBitmap, matrix, mPaint);
-                    //收录一下绘制范围，做监听使用,是否有圖片等
-                    int[] touchArea = {beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, 1};
-                    mAreaTouch.add(touchArea);
-                }
+                    TemplateViewInfo templateViewInfo;
+                    if (mSize > 0) {
+                        templateViewInfo = mAreaTouch.get(i);
+                        if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
+                            //不是占位图
+                            canvas.drawBitmap(templateViewInfo.getBitmap(), null, rectF, mPaint);
+                        } else {
+                            canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                        }
+                        mAreaTouch.remove(i);
+                    } else {
+                        canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                        //收录一下绘制范围，做监听使用,是否有圖片等
+                        templateViewInfo = new TemplateViewInfo(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY, i, false, null);
+                    }
+                    mAreaTouch.add(i, templateViewInfo);
 
+                } else {
+                    double v0 = (outAreaLeftX - centerX) * Math.cos(radians);
+                    double v1 = (outAreaLeftY - centerY) * Math.cos(radians);
+                    double v2 = (outAreaRightX - centerX) * Math.cos(radians);
+                    double v3 = (outAreaRightY - centerY) * Math.cos(radians);
+                    double v4 = (outAreaLeftY - centerY) * Math.sin(radians);
+                    double v5 = (outAreaLeftX - centerX) * Math.sin(radians);
+                    double v6 = (outAreaRightY - centerY) * Math.sin(radians);
+                    double v7 = (outAreaRightX - centerX) * Math.sin(radians);
+                    if (angle > 0) { //顺时针旋转
+                        @SuppressLint("DrawAllocation")
+                        int beforeRotateLeftX = (int) (v0 + v4 + centerX);
+                        int beforeRotateLeftY = (int) (v1 - v5 + centerY);
+                        int beforeRotateRightX = (int) (v2 + v6 + centerX);
+                        int beforeRotateRightY = (int) (v3 - v7 + centerY);
+                        RectF rectF = new RectF(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY);
+                        Matrix matrix = new Matrix();
+                        matrix.setRotate(angle, centerX, centerY);
+                        matrix.mapRect(rectF);
+                        TemplateViewInfo templateViewInfo;
+                        if (mSize > 0) {
+
+                            templateViewInfo = mAreaTouch.get(i);
+                            if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
+                                //不是占位图
+                                canvas.drawBitmap(mTestBitmap, null, rectF, mPaint);
+                            } else {
+                                canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                            }
+                            mAreaTouch.remove(i);
+                        } else {
+                            canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                            //收录一下绘制范围，做监听使用,是否有圖片等
+                            templateViewInfo = new TemplateViewInfo(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, false, null);
+                        }
+                        mAreaTouch.add(i, templateViewInfo);
+                        canvas.drawBitmap(mTouchBitmap, matrix, mPaint);
+                    } else if (angle < 0) { //逆时针旋转
+                        int beforeRotateLeftX = (int) (v0 - v4 + centerX);
+                        int beforeRotateLeftY = (int) (v1 + v5 + centerY);
+                        int beforeRotateRightX = (int) (v2 - v6 + centerX);
+                        int beforeRotateRightY = (int) (v3 + v7 + centerY);
+                        RectF rectF = new RectF(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY);
+                        Matrix matrix = new Matrix();
+                        matrix.setRotate(angle, centerX, centerY);
+                        matrix.mapRect(rectF);
+                        TemplateViewInfo templateViewInfo;
+                        if (mSize > 0) {
+                            templateViewInfo = mAreaTouch.get(i);
+                            if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
+                                //不是占位图
+                                canvas.drawBitmap(mTestBitmap, null, rectF, mPaint);
+                            } else {
+                                canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                            }
+                            mAreaTouch.remove(i);
+                        } else {
+                            canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                            //收录一下绘制范围，做监听使用,是否有圖片等
+                            templateViewInfo = new TemplateViewInfo(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, false, null);
+                        }
+                        mAreaTouch.add(i, templateViewInfo);
+                    }
+                }
             }
             canvas.drawBitmap(mTemplateBitmap, templateX, templateY, mPaint);
         }
@@ -136,56 +218,76 @@ public class TemplateView extends View {
         this.listener = listener;
     }
 
-    public final void setBitMapFromClient(Bitmap bitmap, int position) {
+    public final void setBitMapFromClient(LocalMedia localMedia) {
         /*用戶設置圖片進View中*/
-        int[] picArea = mAreaTouch.get(position);
-        picArea[5] = 2;
+        TemplateViewInfo templateViewInfo = mAreaTouch.get(mSettingPosition);
+        templateViewInfo.setHasPic(true);
+        templateViewInfo.setLocalMedia(localMedia);
+        templateViewInfo.setUrl(localMedia.getAvailablePath());
+        Uri uri = Uri.fromFile(new File(localMedia.getAvailablePath()));
+        try {
+            InputStream inputStream = getContext().getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            templateViewInfo.setBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
+
+        mSettingPosition = -1;
+        invalidate();
+    }
+
+    public final LocalMedia getInfoFromView() {
+        if (mSettingPosition >= 0) {
+            TemplateViewInfo templateViewInfo = mAreaTouch.get(mSettingPosition);
+            return templateViewInfo.getLocalMedia();
+        }
+        return null;
     }
 
     private boolean hasTarget;
 
     public interface OutRectClickListener {
-        void onRectClick(int position, boolean hasPic);
+        boolean onRectClick(boolean hasPic);
     }
 
+    private int mSettingPosition;
+    private long mLastTime;
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
-                //抬手的時候也要監聽按下的位置是否也在相應區域
-                if (hasTarget) {
-                    int upX = (int) event.getX();
-                    int upY = (int) event.getY();
-                    for (int[] area : mAreaTouch) {
-                        if (upX < area[0] || upX > area[2]) {
-                            continue;
-                        }
-                        if (upY < area[1] || upY > area[3]) {
-                            continue;
-                        }
-                        //如果本次up的位置也对,则进行事件监听回调
-                        if (listener != null) {
-                            listener.onRectClick(area[4], area[5] != 1);
-                        }
-                        hasTarget = false;
-                        break;
-                    }
-                }
-                break;
             case MotionEvent.ACTION_DOWN:
-                //下手的位置
-                int downX = (int) event.getX();
-                int downY = (int) event.getY();
-                for (int[] area : mAreaTouch) {
-                    if (downX < area[0] || downX > area[2]) {
+                int upX = (int) event.getX();
+                int upY = (int) event.getY();
+                long currentTime = 0;
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    currentTime = System.currentTimeMillis();
+                }
+                for (TemplateViewInfo templateViewInfo : mAreaTouch) {
+                    if (upX < templateViewInfo.getLeftX() || upX > templateViewInfo.getRightX()) {
                         continue;
                     }
-                    if (downY < area[1] || downY > area[3]) {
+                    if (upY < templateViewInfo.getLeftY() || upY > templateViewInfo.getRightY()) {
                         continue;
                     }
-                    //如果在本次遍历找到则break掉不再循环
-                    hasTarget = true;
+                    if (event.getAction() == MotionEvent.ACTION_UP && hasTarget) {
+                        hasTarget = false;
+                        if (listener != null) {
+                            listener.onRectClick(templateViewInfo.hasPic());
+                            mSettingPosition = templateViewInfo.getPosition();
+                            break;
+                        }
+                    } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        if (currentTime - mLastTime < 500) {
+                            break;
+                        }
+                        mLastTime = currentTime;
+                        hasTarget = true;
+                    }
                     break;
                 }
                 break;
@@ -199,6 +301,6 @@ public class TemplateView extends View {
     private void init() {
         mPaint = new Paint();
         mTouchBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bb);
-        //加载一个占位图
+        mTestBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_home_tab1);
     }
 }

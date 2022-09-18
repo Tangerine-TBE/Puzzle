@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.activity;
+package com.weilai.jigsawpuzzle.activity.main;
 
 import android.Manifest;
 import android.view.LayoutInflater;
@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -15,10 +14,10 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.FragmentAdapter;
-import com.weilai.jigsawpuzzle.base.BaseActivity;
-import com.weilai.jigsawpuzzle.fragment.CrossDressFragment;
-import com.weilai.jigsawpuzzle.fragment.EditImageFragment;
-import com.weilai.jigsawpuzzle.fragment.MineFragment;
+import com.weilai.jigsawpuzzle.base.BaseSimpleActivity;
+import com.weilai.jigsawpuzzle.fragment.main.CrossDressFragment;
+import com.weilai.jigsawpuzzle.fragment.main.EditImageFragment;
+import com.weilai.jigsawpuzzle.fragment.main.MineFragment;
 import com.weilai.jigsawpuzzle.util.StatusBarUtil;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends BaseActivity {
+public class MainBaseActivity extends BaseSimpleActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private int[] tableSelectedIcon = {R.mipmap.icon_sel_home, R.mipmap.icon_sel_special, R.mipmap.icon_sel_mine};
@@ -45,7 +44,7 @@ public class MainActivity extends BaseActivity {
      **/
     @Override
     protected void setStatusBar() {
-        StatusBarUtil.setTranslucentForImageViewInFragment(MainActivity.this, 0, null);
+        StatusBarUtil.setTranslucentForImageViewInFragment(MainBaseActivity.this, 0, null);
     }
 
     @Override

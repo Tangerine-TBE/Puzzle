@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.fragment;
+package com.weilai.jigsawpuzzle.fragment.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.activity.template.TemplateActivity;
-import com.weilai.jigsawpuzzle.activity.template.TemplateShowActivity;
+import com.weilai.jigsawpuzzle.activity.main.TemplateBaseActivity;
+import com.weilai.jigsawpuzzle.fragment.template.TemplateShowFragment;
 import com.weilai.jigsawpuzzle.adapter.ImageBannerAdapter;
 import com.youth.banner.Banner;
 import com.youth.banner.config.IndicatorConfig;
@@ -60,7 +60,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tv_template){
-            startActivity(new Intent(getContext(), TemplateShowActivity.class));
+            startActivity(new Intent(getContext(), TemplateBaseActivity.class));
         }else if (view.getId() == R.id.tv_pic){
 
         }else if (view.getId() == R.id.tv_splic_health){
