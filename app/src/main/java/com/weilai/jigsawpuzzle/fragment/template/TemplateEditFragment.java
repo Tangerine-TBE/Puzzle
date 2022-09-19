@@ -2,6 +2,8 @@ package com.weilai.jigsawpuzzle.fragment.template;
 
 import static com.luck.picture.lib.config.PictureSelectionConfig.cropFileEngine;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +15,9 @@ import android.view.View;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.Crop;
@@ -29,18 +33,19 @@ import com.luck.picture.lib.utils.DateUtils;
 import com.luck.picture.lib.utils.ToastUtils;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateEditDialog;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.ImageCropEngine;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import com.weilai.jigsawpuzzle.util.L;
 import com.weilai.jigsawpuzzle.weight.template.TemplateView;
+import com.weilai.jigsawpuzzle.weight.template.TemplateViewInfo;
 import com.yalantis.ucrop.UCrop;
-
-import org.json.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -48,7 +53,7 @@ import java.util.List;
  * * Author:tangerine
  * * Description:1.After Show the template
  **/
-public class TemplateEditFragment extends BaseFragment implements TemplateView.OutRectClickListener, TemplateEditDialog.TemplateDialogItemListener {
+public class TemplateEditFragment extends BaseFragment implements TemplateView.OutRectClickListener, TemplateEditDialog.TemplateDialogItemListener,TemplateConfirmDialog.OnConfirmClickedListener {
     private TemplateView templateEditView;
     private BitMapInfo bitMapInfo;
     private static final int FILTER_CODE = 1;
@@ -85,7 +90,52 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
                 .create(this);
         templateEditView = view.findViewById(R.id.icon);
         templateEditView.setTemplateBitmap(bitMapInfo);
+        AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
+        tvTitle.setText(getString(R.string.preview_template));
+        view.findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            pop();
+            }
+        });
+        AppCompatTextView tvSave = view.findViewById(R.id.tv_save);
+        tvSave.setVisibility(View.VISIBLE);
+        tvSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkNumOfPicSelected();
+            }
+        });
     }
+    private void checkNumOfPicSelected(){
+        ArrayList<TemplateViewInfo> templateViewInfos = templateEditView.getTemplateViewInfo();
+        int i = 0;
+        for (TemplateViewInfo info : templateViewInfos){
+           if (!info.hasPic()){
+               i++;
+           }
+        }
+        if (i >0){
+            String str = String.format("你还有%d张贴图未选择,确认生成吗?",i);
+            new AlertDialog.Builder(getContext()).setMessage(str).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    dialog.cancel();
+                }
+            }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    dialog.cancel();
+                    new TemplateConfirmDialog(getContext(),TemplateEditFragment.this).show();
+
+                }
+            }).show();
+        }
+    }
+
+
 
     @Override
     protected void initListener(View view) {
@@ -93,7 +143,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
     }
 
     @Override
-    public boolean onRectClick(boolean hasPic) {
+    public void onRectClick(boolean hasPic) {
         if (hasPic) {
             //show dialog
             new TemplateEditDialog(getContext(), this).show();
@@ -101,24 +151,32 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             //startToCameraActivity To select a pic
             startToSelectCropper();
         }
-        return true;
     }
 
     private void startToSelectCropper() {
         SelectedManager.clearSelectResult();
-        mSelector.openGallery(SelectMimeType.ofImage())
-                .setImageEngine(GlideEngine.createGlideEngine())
-                .setCropEngine(new ImageCropEngine())
-                .isPreviewImage(true)
-                .isDisplayCamera(false)
-                .setSelectionMode(SelectModeConfig.SINGLE)
-                .forResult(FILTER_CODE);
+
+        int i = templateEditView.getSettingPosition();
+        if (i >=0){
+           BitMapInfo.SizeInfo sizeInfo =  bitMapInfo.getSizeInfos().get(0);
+            mSelector.openGallery(SelectMimeType.ofImage())
+                    .setImageEngine(GlideEngine.createGlideEngine())
+                    .setCropEngine(new ImageCropEngine(sizeInfo.getAspectRatioWidth(),sizeInfo.getAspectRatioHeight()))
+                    .isPreviewImage(true)
+                    .isDisplayCamera(false)
+                    .setSelectionMode(SelectModeConfig.SINGLE)
+                    .forResult(FILTER_CODE);
+        }
+
     }
 
     private void startToCropper() {
         Uri srcUri;
         Uri destinationUri;
         LocalMedia localMedia = templateEditView.getInfoFromView();
+       int i = templateEditView.getSettingPosition();
+       if (i >= 0 ){
+          BitMapInfo.SizeInfo sizeInfo =  bitMapInfo.getSizeInfos().get(0);
         if (localMedia == null) {
             return;
         }
@@ -134,12 +192,13 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             srcUri = Uri.fromFile(new File(path));
         }
         String fileName = DateUtils.getCreateFileName("CROP_") + ".jpg";
-        File externalFilesDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File externalFilesDir = getBaseActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File outputFile = new File(externalFilesDir.getAbsolutePath(), fileName);
         destinationUri = Uri.fromFile(outputFile);
-        cropFileEngine = new ImageCropEngine();
+        cropFileEngine = new ImageCropEngine(sizeInfo.getAspectRatioWidth(),sizeInfo.getAspectRatioHeight());
         SelectedManager.addSelectResult(localMedia);
         cropFileEngine.onStartCrop(this, srcUri, destinationUri, dataCropSource, CROPPER_CODE);
+       }
 
     }
 
@@ -190,4 +249,13 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onConfirmClicked() {
+        /*生成图片*/
+        String tempInfo = JSONArray.toJSONString(templateEditView.getTemplateViewInfo());
+        String bitmapInfo = JSONObject.toJSONString(bitMapInfo);
+        start(TemplateSaveFragment.getInstance(tempInfo,bitmapInfo));
+
+
+    }
 }

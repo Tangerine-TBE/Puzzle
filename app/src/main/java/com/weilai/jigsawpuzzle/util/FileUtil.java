@@ -11,10 +11,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/16
- */
+ ** DATE: 2022/9/19
+ ** Author:tangerine
+ ** Description:
+ **/
 public class FileUtil {
     private static final String BASE_PATH =Config.getApplicationContext().getDatabasePath("template").getAbsolutePath() ;
     public static void saveBitmapToCache(String fileName, Bitmap bitmap) {

@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.adapter.FragmentAdapter;
+import com.weilai.jigsawpuzzle.adapter.main.FragmentAdapter;
 import com.weilai.jigsawpuzzle.base.BaseSimpleActivity;
 import com.weilai.jigsawpuzzle.fragment.main.CrossDressFragment;
 import com.weilai.jigsawpuzzle.fragment.main.EditImageFragment;

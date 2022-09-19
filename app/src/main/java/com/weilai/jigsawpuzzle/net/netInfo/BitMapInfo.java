@@ -12,24 +12,53 @@ import java.util.List;
 public class BitMapInfo implements IBean {
 
     private String bitmap;
+    private String name;
     private List<SizeInfo> sizeInfos;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public static class SizeInfo {
         private float x;//左上角x 占比
         private float y;//左上角y 占比
         private int angle;//旋转角度
         private float centerY;//中心点 占比
         private float centerX;//中心点 占比
-
+        private float aspectRatioWidth;//宽
+        private float aspectRatioHeight;//高
         public SizeInfo() {
 
         }
 
-        public SizeInfo(float x, float y, int  angle, float height, float width) {
+        public SizeInfo(float x, float y, int  angle, float height, float width,float aspectRatioHeight,float aspectRatioWidth) {
             this.x = x;
             this.y = y;
             this.angle = angle;
             this.centerY = height;
             this.centerX = width;
+            this.aspectRatioHeight = aspectRatioHeight;
+            this.aspectRatioWidth = aspectRatioWidth;
+        }
+
+        public float getAspectRatioWidth() {
+            return aspectRatioWidth;
+        }
+
+        public void setAspectRatioWidth(int aspectRatioWidth) {
+            this.aspectRatioWidth = aspectRatioWidth;
+        }
+
+        public float getAspectRatioHeight() {
+            return aspectRatioHeight;
+        }
+
+        public void setAspectRatioHeight(int aspectRatioHeight) {
+            this.aspectRatioHeight = aspectRatioHeight;
         }
 
         public float getX() {
@@ -78,9 +107,10 @@ public class BitMapInfo implements IBean {
 
     }
 
-    public BitMapInfo(String bitmap,List<SizeInfo> list) {
+    public BitMapInfo(String bitmap,String name,List<SizeInfo> list) {
         this.bitmap = bitmap;
         this.sizeInfos = list;
+        this.name = name;
     }
 
     public String getBitmap() {

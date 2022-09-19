@@ -2,12 +2,13 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     android:layout_height="match_parent">
     <include layout="@layout/layout_title_back"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_template_data"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

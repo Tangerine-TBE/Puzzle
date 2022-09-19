@@ -11,6 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.base.BaseSimpleActivity;
@@ -29,7 +30,6 @@ import java.util.List;
  * * Description: @TemplateItemFragment's RecyclerViewItem click join this Activity
  **/
 public class TemplateShowFragment extends BaseFragment {
-    private AppCompatTextView mTvConfirm;
 
     private TemplateShowFragment() {
 
@@ -38,7 +38,7 @@ public class TemplateShowFragment extends BaseFragment {
     public static TemplateShowFragment getInstance(String info) {
         TemplateShowFragment templateShowFragment = new TemplateShowFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("xxx", info);
+        bundle.putString("bitmapInfo", info);
         templateShowFragment.setArguments(bundle);
         return templateShowFragment;
     }
@@ -50,28 +50,34 @@ public class TemplateShowFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        BitMapInfo bitMapInfo = JSONObject.parseObject(getArguments().getString("bitmapInfo"),BitMapInfo.class);
         AppCompatImageView imageView = view.findViewById(R.id.iv_img);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
-        FileUtil.saveBitmapToCache("template", bitmap);
-        BitMapInfo bitMapInfo = new BitMapInfo();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        bitMapInfo.setBitmap("template");
-        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.16f, 0.23f, 0, 0.23f, 0.14f);
-        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.53f, 0.23f, 0, 0.23f, 0.14f);
-        List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
-        sizeInfos.add(sizeInfo1);
-        sizeInfos.add(sizeInfo2);
-        bitMapInfo.setSizeInfos(sizeInfos);
-        imageView.setImageBitmap(bitmap);
-        String jsonString = JSONObject.toJSONString(bitMapInfo);
+        if (bitMapInfo.getBitmap().equals("模板1:1")){
+            Glide.with(getContext()).load(R.mipmap.template_show_11).into(imageView);
+        }else if (bitMapInfo.getBitmap().equals("模板3:2")){
+            Glide.with(getContext()).load(R.mipmap.template_shhow_32).into(imageView);
+        }else if (bitMapInfo.getBitmap().equals("角度模板1:1")){
+            Glide.with(getContext()).load(R.mipmap.template_show_rorate_11).into(imageView);
+        }else if (bitMapInfo.getBitmap().equals("角度模板3:2")){
+            Glide.with(getContext()).load(R.mipmap.template_show_rorate_32).into(imageView);
+        }
+        
+        
         view.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TemplateEditFragment templateEditFragment = TemplateEditFragment.newInstance(jsonString);
+                TemplateEditFragment templateEditFragment = TemplateEditFragment.newInstance(getArguments().getString("bitmapInfo"));
                 start(templateEditFragment);
             }
         });
+        view.findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pop();
+            }
+        });
+      AppCompatTextView tvTitle =   view.findViewById(R.id.tv_title);
+      tvTitle.setText(getString(R.string.make_template));
     }
 
     @Override

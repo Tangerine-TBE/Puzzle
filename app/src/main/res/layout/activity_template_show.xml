@@ -6,6 +6,7 @@
     android:fitsSystemWindows="true"
     android:paddingEnd="16dp"
     android:paddingBottom="16dp"
+    android:background="@color/card_view_color"
     android:layout_height="match_parent">
     <include
         layout="@layout/layout_title_back"/>
@@ -22,11 +23,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/tv_confirm"
         android:layout_width="match_parent"
-        android:text="使用當前模板製作"
+        android:text="@string/for_use"
         android:gravity="center"
         android:textSize="16sp"
         android:paddingTop="17dp"
         android:paddingBottom="17dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="20dp"
         android:textColor="@color/white"
         android:background="@drawable/bg_button_template"

@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.adapter;
+package com.weilai.jigsawpuzzle.adapter.main;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

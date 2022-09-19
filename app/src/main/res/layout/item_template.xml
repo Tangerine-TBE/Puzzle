@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="160dp"
-    android:background="@drawable/bg_card_item_template"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
-    <androidx.appcompat.widget.AppCompatImageView
+
+    <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
         android:background="@drawable/bg_card_item_template"
-        android:id="@+id/aiv_image"
-        android:layout_width="160dp"
-        android:layout_height="200dp"/>
-    <androidx.appcompat.widget.AppCompatTextView
-        android:textSize="16sp"
-        android:text="水墨畫"
-        android:id="@+id/tv_name"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:background="@drawable/bg_card_item_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</androidx.appcompat.widget.LinearLayoutCompat >
+        android:id="@+id/layout_content"
+        android:elevation="10dp"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/aiv_image"
+            android:layout_width="160dp"
+            android:layout_height="200dp"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:textSize="16sp"
+            android:text="水墨畫"
+            android:id="@+id/tv_name"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:background="@drawable/bg_card_item_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+

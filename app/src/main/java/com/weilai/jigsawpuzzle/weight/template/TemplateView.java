@@ -8,36 +8,26 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.content.FileProvider;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import com.weilai.jigsawpuzzle.util.FileUtil;
-import com.weilai.jigsawpuzzle.util.L;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import io.reactivex.rxjava3.internal.util.LinkedArrayList;
 
 /**
  * @description:
@@ -46,14 +36,15 @@ import io.reactivex.rxjava3.internal.util.LinkedArrayList;
  */
 public class TemplateView extends View {
     private Paint mPaint;
-    private Bitmap mTouchBitmap;
+    private Bitmap mTemplate11;
     private Bitmap mTemplateBitmap;
     private int mTemplateHeight;
     private int mTemplateWidth;
     private boolean mDrawView;
     private BitMapInfo mBitmapInfo;
-    private Bitmap mTestBitmap;
-    private final LinkedList<TemplateViewInfo> mAreaTouch = new LinkedList<>();
+    private Bitmap mTemplate32;
+    private boolean shouldCreateBitmap;
+    private  ArrayList<TemplateViewInfo> mAreaTouch = new ArrayList<>();
 
 
     public TemplateView(Context context) {
@@ -80,8 +71,20 @@ public class TemplateView extends View {
                 invalidate();
             }
             /*异常！*/
-
         }
+    }
+
+    public final int getSettingPosition() {
+        return mSettingPosition;
+    }
+    public final ArrayList<TemplateViewInfo> getTemplateViewInfo(){
+        return mAreaTouch;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -111,8 +114,8 @@ public class TemplateView extends View {
                 //根据比例以及偏移量计算左上 右下 坐标
                 int outAreaLeftX = templateX + x;
                 int outAreaLeftY = templateY + y;
-                int outAreaRightX = templateX + x + centerX * 2;
-                int outAreaRightY = templateY + y + centerY * 2;
+                int outAreaRightX = templateX  + centerX-x+centerX ;
+                int outAreaRightY = templateY  + centerY-y + centerY;
                 //计算选择前的坐标 以centerX centerY 为中心开始 逆时针旋转 旋转后的坐标为
                 //以(x0,y0)为旋转中心点，
                 //逆时针旋转30度  -30
@@ -121,27 +124,38 @@ public class TemplateView extends View {
                 double degrees = 30;
                 double radians = Math.toRadians(degrees);
                 //获取逆时针旋转前的坐标
-
                 if (angle == 0) {
                     @SuppressLint("DrawAllocation")
                     RectF rectF = new RectF(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY);
-                    TemplateViewInfo templateViewInfo;
+                    TemplateViewInfo templateViewInfo = null;
+                    BitMapInfo.SizeInfo sizeInfo = sizeInfos.get(i);
                     if (mSize > 0) {
                         templateViewInfo = mAreaTouch.get(i);
                         if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
                             //不是占位图
                             canvas.drawBitmap(templateViewInfo.getBitmap(), null, rectF, mPaint);
                         } else {
-                            canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                            if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                canvas.drawBitmap(mTemplate11, null, rectF, mPaint);
+                            } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
+                                canvas.drawBitmap(mTemplate32, null, rectF, mPaint);
+                            }
                         }
                         mAreaTouch.remove(i);
                     } else {
-                        canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
-                        //收录一下绘制范围，做监听使用,是否有圖片等
-                        templateViewInfo = new TemplateViewInfo(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY, i, false, null);
+                        if (!shouldCreateBitmap){
+                            if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                canvas.drawBitmap(mTemplate11, null, rectF, mPaint);
+                            } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
+                                canvas.drawBitmap(mTemplate32, null, rectF, mPaint);
+                            }
+                            //收录一下绘制范围，做监听使用,是否有圖片等
+                            templateViewInfo = new TemplateViewInfo(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY, i, false, null);
+                        }
                     }
-                    mAreaTouch.add(i, templateViewInfo);
-
+                    if (templateViewInfo != null){
+                        mAreaTouch.add(i, templateViewInfo);
+                    }
                 } else {
                     double v0 = (outAreaLeftX - centerX) * Math.cos(radians);
                     double v1 = (outAreaLeftY - centerY) * Math.cos(radians);
@@ -157,61 +171,133 @@ public class TemplateView extends View {
                         int beforeRotateLeftY = (int) (v1 - v5 + centerY);
                         int beforeRotateRightX = (int) (v2 + v6 + centerX);
                         int beforeRotateRightY = (int) (v3 - v7 + centerY);
-                        RectF rectF = new RectF(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY);
-                        Matrix matrix = new Matrix();
-                        matrix.setRotate(angle, centerX, centerY);
-                        matrix.mapRect(rectF);
-                        TemplateViewInfo templateViewInfo;
+                        TemplateViewInfo templateViewInfo = null;
+                        BitMapInfo.SizeInfo sizeInfo = sizeInfos.get(i);
                         if (mSize > 0) {
-
                             templateViewInfo = mAreaTouch.get(i);
                             if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
-                                //不是占位图
-                                canvas.drawBitmap(mTestBitmap, null, rectF, mPaint);
+                                //不是占位图 有图片
+                                Bitmap bitmap = templateViewInfo.getBitmap();
+                                matrix.setTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
+                                matrix.postRotate(angle);
+                                float postScaleX = (float) (beforeRotateRightX-beforeRotateLeftX)/bitmap.getWidth();
+                                float postScaleY = (float)(beforeRotateRightY-beforeRotateLeftY)/bitmap.getHeight();
+                                matrix.postScale(postScaleX ,postScaleY);
+                                matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                canvas.drawBitmap(bitmap, matrix, mPaint);
                             } else {
-                                canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                                if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                    matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/mTemplate11.getWidth(),(float)(beforeRotateRightY-beforeRotateLeftY)/mTemplate11.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate11, matrix, mPaint);
+                                } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
+                                    matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/mTemplate32.getWidth(),(float)(beforeRotateRightY-beforeRotateLeftY)/mTemplate32.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate32, matrix, mPaint);
+                                }
                             }
                             mAreaTouch.remove(i);
                         } else {
-                            canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
-                            //收录一下绘制范围，做监听使用,是否有圖片等
-                            templateViewInfo = new TemplateViewInfo(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, false, null);
+                            if (!shouldCreateBitmap){
+                                if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                    matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/mTemplate11.getWidth(),(float)(beforeRotateRightY-beforeRotateLeftY)/mTemplate11.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate11, matrix, mPaint);
+                                } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
+                                    matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/mTemplate32.getWidth(),(float)(beforeRotateRightY-beforeRotateLeftY)/mTemplate32.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate32, matrix, mPaint);
+                                }
+                                //收录一下绘制范围，做监听使用,是否有圖片等
+                                templateViewInfo = new TemplateViewInfo(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, false, null);
+                            }
                         }
-                        mAreaTouch.add(i, templateViewInfo);
-                        canvas.drawBitmap(mTouchBitmap, matrix, mPaint);
+                        if (templateViewInfo != null){
+                            mAreaTouch.add(i, templateViewInfo);
+                        }
                     } else if (angle < 0) { //逆时针旋转
                         int beforeRotateLeftX = (int) (v0 - v4 + centerX);
                         int beforeRotateLeftY = (int) (v1 + v5 + centerY);
                         int beforeRotateRightX = (int) (v2 - v6 + centerX);
                         int beforeRotateRightY = (int) (v3 + v7 + centerY);
-                        RectF rectF = new RectF(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY);
-                        Matrix matrix = new Matrix();
-                        matrix.setRotate(angle, centerX, centerY);
-                        matrix.mapRect(rectF);
-                        TemplateViewInfo templateViewInfo;
+                        TemplateViewInfo templateViewInfo = null;
+                        BitMapInfo.SizeInfo sizeInfo = sizeInfos.get(i);
                         if (mSize > 0) {
                             templateViewInfo = mAreaTouch.get(i);
                             if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
                                 //不是占位图
-                                canvas.drawBitmap(mTestBitmap, null, rectF, mPaint);
+                                Bitmap bitmap = templateViewInfo.getBitmap();
+                                matrix.setTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
+                                matrix.postRotate(angle);
+                                matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/bitmap.getWidth(),(beforeRotateRightY-beforeRotateLeftY)/bitmap.getHeight());
+                                matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                canvas.drawBitmap(bitmap, matrix, mPaint);
                             } else {
-                                canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
+                                if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                    matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/mTemplate11.getWidth(),(beforeRotateRightY-beforeRotateLeftY)/mTemplate11.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate11, matrix, mPaint);
+                                } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
+                                    matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/mTemplate32.getWidth(),(beforeRotateRightY-beforeRotateLeftY)/mTemplate11.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate32, matrix, mPaint);
+                                }
                             }
                             mAreaTouch.remove(i);
                         } else {
-                            canvas.drawBitmap(mTouchBitmap, null, rectF, mPaint);
-                            //收录一下绘制范围，做监听使用,是否有圖片等
-                            templateViewInfo = new TemplateViewInfo(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, false, null);
+                            if (!shouldCreateBitmap){
+                                if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                    matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/mTemplate11.getWidth(),(beforeRotateRightY-beforeRotateLeftY)/mTemplate11.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate11, matrix, mPaint);
+                                } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
+                                    matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale( (float)(beforeRotateRightX-beforeRotateLeftX)/mTemplate32.getWidth(),(beforeRotateRightY-beforeRotateLeftY)/mTemplate32.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate32, matrix, mPaint);
+                                }
+                                //收录一下绘制范围，做监听使用,是否有圖片等
+                                templateViewInfo = new TemplateViewInfo(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, false, null);
+                            }
+
                         }
-                        mAreaTouch.add(i, templateViewInfo);
+                        if (templateViewInfo != null){
+                            mAreaTouch.add(i, templateViewInfo);
+                        }
                     }
                 }
             }
             canvas.drawBitmap(mTemplateBitmap, templateX, templateY, mPaint);
+            if (shouldCreateBitmap){
+                if (drawFinish != null){
+                    drawFinish.drawFinish();
+                }
+            }
         }
         super.onDraw(canvas);
     }
-
+    public interface DrawFinish{
+        void drawFinish();
+    }
+    private DrawFinish drawFinish;
+    public final void setDrawFinish(DrawFinish drawFinish){
+        this.drawFinish = drawFinish;
+    }
     private OutRectClickListener listener;
 
     public final void setOutRectClickListener(OutRectClickListener listener) {
@@ -247,9 +333,23 @@ public class TemplateView extends View {
     }
 
     private boolean hasTarget;
+    private Matrix matrix;
+
+    public final void createBitmap(List<TemplateViewInfo> infos,BitMapInfo bitMapInfo) {
+        mAreaTouch = (ArrayList<TemplateViewInfo>) infos;
+        mBitmapInfo = bitMapInfo;
+        mTemplateBitmap = FileUtil.getBitmapFromCache(mBitmapInfo.getBitmap());
+        if (mTemplateBitmap != null) {
+            mTemplateWidth = mTemplateBitmap.getWidth();
+            mTemplateHeight = mTemplateBitmap.getHeight();
+        }
+        shouldCreateBitmap = true;
+        mDrawView = true;
+        invalidate();
+    }
 
     public interface OutRectClickListener {
-        boolean onRectClick(boolean hasPic);
+        void onRectClick(boolean hasPic);
     }
 
     private int mSettingPosition;
@@ -300,7 +400,8 @@ public class TemplateView extends View {
 
     private void init() {
         mPaint = new Paint();
-        mTouchBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bb);
-        mTestBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_home_tab1);
+        matrix = new Matrix();
+        mTemplate11 = BitmapFactory.decodeResource(getResources(), R.mipmap.template11);
+        mTemplate32 = BitmapFactory.decodeResource(getResources(), R.mipmap.template32);
     }
 }

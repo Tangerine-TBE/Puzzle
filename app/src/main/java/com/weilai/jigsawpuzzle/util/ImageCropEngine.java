@@ -27,7 +27,12 @@ public class ImageCropEngine implements CropFileEngine {
     private String[] getNotSupportCrop() {
         return new String[]{PictureMimeType.ofGIF(), PictureMimeType.ofWEBP()};
     }
-
+    private final float ratioX;
+    private final float ratioY;
+    public ImageCropEngine(float ratioX , float ratioY){
+        this.ratioX = ratioX;
+        this.ratioY = ratioY;
+    }
     @Override
     public void onStartCrop(Fragment fragment, Uri srcUri, Uri destinationUri, ArrayList<String> dataSource, int requestCode) {
         UCrop.Options options = new UCrop.Options();
@@ -37,20 +42,11 @@ public class ImageCropEngine implements CropFileEngine {
         options.isCropDragSmoothToCenter(false);//裁剪和拖动自动居中
         options.setSkipCropMimeType(getNotSupportCrop());//跳过某些不想要的类型，比如gif web
         options.isForbidCropGifWebp(false);//是否需要支持剪切动态图形gif或webp
-        options.setCropOutputFileName("test.jpeg");
         options.isForbidSkipMultipleCrop(false);//切割多张图片是否禁止跳跃
-        options.withAspectRatio(3, 2);//设置为3:2
+        options.withAspectRatio(ratioX, ratioY);//设置为3:2
         UCrop uCrop = UCrop.of(srcUri, destinationUri, dataSource);
         uCrop.withOptions(options);
         uCrop.start(fragment.requireActivity(), fragment, requestCode);
 
-    }
-    private String getSandboxPath() {
-        File externalFilesDir = Config.getApplicationContext().getExternalFilesDir("");
-        File customFile = new File(externalFilesDir.getAbsolutePath(), "Puzzle");
-        if (!customFile.exists()) {
-            customFile.mkdirs();
-        }
-        return customFile.getAbsolutePath() + File.separator;
     }
 }

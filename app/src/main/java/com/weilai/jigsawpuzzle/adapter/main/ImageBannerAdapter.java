@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.adapter;
+package com.weilai.jigsawpuzzle.adapter.main;
 
 import android.view.View;
 import android.view.ViewGroup;

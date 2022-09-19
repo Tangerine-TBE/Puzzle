@@ -14,26 +14,20 @@ public class TemplateViewInfo implements IBean {
     private  int mPosition;
     private  boolean mHasPic;
     private  String mUrl;
-
+    private Bitmap bitmap;
+    private LocalMedia localMedia;
     public Bitmap getBitmap() {
         return bitmap;
     }
-
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
     }
-
-    private Bitmap bitmap;
-
     public LocalMedia getLocalMedia() {
         return localMedia;
     }
-
     public void setLocalMedia(LocalMedia localMedia) {
         this.localMedia = localMedia;
     }
-
-    private LocalMedia localMedia;
     public TemplateViewInfo(int leftX,int leftY,int rightX,int rightY,int position,boolean hasPic,String url){
         this.mHasPic = hasPic;
         this.mLeftX = leftX;
@@ -43,7 +37,9 @@ public class TemplateViewInfo implements IBean {
         this.mLeftY = leftY;
         this.mUrl = url;
     }
+    public TemplateViewInfo(){
 
+    }
     public void setLeftX(int mLeftX) {
         this.mLeftX = mLeftX;
     }

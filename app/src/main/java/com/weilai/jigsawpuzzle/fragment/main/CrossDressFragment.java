@@ -11,9 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.activity.main.TemplateBaseActivity;
-import com.weilai.jigsawpuzzle.fragment.template.TemplateShowFragment;
-import com.weilai.jigsawpuzzle.adapter.ImageBannerAdapter;
+import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
+import com.weilai.jigsawpuzzle.adapter.main.ImageBannerAdapter;
 import com.youth.banner.Banner;
 import com.youth.banner.config.IndicatorConfig;
 import com.youth.banner.indicator.RectangleIndicator;

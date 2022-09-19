@@ -6,17 +6,20 @@
     <string name="photo_tab">相册</string>
     <string name="edit_image_tab">修图</string>
     <string name="item_template">模板</string>
-    <string name="item_pic">拼圖</string>
-    <string name="item_splic_health">拼健康碼</string>
+    <string name="item_pic">拼图</string>
+    <string name="item_splic_health">拼健康码</string>
     <string name="item_splic_hori">橫拼</string>
-    <string name="item_l_pic">拼長圖</string>
-    <string name="item_lines">拼臺詞</string>
-    <string name="item_lattice">九宮格</string>
-    <string name="item_screen_shot">網址截圖</string>
-    <string name="special_title">特效圖片</string>
+    <string name="item_l_pic">拼长图</string>
+    <string name="item_lines">拼台词</string>
+    <string name="item_lattice">九宫格</string>
+    <string name="item_screen_shot">网址截图</string>
+    <string name="special_title">特效图片</string>
     <string name="mine_title">我的</string>
     <string name="template">模板</string>
     <string name="replace">替换</string>
     <string name="crop">裁剪</string>
     <string name="cancel">取消</string>
+    <string name="for_use">试用当前模板</string>
+    <string name="make_template">制作模板</string>
+    <string name="preview_template">模板预览</string>
 </resources>
