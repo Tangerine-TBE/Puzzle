@@ -67,7 +67,7 @@ public class TemplateSaveFragment extends BaseFragment {
                 //线程操作
                 Bitmap bitmap =   shotScrollView();
                 try {
-                    FileUtil.saveScreenShot(bitmap,"WeiLai_"+System.currentTimeMillis()+"");
+                    FileUtil.saveScreenShot(bitmap,System.currentTimeMillis()+"");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
