@@ -3,12 +3,14 @@ package com.weilai.jigsawpuzzle.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.util.Log;
 
 import com.weilai.jigsawpuzzle.configure.Config;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Objects;
 
 /**
  ** DATE: 2022/9/19
@@ -46,4 +48,31 @@ public class FileUtil {
         }
         return bitmap;
     }
+    public static boolean saveScreenShot(Bitmap bitmap, String fileNameStr) throws Exception {
+        FileOutputStream fos;
+        File file;
+        File externalFileRootDir =Config.getApplicationContext(). getExternalFilesDir(null);
+        do {
+            externalFileRootDir = Objects.requireNonNull(externalFileRootDir).getParentFile();
+        } while (Objects.requireNonNull(externalFileRootDir).getAbsolutePath().contains("/Android"));
+
+        String saveDir = Objects.requireNonNull(externalFileRootDir).getAbsolutePath();
+        String filePath = saveDir + "/" + Environment.DIRECTORY_DCIM ;
+        file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        filePath = filePath + "/" + fileNameStr + ".jpg";
+        fos = new FileOutputStream(filePath);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        try {
+            fos.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fos.close();
+        }
+        return true;
+    }
+
 }

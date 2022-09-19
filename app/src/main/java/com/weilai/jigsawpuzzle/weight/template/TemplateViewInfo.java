@@ -14,14 +14,7 @@ public class TemplateViewInfo implements IBean {
     private  int mPosition;
     private  boolean mHasPic;
     private  String mUrl;
-    private Bitmap bitmap;
     private LocalMedia localMedia;
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-    }
     public LocalMedia getLocalMedia() {
         return localMedia;
     }
