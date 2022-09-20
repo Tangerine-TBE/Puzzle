@@ -2,9 +2,14 @@ package com.weilai.jigsawpuzzle.fragment.template;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.ArrayMap;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +35,8 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private RecyclerView mRvTemplate;
     private List<BitMapInfo> list;
     private TemplateAdapter templateAdapter;
+    private GridLayoutManager gridLayoutManager;
+    ArrayMap<String, Integer> arrayMap;
 
     @Override
     protected Object setLayout() {
@@ -43,7 +50,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private TemplateItemFragment() {
 
     }
-
+    private Handler mHandler;
     @Override
     protected void initView(View view) {
         list = new ArrayList<>();
@@ -53,21 +60,43 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
                 _mActivity.finish();
             }
         });
-        ArrayMap<String, Integer> arrayMap = new ArrayMap<>();
-        arrayMap.put(SpacesItemDecoration.TOP_SPACE, 60);
-        arrayMap.put(SpacesItemDecoration.BOTTOM_SPACE, 60);
-        arrayMap.put(SpacesItemDecoration.LEFT_SPACE, 60);
-        arrayMap.put(SpacesItemDecoration.RIGHT_SPACE, 20);
-        initData1();
-        initData2();
-        initData3();
-        initData4();
         mRvTemplate = view.findViewById(R.id.rv_template_data);
-        mRvTemplate.addItemDecoration(new SpacesItemDecoration(2, arrayMap, true));
         templateAdapter = new TemplateAdapter(list, getContext(), this);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(_mActivity, 2);
+        gridLayoutManager = new GridLayoutManager(_mActivity, 2);
         mRvTemplate.setLayoutManager(gridLayoutManager);
         mRvTemplate.setAdapter(templateAdapter);
+
+
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+
+        /*這裏先這樣模擬網絡加載*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                arrayMap = new ArrayMap<>();
+                arrayMap.put(SpacesItemDecoration.TOP_SPACE, 60);
+                arrayMap.put(SpacesItemDecoration.BOTTOM_SPACE, 60);
+                arrayMap.put(SpacesItemDecoration.LEFT_SPACE, 60);
+                arrayMap.put(SpacesItemDecoration.RIGHT_SPACE, 20);
+                initData1();
+                initData2();
+                initData3();
+                initData4();
+                _mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRvTemplate.addItemDecoration(new SpacesItemDecoration(2, arrayMap, true));
+                        templateAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+
+
+        super.onLazyInitView(savedInstanceState);
     }
 
     /*for test*/
@@ -142,4 +171,6 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         TemplateShowFragment templateShowFragment = TemplateShowFragment.getInstance(jsonValue);
         start(templateShowFragment);
     }
+
+
 }
