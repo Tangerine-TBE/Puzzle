@@ -1,6 +1,7 @@
 package com.weilai.jigsawpuzzle.adapter.template;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -51,7 +57,6 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
                Glide.with(mContext).load(R.mipmap.template_shhow_32).into(holder.imageView);
            }else if (name.equals("角度模板1:1")){
                Glide.with(mContext).load(R.mipmap.template_show_rorate_11).into(holder.imageView);
-
            }else if (name.equals("角度模板3:2")){
                Glide.with(mContext).load(R.mipmap.template_show_rorate_32).into(holder.imageView);
            }

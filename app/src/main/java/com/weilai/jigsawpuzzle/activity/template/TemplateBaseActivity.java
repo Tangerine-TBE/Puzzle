@@ -11,4 +11,9 @@ public class TemplateBaseActivity extends BaseFragmentActivity {
 //        return new TemplateItemFragment();
         return TemplateItemFragment.getInstance();
     }
+
+    @Override
+    public void setStatusBar() {
+
+    }
 }

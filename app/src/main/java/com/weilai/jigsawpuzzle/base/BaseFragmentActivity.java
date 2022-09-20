@@ -14,6 +14,7 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public abstract class BaseFragmentActivity extends SupportActivity {
     public abstract BaseFragment setRootFragment();
+    public abstract void setStatusBar();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,6 +25,7 @@ public abstract class BaseFragmentActivity extends SupportActivity {
     private void initContainer(@Nullable Bundle saveInstanceState) {
         final ContentFrameLayout container = new ContentFrameLayout(this);
         container.setId(R.id.fragment_container);
+        setStatusBar();
         setContentView(container);
         if (saveInstanceState == null) {
             loadRootFragment(R.id.fragment_container, setRootFragment(),true,true);
