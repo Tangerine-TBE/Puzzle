@@ -109,7 +109,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         templateEditView.setTemplateBitmap(bitMapInfo);
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
         tvTitle.setText(getString(R.string.preview_template));
-        view.findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pop();
@@ -320,18 +320,19 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         super.onDestroy();
     }
 
-    private Bitmap shotScrollView() {
+    private Bitmap shotScrollView(int x, int y , int width,int height) {
         Bitmap bitmap;
         templateEditView.setBackgroundColor(Color.parseColor("#ffffff"));
         bitmap = Bitmap.createBitmap(templateEditView.getWidth(), templateEditView.getHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         templateEditView.draw(canvas);
+        bitmap = Bitmap.createBitmap(bitmap,x,y,width,height);
         return bitmap;
     }
 
     @Override
-    public void drawFinish() {
-        Bitmap bitmap = shotScrollView();
+    public void drawFinish(int x ,int y , int width ,int height) {
+        Bitmap bitmap = shotScrollView(x, y, width, height);
         templateEditView.resetState();
         doOnBackGround(bitmap);
     }

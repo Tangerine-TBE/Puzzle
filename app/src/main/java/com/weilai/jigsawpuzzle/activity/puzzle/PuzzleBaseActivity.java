@@ -1,8 +1,10 @@
 package com.weilai.jigsawpuzzle.activity.puzzle;
 
+import com.weilai.jigsawpuzzle.activity.main.MainBaseActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.base.BaseFragmentActivity;
 import com.weilai.jigsawpuzzle.fragment.puzzle.PuzzleFragment;
+import com.weilai.jigsawpuzzle.util.StatusBarUtil;
 
 /**
  ** DATE: 2022/9/20
@@ -17,6 +19,8 @@ public class PuzzleBaseActivity extends BaseFragmentActivity {
 
     @Override
     public void setStatusBar() {
+        StatusBarUtil.setTranslucentForImageViewInFragment(this, 0, null);
+        StatusBarUtil.setLightMode(this);
 
     }
 }

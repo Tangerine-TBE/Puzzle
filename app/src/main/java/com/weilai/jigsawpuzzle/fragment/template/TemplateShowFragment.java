@@ -70,7 +70,7 @@ public class TemplateShowFragment extends BaseFragment {
                 start(templateEditFragment);
             }
         });
-        view.findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pop();

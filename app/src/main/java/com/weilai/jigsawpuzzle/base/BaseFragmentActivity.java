@@ -25,8 +25,9 @@ public abstract class BaseFragmentActivity extends SupportActivity {
     private void initContainer(@Nullable Bundle saveInstanceState) {
         final ContentFrameLayout container = new ContentFrameLayout(this);
         container.setId(R.id.fragment_container);
-        setStatusBar();
+        container.setFitsSystemWindows(true);
         setContentView(container);
+        setStatusBar();
         if (saveInstanceState == null) {
             loadRootFragment(R.id.fragment_container, setRootFragment(),true,true);
         }

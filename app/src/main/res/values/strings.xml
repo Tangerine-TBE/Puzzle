@@ -24,4 +24,8 @@
     <string name="preview_template">模板预览</string>
     <string name="bitmap_info">图片信息</string>
     <string name="share">分享</string>
+    <string name="two_pic">两张图片</string>
+    <string name="custom_pic">自定义选择</string>
+    <string name="three_pic">三张图片</string>
+    <string name="four_pic">四张图片</string>
 </resources>

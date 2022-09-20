@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.activity.puzzle.PuzzleBaseActivity;
 import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.main.ImageBannerAdapter;
 import com.youth.banner.Banner;
@@ -61,7 +62,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
         if (view.getId() == R.id.tv_template){
             startActivity(new Intent(getContext(), TemplateBaseActivity.class));
         }else if (view.getId() == R.id.tv_pic){
-
+            startActivity(new Intent(getContext(), PuzzleBaseActivity.class));
         }else if (view.getId() == R.id.tv_splic_health){
 
         }else if (view.getId() == R.id.tv_splic_hori){

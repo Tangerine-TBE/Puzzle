@@ -2,6 +2,7 @@ package com.weilai.jigsawpuzzle.fragment.puzzle;
 
 import android.view.View;
 
+import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 
 /**
@@ -18,7 +19,7 @@ public class PuzzleFragment extends BaseFragment {
     }
     @Override
     protected Object setLayout() {
-        return null;
+        return R.layout.fragment_puzzle;
     }
 
     @Override

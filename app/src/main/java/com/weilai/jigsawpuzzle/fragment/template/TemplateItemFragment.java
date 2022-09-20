@@ -54,7 +54,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     @Override
     protected void initView(View view) {
         list = new ArrayList<>();
-        view.findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 _mActivity.finish();

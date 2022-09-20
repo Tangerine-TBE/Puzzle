@@ -45,6 +45,7 @@ public class MainBaseActivity extends BaseSimpleActivity {
     @Override
     protected void setStatusBar() {
         StatusBarUtil.setTranslucentForImageViewInFragment(MainBaseActivity.this, 0, null);
+        StatusBarUtil.setLightMode(this);
     }
 
     @Override

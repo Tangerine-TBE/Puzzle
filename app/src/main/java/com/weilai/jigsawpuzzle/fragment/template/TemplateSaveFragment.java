@@ -60,7 +60,7 @@ public class TemplateSaveFragment extends BaseFragment {
 //        view.findViewById(R.id.tv_create_date);//创建时间
         AppCompatTextView appCompatTextView = view.findViewById(R.id.tv_title);
         appCompatTextView.setText(R.string.bitmap_info);
-        view.findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pop();

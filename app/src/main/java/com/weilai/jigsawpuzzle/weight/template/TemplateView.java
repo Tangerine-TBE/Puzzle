@@ -10,30 +10,25 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-
 import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import com.weilai.jigsawpuzzle.util.FileUtil;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/16
- */
+ ** DATE: 2022/9/20
+ ** Author:tangerine
+ ** Description:
+ **/
 public class TemplateView extends View {
     private Paint mPaint;
     private Bitmap mTemplate11;
@@ -46,12 +41,6 @@ public class TemplateView extends View {
     private boolean shouldCreateBitmap;
     private final ArrayList<TemplateViewInfo> mAreaTouch = new ArrayList<>();
 
-    public final int getTemplateHeight(){
-        return mTemplateHeight;
-    }
-    public final int getTemplateWidth(){
-        return mTemplateWidth;
-    }
     public TemplateView(Context context) {
         this(context, null);
     }
@@ -87,13 +76,6 @@ public class TemplateView extends View {
         return mAreaTouch;
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        int reHeight = resolveSize(heightSize, heightMeasureSpec);
-        setMeasuredDimension(widthMeasureSpec, reHeight);
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -302,7 +284,7 @@ public class TemplateView extends View {
             if (shouldCreateBitmap && drawBySystem == 1) {
                 if (drawFinish != null) {
                     drawBySystem++;
-                    drawFinish.drawFinish();
+                    drawFinish.drawFinish(templateX,templateY,mTemplateWidth,mTemplateHeight);
                 }
             }
         }
@@ -310,7 +292,7 @@ public class TemplateView extends View {
     }
 
     public interface DrawFinish {
-        void drawFinish();
+        void drawFinish(int x,int y ,int width,int height);
     }
 
     private boolean hasTarget;
