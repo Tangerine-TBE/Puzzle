@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.weight;
+package com.weilai.jigsawpuzzle.weight.main;
 
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;

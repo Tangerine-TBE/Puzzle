@@ -20,16 +20,23 @@
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_cross_dress.xml" value="0.5" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_edit_image.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_mine.xml" value="0.28888888888888886" />
-        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle.xml" value="0.31633130556855404" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle.xml" value="0.17277726856095327" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_template_save.xml" value="0.18" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_main_tab.xml" value="0.17264957264957265" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_template.xml" value="0.25" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/layout_title_back.xml" value="0.22" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/test_fragment.xml" value="0.288034188034188" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.135" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab.xml" value="0.16367521367521368" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_bottom.xml" value="0.16367521367521368" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_left.xml" value="0.15213675213675212" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_segment.xml" value="0.15213675213675212" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_top.xml" value="0.15213675213675212" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable/button.xml" value="0.2645" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_activity_photobox.xml" value="0.16282051282051282" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_controls.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_fragment_photobox.xml" value="0.16282051282051282" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_layout_rotate_wheel.xml" value="0.25" />
       </map>
     </option>
   </component>

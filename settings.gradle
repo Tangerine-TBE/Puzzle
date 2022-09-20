@@ -2,3 +2,5 @@ rootProject.name = "Puzzle"
 include ':app'
 include ':library'
 
+include ':selector'
+include ':ucrop'

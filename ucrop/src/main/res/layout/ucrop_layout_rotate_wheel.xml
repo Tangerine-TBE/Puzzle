@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    tools:showIn="@layout/ucrop_controls"
+    tools:visibility="visible">
+
+    <TextView
+        app:layout_constraintBottom_toBottomOf="@id/rotate_scroll_wheel"
+        app:layout_constraintStart_toEndOf="@id/rotate_scroll_wheel"
+        android:id="@+id/text_view_rotate"
+        style="@style/ucrop_TextViewWidgetText"
+        android:layout_toEndOf="@id/rotate_scroll_wheel"
+        tools:text="100°" />
+
+    <com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wrapper_reset_rotate"
+        android:id="@+id/rotate_scroll_wheel"
+        android:layout_width="300dp"
+        android:layout_height="20dp"
+        />
+
+    <FrameLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/wrapper_reset_rotate"
+        style="@style/ucrop_WrapperRotateButton"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageView
+            style="@style/ucrop_ImageViewWidgetIcon"
+            app:srcCompat="@drawable/ucrop_ic_reset" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/wrapper_rotate_by_angle"
+        style="@style/ucrop_WrapperRotateButton"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageView
+            style="@style/ucrop_ImageViewWidgetIcon"
+            android:src="@drawable/ucrop_ic_angle"
+            android:tint="@color/ucrop_color_widget_rotate_angle" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

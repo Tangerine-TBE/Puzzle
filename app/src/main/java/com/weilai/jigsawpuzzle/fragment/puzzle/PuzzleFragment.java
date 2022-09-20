@@ -2,6 +2,8 @@ package com.weilai.jigsawpuzzle.fragment.puzzle;
 
 import android.view.View;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 
@@ -10,7 +12,7 @@ import com.weilai.jigsawpuzzle.base.BaseFragment;
  ** Author:tangerine
  ** Description:
  **/
-public class PuzzleFragment extends BaseFragment {
+public class PuzzleFragment extends BaseFragment implements View.OnClickListener{
     private PuzzleFragment(){
         
     }
@@ -24,11 +26,19 @@ public class PuzzleFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-
+         view.findViewById(R.id.tv_add).setOnClickListener(this);
     }
 
     @Override
     protected void initListener(View view) {
 
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.tv_add){
+
+        }
     }
 }

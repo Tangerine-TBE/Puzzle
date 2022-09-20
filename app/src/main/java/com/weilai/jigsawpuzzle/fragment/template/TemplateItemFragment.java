@@ -50,7 +50,6 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private TemplateItemFragment() {
 
     }
-    private Handler mHandler;
     @Override
     protected void initView(View view) {
         list = new ArrayList<>();
