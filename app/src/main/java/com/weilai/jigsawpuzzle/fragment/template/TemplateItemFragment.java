@@ -108,8 +108,8 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         FileUtil.saveBitmapToCache("模板3:2", bitmap);
         bitMapInfo.setBitmap("模板3:2");
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
-        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.08f, 0.33f, 0, 0.40f, 0.26f, 2, 3);
-        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.55f, 0.33f, 0, 0.40f, 0.74f, 2, 3);
+        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.0773f, 0.3335f, 0, 0.4047f, 0.264f, 2, 3);
+        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.553f, 0.3335f, 0, 0.4047f, 0.74f, 2, 3);
         sizeInfos.add(sizeInfo1);
         sizeInfos.add(sizeInfo2);
         bitMapInfo.setSizeInfos(sizeInfos);
@@ -123,8 +123,8 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         FileUtil.saveBitmapToCache("角度模板3:2", bitmap);
         bitMapInfo.setBitmap("角度模板3:2");
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
-        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.165f, 0.29f, 30, 0.40f, 0.26f, 2, 3);
-        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.55f, 0.33f, 0, 0.40f, 0.74f, 2, 3);
+        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.165f, 0.29f, 30, 0.4047f, 0.264f, 2, 3);
+        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.553f, 0.33f, 0, 0.4047f, 0.74f, 2, 3);
         sizeInfos.add(sizeInfo1);
         sizeInfos.add(sizeInfo2);
         bitMapInfo.setSizeInfos(sizeInfos);

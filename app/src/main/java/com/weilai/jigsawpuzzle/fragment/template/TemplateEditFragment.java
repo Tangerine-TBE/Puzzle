@@ -5,6 +5,9 @@ import static com.luck.picture.lib.config.PictureSelectionConfig.cropFileEngine;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -35,6 +38,7 @@ import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateEditDialog;
+import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.ImageCropEngine;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
@@ -44,16 +48,29 @@ import com.weilai.jigsawpuzzle.weight.template.TemplateViewInfo;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableEmitter;
+import io.reactivex.rxjava3.core.ObservableOnSubscribe;
+import io.reactivex.rxjava3.core.ObservableSource;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * * DATE: 2022/9/14
  * * Author:tangerine
  * * Description:1.After Show the template
  **/
-public class TemplateEditFragment extends BaseFragment implements TemplateView.OutRectClickListener, TemplateEditDialog.TemplateDialogItemListener,TemplateConfirmDialog.OnConfirmClickedListener {
+public class TemplateEditFragment extends BaseFragment implements TemplateView.OutRectClickListener, TemplateEditDialog.TemplateDialogItemListener, TemplateConfirmDialog.OnConfirmClickedListener,TemplateView.DrawFinish {
     private TemplateView templateEditView;
     private BitMapInfo bitMapInfo;
     private static final int FILTER_CODE = 1;
@@ -95,7 +112,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         view.findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            pop();
+                pop();
             }
         });
         AppCompatTextView tvSave = view.findViewById(R.id.tv_save);
@@ -107,16 +124,17 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             }
         });
     }
-    private void checkNumOfPicSelected(){
+
+    private void checkNumOfPicSelected() {
         ArrayList<TemplateViewInfo> templateViewInfos = templateEditView.getTemplateViewInfo();
         int i = 0;
-        for (TemplateViewInfo info : templateViewInfos){
-           if (!info.hasPic()){
-               i++;
-           }
+        for (TemplateViewInfo info : templateViewInfos) {
+            if (!info.hasPic()) {
+                i++;
+            }
         }
-        if (i >0){
-            String str = String.format("你还有%d张贴图未选择,确认生成吗?",i);
+        if (i > 0) {
+            String str = String.format("你还有%d张贴图未选择,确认生成吗?", i);
             new AlertDialog.Builder(getContext()).setMessage(str).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -128,18 +146,20 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     dialog.cancel();
-                    new TemplateConfirmDialog(getContext(),TemplateEditFragment.this).show();
-
+                    templateEditView.createBitmap();
                 }
             }).show();
+        }else{
+            templateEditView.createBitmap();
         }
     }
-
 
 
     @Override
     protected void initListener(View view) {
         templateEditView.setOutRectClickListener(this);
+        templateEditView.setDrawFinish(this);
+
     }
 
     @Override
@@ -157,11 +177,11 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         SelectedManager.clearSelectResult();
 
         int i = templateEditView.getSettingPosition();
-        if (i >=0){
-           BitMapInfo.SizeInfo sizeInfo =  bitMapInfo.getSizeInfos().get(0);
+        if (i >= 0) {
+            BitMapInfo.SizeInfo sizeInfo = bitMapInfo.getSizeInfos().get(0);
             mSelector.openGallery(SelectMimeType.ofImage())
                     .setImageEngine(GlideEngine.createGlideEngine())
-                    .setCropEngine(new ImageCropEngine(sizeInfo.getAspectRatioWidth(),sizeInfo.getAspectRatioHeight()))
+                    .setCropEngine(new ImageCropEngine(sizeInfo.getAspectRatioWidth(), sizeInfo.getAspectRatioHeight()))
                     .isPreviewImage(true)
                     .isDisplayCamera(false)
                     .setSelectionMode(SelectModeConfig.SINGLE)
@@ -174,31 +194,31 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         Uri srcUri;
         Uri destinationUri;
         LocalMedia localMedia = templateEditView.getInfoFromView();
-       int i = templateEditView.getSettingPosition();
-       if (i >= 0 ){
-          BitMapInfo.SizeInfo sizeInfo =  bitMapInfo.getSizeInfos().get(0);
-        if (localMedia == null) {
-            return;
+        int i = templateEditView.getSettingPosition();
+        if (i >= 0) {
+            BitMapInfo.SizeInfo sizeInfo = bitMapInfo.getSizeInfos().get(0);
+            if (localMedia == null) {
+                return;
+            }
+            String path = localMedia.getAvailablePath();
+            if (path == null || path.isEmpty()) {
+                return;
+            }
+            ArrayList<String> dataCropSource = new ArrayList<>();
+            dataCropSource.add(path);
+            if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
+                srcUri = Uri.parse(path);
+            } else {
+                srcUri = Uri.fromFile(new File(path));
+            }
+            String fileName = DateUtils.getCreateFileName("CROP_") + ".jpg";
+            File externalFilesDir = getBaseActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File outputFile = new File(externalFilesDir.getAbsolutePath(), fileName);
+            destinationUri = Uri.fromFile(outputFile);
+            cropFileEngine = new ImageCropEngine(sizeInfo.getAspectRatioWidth(), sizeInfo.getAspectRatioHeight());
+            SelectedManager.addSelectResult(localMedia);
+            cropFileEngine.onStartCrop(this, srcUri, destinationUri, dataCropSource, CROPPER_CODE);
         }
-        String path = localMedia.getAvailablePath();
-        if (path == null || path.isEmpty()) {
-            return;
-        }
-        ArrayList<String> dataCropSource = new ArrayList<>();
-        dataCropSource.add(path);
-        if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
-            srcUri = Uri.parse(path);
-        } else {
-            srcUri = Uri.fromFile(new File(path));
-        }
-        String fileName = DateUtils.getCreateFileName("CROP_") + ".jpg";
-        File externalFilesDir = getBaseActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File outputFile = new File(externalFilesDir.getAbsolutePath(), fileName);
-        destinationUri = Uri.fromFile(outputFile);
-        cropFileEngine = new ImageCropEngine(sizeInfo.getAspectRatioWidth(),sizeInfo.getAspectRatioHeight());
-        SelectedManager.addSelectResult(localMedia);
-        cropFileEngine.onStartCrop(this, srcUri, destinationUri, dataCropSource, CROPPER_CODE);
-       }
 
     }
 
@@ -227,7 +247,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         } else if (requestCode == CROPPER_CODE) {
             if (data != null) {
                 List<LocalMedia> selectedResult = SelectedManager.getSelectedResult();
-                if (selectedResult.size() > 0){
+                if (selectedResult.size() > 0) {
                     LocalMedia media = selectedResult.get(0);
                     Uri output = Crop.getOutput(data);
                     media.setCutPath(output != null ? output.getPath() : "");
@@ -249,13 +269,70 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private Disposable mDisposable;
+
     @Override
-    public void onConfirmClicked() {
+    public void onConfirmClicked(String path) {
         /*生成图片*/
-        String tempInfo = JSONArray.toJSONString(templateEditView.getTemplateViewInfo());
-        String bitmapInfo = JSONObject.toJSONString(bitMapInfo);
-        start(TemplateSaveFragment.getInstance(tempInfo,bitmapInfo));
+        TemplateSaveFragment templateSaveFragment = TemplateSaveFragment.getInstance(path);
+        start(templateSaveFragment);
 
+    }
+    private void doOnBackGround(Bitmap bitmap){
+         Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Throwable {
+                String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
+                if (!bitmap.isRecycled()){
+                    bitmap.recycle();
+                }
+                emitter.onNext(filePath);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                mDisposable = d;
+            }
 
+            @Override
+            public void onNext(@NonNull String s) {
+                new TemplateConfirmDialog(getContext(), TemplateEditFragment.this,s).show();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+    @Override
+    public void onDestroy() {
+        if (mDisposable != null) {
+            if (!mDisposable.isDisposed()) {
+                mDisposable.dispose();
+            }
+        }
+        super.onDestroy();
+    }
+
+    private Bitmap shotScrollView() {
+        Bitmap bitmap;
+        templateEditView.setBackgroundColor(Color.parseColor("#ffffff"));
+        bitmap = Bitmap.createBitmap(templateEditView.getWidth(), templateEditView.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bitmap);
+        templateEditView.draw(canvas);
+        return bitmap;
+    }
+
+    @Override
+    public void drawFinish() {
+        Bitmap bitmap = shotScrollView();
+        templateEditView.resetState();
+        doOnBackGround(bitmap);
     }
 }

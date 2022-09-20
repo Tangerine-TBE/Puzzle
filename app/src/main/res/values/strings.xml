@@ -22,4 +22,6 @@
     <string name="for_use">试用当前模板</string>
     <string name="make_template">制作模板</string>
     <string name="preview_template">模板预览</string>
+    <string name="bitmap_info">图片信息</string>
+    <string name="share">分享</string>
 </resources>

@@ -5,62 +5,33 @@
     android:fitsSystemWindows="true"
     android:layout_height="match_parent">
     <include layout="@layout/layout_title_back"/>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:layout_marginStart="12dp"
-        android:id="@+id/rv_show"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_big"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="图片尺寸" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="20dp"
-            android:src="@mipmap/title_back" />
-    </RelativeLayout>
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/visible"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:text="创建时间"
-            android:id="@+id/tv_create_date"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:layout_marginStart="12dp"
-            android:layout_height="wrap_content"/>
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:id="@+id/tv_path"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="本地路径:"
-            android:layout_marginStart="12dp"
-            android:layout_height="wrap_content"/>
-    </androidx.appcompat.widget.LinearLayoutCompat>
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp">
-        <com.weilai.jigsawpuzzle.weight.template.TemplateView
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:id="@+id/templateView"
-            android:layout_height="wrap_content"/>
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="match_parent"
+                android:id="@+id/iv_img"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textSize="14sp"
+                android:id="@+id/tv_mapInfo"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </ScrollView>
-
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/bg_cross_gray"
+        android:layout_height="10dp"/>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -71,7 +42,8 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:gravity="center"
-            android:text="——————APP体验如何——————"
+            android:textStyle="bold"
+            android:text="APP体验如何"
             android:layout_height="wrap_content"/>
         <androidx.appcompat.widget.LinearLayoutCompat
             android:paddingTop="20dp"
@@ -85,7 +57,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:src="@mipmap/icon_sel_mine"
+                    android:src="@mipmap/item_good"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <androidx.appcompat.widget.AppCompatTextView
@@ -101,13 +73,13 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:src="@mipmap/icon_sel_mine"
+                    android:src="@mipmap/item_normal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:textSize="16sp"
-                    android:text="挺好"
+                    android:text="一般"
                     android:layout_height="wrap_content"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -117,13 +89,13 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:src="@mipmap/icon_sel_mine"
+                    android:src="@mipmap/item_juice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:textSize="16sp"
-                    android:text="挺好"
+                    android:text="鼓励"
                     android:layout_height="wrap_content"/>
             </androidx.appcompat.widget.LinearLayoutCompat>
 

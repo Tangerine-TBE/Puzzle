@@ -17,11 +17,16 @@ import com.weilai.jigsawpuzzle.R;
 public class TemplateConfirmDialog {
     private final Context mContext;
     private AppCompatDialog mAppCompatDialog;
-    private OnConfirmClickedListener onConfirmClickedListener;
-    public TemplateConfirmDialog(Context context,OnConfirmClickedListener onConfirmClickedListener){
+    private final OnConfirmClickedListener onConfirmClickedListener;
+    private String path ;
+    public TemplateConfirmDialog(Context context,OnConfirmClickedListener onConfirmClickedListener,String path){
         this.mContext = context;
         this.onConfirmClickedListener = onConfirmClickedListener;
+        this.path = path;
     }
+
+
+
     public final void show(){
         mAppCompatDialog = new AppCompatDialog(mContext, R.style.DialogStyle);
         final View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_template,null,false);
@@ -30,7 +35,7 @@ public class TemplateConfirmDialog {
             @Override
             public void onClick(View v) {
                 if (onConfirmClickedListener != null){
-                    onConfirmClickedListener.onConfirmClicked();
+                    onConfirmClickedListener.onConfirmClicked(path);
                     if (mAppCompatDialog != null){
                         if (mAppCompatDialog.isShowing()){
                             mAppCompatDialog.dismiss();
@@ -44,6 +49,6 @@ public class TemplateConfirmDialog {
         mAppCompatDialog.show();
     }
     public interface OnConfirmClickedListener{
-        void onConfirmClicked();
+        void onConfirmClicked(String path);
     }
 }

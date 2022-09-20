@@ -44,9 +44,14 @@ public class TemplateView extends View {
     private BitMapInfo mBitmapInfo;
     private Bitmap mTemplate32;
     private boolean shouldCreateBitmap;
-    private ArrayList<TemplateViewInfo> mAreaTouch = new ArrayList<>();
+    private final ArrayList<TemplateViewInfo> mAreaTouch = new ArrayList<>();
 
-
+    public final int getTemplateHeight(){
+        return mTemplateHeight;
+    }
+    public final int getTemplateWidth(){
+        return mTemplateWidth;
+    }
     public TemplateView(Context context) {
         this(context, null);
     }
@@ -308,13 +313,16 @@ public class TemplateView extends View {
         void drawFinish();
     }
 
+    private boolean hasTarget;
+    private Matrix matrix;
+    private int drawBySystem = 1;
     private DrawFinish drawFinish;
+    private OutRectClickListener listener;
+
 
     public final void setDrawFinish(DrawFinish drawFinish) {
         this.drawFinish = drawFinish;
     }
-
-    private OutRectClickListener listener;
 
     public final void setOutRectClickListener(OutRectClickListener listener) {
         this.listener = listener;
@@ -349,20 +357,13 @@ public class TemplateView extends View {
         return null;
     }
 
-    private boolean hasTarget;
-    private Matrix matrix;
-    private int drawBySystem = 1;
-
-    public final void createBitmap(List<TemplateViewInfo> infos, BitMapInfo bitMapInfo) {
-        mAreaTouch = (ArrayList<TemplateViewInfo>) infos;
-        mBitmapInfo = bitMapInfo;
-        mTemplateBitmap = FileUtil.getBitmapFromCache(mBitmapInfo.getBitmap());
-        if (mTemplateBitmap != null) {
-            mTemplateWidth = mTemplateBitmap.getWidth();
-            mTemplateHeight = mTemplateBitmap.getHeight();
-        }
+    public final void createBitmap() {
         shouldCreateBitmap = true;
-        mDrawView = true;
+        invalidate();
+    }
+    public final void resetState(){
+        drawBySystem = 1;
+        shouldCreateBitmap = false;
         invalidate();
     }
 

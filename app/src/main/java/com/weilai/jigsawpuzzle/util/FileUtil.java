@@ -61,7 +61,7 @@ public class FileUtil {
         }
         return bitmap;
     }
-    public static boolean saveScreenShot(Bitmap bitmap, String fileNameStr) throws Exception {
+    public static String saveScreenShot(Bitmap bitmap, String fileNameStr) throws Exception {
         FileOutputStream fos;
         File file;
         File externalFileRootDir = getApplicationContext(). getExternalFilesDir(null);
@@ -87,7 +87,7 @@ public class FileUtil {
         }
         savePhotoAlbum(bitmap,new File(filePath));
 
-        return true;
+        return filePath;
     }
     private static void savePhotoAlbum(Bitmap src, File file) {
 
