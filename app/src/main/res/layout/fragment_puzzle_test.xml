@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <com.yalantis.ucrop.view.GestureCropImageView
-        android:id="@+id/image"
-        android:src="@mipmap/template_show_rorate_11"
+        android:id="@+id/pic_view1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@mipmap/template_show_rorate_11" />
+
+
+    <com.yalantis.ucrop.view.GestureCropImageView
+        android:id="@+id/pic_view2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@mipmap/template_show_rorate_32" />
+
+
 </androidx.appcompat.widget.LinearLayoutCompat>

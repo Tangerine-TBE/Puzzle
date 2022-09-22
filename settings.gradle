@@ -4,3 +4,4 @@ include ':library'
 
 include ':selector'
 include ':ucrop'
+include ':puzzle'

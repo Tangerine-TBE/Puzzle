@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_down.xml" value="0.325" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_item.xml" value="0.1365" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_selected.xml" value="0.1365" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_up.xml" value="0.325" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_button_template.xml" value="0.3165" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_card_item_template.xml" value="0.3165" />
@@ -34,6 +36,7 @@
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_segment.xml" value="0.15213675213675212" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_top.xml" value="0.15213675213675212" />
         <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable-xhdpi/bg_button_template.xml" value="0.287" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable/bg_blue_background.xml" value="0.1365" />
         <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable/bg_blue_backgroundd.xml" value="0.323" />
         <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable/button.xml" value="0.2645" />
         <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable/ucrop_shadow_upside.xml" value="0.3225" />
