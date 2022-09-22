@@ -2,10 +2,9 @@
 <resources>
 
     <style name="ucrop_ImageViewWidgetIcon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:scaleType">fitCenter</item>
         <item name="android:duplicateParentState">true</item>
     </style>
 
@@ -22,7 +21,6 @@
     <style name="ucrop_WrapperRotateButton">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>
-        <item name="background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:clickable">true</item>
     </style>
 

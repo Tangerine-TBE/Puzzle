@@ -48,6 +48,7 @@ import com.yalantis.ucrop.model.AspectRatio;
 import com.yalantis.ucrop.statusbar.ImmersiveManager;
 import com.yalantis.ucrop.util.FileUtils;
 import com.yalantis.ucrop.util.SelectedStateListDrawable;
+import com.yalantis.ucrop.util.StatusBarUtil;
 import com.yalantis.ucrop.view.CropImageView;
 import com.yalantis.ucrop.view.GestureCropImageView;
 import com.yalantis.ucrop.view.OverlayView;
@@ -266,13 +267,13 @@ public class UCropActivity extends AppCompatActivity {
         mOverlayView.setCircleDimmedLayer(intent.getBooleanExtra(UCrop.Options.EXTRA_CIRCLE_DIMMED_LAYER, OverlayView.DEFAULT_CIRCLE_DIMMED_LAYER));
 
         mOverlayView.setShowCropFrame(intent.getBooleanExtra(UCrop.Options.EXTRA_SHOW_CROP_FRAME, OverlayView.DEFAULT_SHOW_CROP_FRAME));
-        mOverlayView.setCropFrameColor(intent.getIntExtra(UCrop.Options.EXTRA_CROP_FRAME_COLOR, getResources().getColor(R.color.ucrop_color_default_crop_frame)));
+        mOverlayView.setCropFrameColor(intent.getIntExtra(UCrop.Options.EXTRA_CROP_FRAME_COLOR, getResources().getColor(R.color.ucrop_color_widget_active)));
         mOverlayView.setCropFrameStrokeWidth(intent.getIntExtra(UCrop.Options.EXTRA_CROP_FRAME_STROKE_WIDTH, getResources().getDimensionPixelSize(R.dimen.ucrop_default_crop_frame_stoke_width)));
 
         mOverlayView.setShowCropGrid(intent.getBooleanExtra(UCrop.Options.EXTRA_SHOW_CROP_GRID, OverlayView.DEFAULT_SHOW_CROP_GRID));
         mOverlayView.setCropGridRowCount(intent.getIntExtra(UCrop.Options.EXTRA_CROP_GRID_ROW_COUNT, OverlayView.DEFAULT_CROP_GRID_ROW_COUNT));
         mOverlayView.setCropGridColumnCount(intent.getIntExtra(UCrop.Options.EXTRA_CROP_GRID_COLUMN_COUNT, OverlayView.DEFAULT_CROP_GRID_COLUMN_COUNT));
-        mOverlayView.setCropGridColor(intent.getIntExtra(UCrop.Options.EXTRA_CROP_GRID_COLOR, getResources().getColor(R.color.ucrop_color_default_crop_grid)));
+        mOverlayView.setCropGridColor(intent.getIntExtra(UCrop.Options.EXTRA_CROP_GRID_COLOR, getResources().getColor(R.color.ucrop_color_widget_active)));
         mOverlayView.setCropGridStrokeWidth(intent.getIntExtra(UCrop.Options.EXTRA_CROP_GRID_STROKE_WIDTH, getResources().getDimensionPixelSize(R.dimen.ucrop_default_crop_grid_stoke_width)));
         mOverlayView.setDimmedStrokeWidth(intent.getIntExtra(UCrop.Options.EXTRA_CIRCLE_STROKE_WIDTH_LAYER, getResources().getDimensionPixelSize(R.dimen.ucrop_default_crop_grid_stoke_width)));
         // Aspect ratio options
@@ -309,7 +310,7 @@ public class UCropActivity extends AppCompatActivity {
         isForbidCropGifWebp = intent.getBooleanExtra(UCrop.Options.EXTRA_CROP_FORBID_GIF_WEBP, false);
         mStatusBarColor = intent.getIntExtra(UCrop.Options.EXTRA_STATUS_BAR_COLOR, ContextCompat.getColor(this, R.color.ucrop_color_statusbar));
         mToolbarColor = intent.getIntExtra(UCrop.Options.EXTRA_TOOL_BAR_COLOR, ContextCompat.getColor(this, R.color.ucrop_color_toolbar));
-        mActiveControlsWidgetColor = intent.getIntExtra(UCrop.Options.EXTRA_UCROP_COLOR_CONTROLS_WIDGET_ACTIVE, ContextCompat.getColor(this, R.color.ucrop_color_active_controls_color));
+        mActiveControlsWidgetColor = intent.getIntExtra(UCrop.Options.EXTRA_UCROP_COLOR_CONTROLS_WIDGET_ACTIVE, ContextCompat.getColor(this, R.color.ucrop_color_widget_active));
 
         mToolbarWidgetColor = intent.getIntExtra(UCrop.Options.EXTRA_UCROP_WIDGET_COLOR_TOOLBAR, ContextCompat.getColor(this, R.color.ucrop_color_toolbar_widget));
         mToolbarCancelDrawable = intent.getIntExtra(UCrop.Options.EXTRA_UCROP_WIDGET_CANCEL_DRAWABLE, R.drawable.ucrop_ic_cross);
@@ -356,29 +357,43 @@ public class UCropActivity extends AppCompatActivity {
      * Configures and styles both status bar and toolbar.
      */
     private void setupAppBar() {
-        setStatusBarColor(mStatusBarColor);
+        StatusBarUtil.setTranslucentForImageViewInFragment(this,0,null);
+        StatusBarUtil.setLightMode(this);
 
-        final Toolbar toolbar = findViewById(R.id.toolbar);
 
+        findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
+        findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cropAndSaveImage();
+            }
+        });
+//        final Toolbar toolbar = findViewById(R.id.toolbar);
         // Set all of the Toolbar coloring
-        toolbar.setBackgroundColor(mToolbarColor);
-        toolbar.setTitleTextColor(mToolbarWidgetColor);
-
-        final TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setTextColor(mToolbarWidgetColor);
-        toolbarTitle.setText(mToolbarTitle);
-        toolbarTitle.setTextSize(mToolbarTitleSize);
+//        toolbar.setBackgroundColor(mToolbarColor);
+//        toolbar.setTitleTextColor(mToolbarWidgetColor);
+//
+//        final TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
+//        toolbarTitle.setTextColor(mToolbarWidgetColor);
+//        toolbarTitle.setText(mToolbarTitle);
+//        toolbarTitle.setTextSize(mToolbarTitleSize);
 
         // Color buttons inside the Toolbar
-        Drawable stateButtonDrawable = AppCompatResources.getDrawable(this, mToolbarCancelDrawable).mutate();
-        ColorFilter colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(mToolbarWidgetColor, BlendModeCompat.SRC_ATOP);
-        stateButtonDrawable.setColorFilter(colorFilter);
-        toolbar.setNavigationIcon(stateButtonDrawable);
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+//        Drawable stateButtonDrawable = AppCompatResources.getDrawable(this, mToolbarCancelDrawable).mutate();
+//        ColorFilter colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(mToolbarWidgetColor, BlendModeCompat.SRC_ATOP);
+//        stateButtonDrawable.setColorFilter(colorFilter);
+//        toolbar.setNavigationIcon(stateButtonDrawable);
+//        setSupportActionBar(toolbar);
+//        final ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayShowTitleEnabled(false);
+//        }
     }
 
     private void initiateRootViews() {
@@ -550,6 +565,12 @@ public class UCropActivity extends AppCompatActivity {
                 rotateByAngle(90);
             }
         });
+        findViewById(R.id.wrapper_reset_scale).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetScale();
+            }
+        });
 
         setAngleTextColor(mActiveControlsWidgetColor);
     }
@@ -616,6 +637,10 @@ public class UCropActivity extends AppCompatActivity {
     private void rotateByAngle(int angle) {
         mGestureCropImageView.postRotate(angle);
         mGestureCropImageView.setImageToWrapCropBounds();
+    }
+    private void resetScale(){
+        mGestureCropImageView.zoomInImage(mGestureCropImageView.getMinScale());
+
     }
 
     private final View.OnClickListener mStateClickListener = new View.OnClickListener() {
@@ -685,7 +710,7 @@ public class UCropActivity extends AppCompatActivity {
         if (mBlockingView == null) {
             mBlockingView = new View(this);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            lp.addRule(RelativeLayout.BELOW, R.id.toolbar);
+//            lp.addRule(RelativeLayout.BELOW, R.id.toolbar);
             mBlockingView.setLayoutParams(lp);
             mBlockingView.setClickable(true);
         }

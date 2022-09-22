@@ -2,6 +2,7 @@ package com.yalantis.ucrop;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -53,6 +54,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author：luck
@@ -293,27 +295,27 @@ public class UCropMultipleActivity extends AppCompatActivity implements UCropFra
     private void setupAppBar() {
         setStatusBarColor(mStatusBarColor);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-
-        // Set all of the Toolbar coloring
-        toolbar.setBackgroundColor(mToolbarColor);
-        toolbar.setTitleTextColor(mToolbarWidgetColor);
-
-        final TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
-        toolbarTitle.setTextColor(mToolbarWidgetColor);
-        toolbarTitle.setText(mToolbarTitle);
-        toolbarTitle.setTextSize(mToolbarTitleSize);
-
-        // Color buttons inside the Toolbar
-        Drawable stateButtonDrawable = AppCompatResources.getDrawable(this, mToolbarCancelDrawable).mutate();
-        ColorFilter colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(mToolbarWidgetColor, BlendModeCompat.SRC_ATOP);
-        stateButtonDrawable.setColorFilter(colorFilter);
-        toolbar.setNavigationIcon(stateButtonDrawable);
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//
+//         Set all of the Toolbar coloring
+//        toolbar.setBackgroundColor(mToolbarColor);
+//        toolbar.setTitleTextColor(mToolbarWidgetColor);
+//
+//        final TextView toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
+//        toolbarTitle.setTextColor(mToolbarWidgetColor);
+//        toolbarTitle.setText(mToolbarTitle);
+//        toolbarTitle.setTextSize(mToolbarTitleSize);
+//
+//         Color buttons inside the Toolbar
+//        Drawable stateButtonDrawable = AppCompatResources.getDrawable(this, mToolbarCancelDrawable).mutate();
+//        ColorFilter colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(mToolbarWidgetColor, BlendModeCompat.SRC_ATOP);
+//        stateButtonDrawable.setColorFilter(colorFilter);
+//        toolbar.setNavigationIcon(stateButtonDrawable);
+//        setSupportActionBar(toolbar);
+//        final ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayShowTitleEnabled(false);
+//        }
     }
 
     /**

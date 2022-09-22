@@ -38,7 +38,8 @@ public class PuzzleFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.tv_add){
-
+            //for test View
+            start(PuzzleTestFragment.getInstance());
         }
     }
 }

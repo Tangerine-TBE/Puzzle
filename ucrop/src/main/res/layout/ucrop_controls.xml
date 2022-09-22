@@ -8,9 +8,9 @@
     <FrameLayout
         android:id="@+id/wrapper_controls"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ucrop_height_wrapper_controls"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="0dp">
+       >
 
         <ImageView
             android:layout_width="match_parent"
@@ -34,18 +34,11 @@
 
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/controls_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:layout_alignBottom="@+id/wrapper_controls"
-        android:src="@drawable/ucrop_shadow_upside" />
-
     <LinearLayout
         android:id="@+id/wrapper_states"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ucrop_height_wrapper_states"
-        android:layout_below="@+id/controls_shadow"
+        android:layout_height="40dp"
+        android:layout_below="@+id/wrapper_controls"
         android:background="@color/ucrop_color_white"
         android:baselineAligned="false"
         android:gravity="center"

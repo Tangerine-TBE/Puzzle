@@ -21,6 +21,7 @@
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_edit_image.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_mine.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle.xml" value="0.17277726856095327" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle_test.xml" value="0.18632478632478633" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_template_save.xml" value="0.18" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_main_tab.xml" value="0.17264957264957265" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_template.xml" value="0.25" />
@@ -32,11 +33,20 @@
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_left.xml" value="0.15213675213675212" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_segment.xml" value="0.15213675213675212" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_top.xml" value="0.15213675213675212" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable-xhdpi/bg_button_template.xml" value="0.287" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable/bg_blue_backgroundd.xml" value="0.323" />
         <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable/button.xml" value="0.2645" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/drawable/ucrop_shadow_upside.xml" value="0.3225" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/layout_title_back.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_activity_multiple.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_activity_photobox.xml" value="0.16282051282051282" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_aspect_ratio.xml" value="0.3004273504273504" />
         <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_controls.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_fragment_photobox.xml" value="0.16282051282051282" />
-        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_layout_rotate_wheel.xml" value="0.25" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_layout_rotate_wheel.xml" value="0.5" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_layout_scale_wheel.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/layout/ucrop_title_bar.xml" value="0.288034188034188" />
+        <entry key="..\:/luojl/TestProject/Puzzle/ucrop/src/main/res/menu/ucrop_menu_activity.xml" value="0.28888888888888886" />
       </map>
     </option>
   </component>

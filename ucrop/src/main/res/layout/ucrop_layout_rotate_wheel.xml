@@ -6,53 +6,76 @@
     android:layout_height="match_parent"
     android:visibility="gone"
     tools:showIn="@layout/ucrop_controls"
-    tools:visibility="visible">
+    tools:visibility="gone">
 
     <TextView
         app:layout_constraintBottom_toBottomOf="@id/rotate_scroll_wheel"
         app:layout_constraintStart_toEndOf="@id/rotate_scroll_wheel"
+        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/text_view_rotate"
-        style="@style/ucrop_TextViewWidgetText"
-        android:layout_toEndOf="@id/rotate_scroll_wheel"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:textColor="#05B4E6"
         tools:text="100°" />
 
     <com.yalantis.ucrop.view.widget.HorizontalProgressWheelView
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/wrapper_reset_rotate"
         android:id="@+id/rotate_scroll_wheel"
         android:layout_width="300dp"
         android:layout_height="20dp"
         />
+    <ImageView
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rotate_scroll_wheel"
+        app:layout_constraintStart_toStartOf="@id/wrapper_reset_rotate"
+        android:layout_width="wrap_content"
+        android:src="@drawable/icon_top"
+        android:layout_height="20dp"/>
 
     <FrameLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/wrapper_reset_rotate"
         style="@style/ucrop_WrapperRotateButton"
         android:background="?attr/selectableItemBackground">
 
         <ImageView
             style="@style/ucrop_ImageViewWidgetIcon"
-            app:srcCompat="@drawable/ucrop_ic_reset" />
+            app:srcCompat="@drawable/icon_cancel" />
 
     </FrameLayout>
 
-    <FrameLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/wrapper_rotate_by_angle"
-        style="@style/ucrop_WrapperRotateButton"
+        android:layout_width="60dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="30dp"
+        android:gravity="center"
+
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="?attr/selectableItemBackground">
+        android:background="@drawable/bg_blue_background">
 
         <ImageView
-            style="@style/ucrop_ImageViewWidgetIcon"
-            android:src="@drawable/ucrop_ic_angle"
-            android:tint="@color/ucrop_color_widget_rotate_angle" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_rorate"
+            />
+        <TextView
+            android:layout_marginStart="6dp"
+            android:layout_width="wrap_content"
+            android:text="90°"
+            android:gravity="center"
+            android:textColor="@color/ucrop_color_white"
+            android:layout_height="wrap_content"/>
 
-    </FrameLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
