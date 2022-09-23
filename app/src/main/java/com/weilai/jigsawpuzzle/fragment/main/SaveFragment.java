@@ -1,51 +1,35 @@
-package com.weilai.jigsawpuzzle.fragment.template;
+package com.weilai.jigsawpuzzle.fragment.main;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
-import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
-import com.weilai.jigsawpuzzle.util.FileUtil;
-import com.weilai.jigsawpuzzle.util.ScreenShotUtil;
-import com.weilai.jigsawpuzzle.weight.template.TemplateView;
-import com.weilai.jigsawpuzzle.weight.template.TemplateViewInfo;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  ** DATE: 2022/9/20
  ** Author:tangerine
  ** Description:
  **/
-public class TemplateSaveFragment extends BaseFragment {
-    private TemplateSaveFragment() {
+public class SaveFragment extends BaseFragment {
+    private SaveFragment() {
 
     }
 
-    public static TemplateSaveFragment getInstance(String s) {
-        TemplateSaveFragment templateSaveFragment = new TemplateSaveFragment();
+    public static SaveFragment getInstance(String s) {
+        SaveFragment saveFragment = new SaveFragment();
         Bundle bundle = new Bundle();
         bundle.putString("filePath", s);
-        templateSaveFragment.setArguments(bundle);
-        return templateSaveFragment;
+        saveFragment.setArguments(bundle);
+        return saveFragment;
     }
 
     @Override
@@ -84,7 +68,6 @@ public class TemplateSaveFragment extends BaseFragment {
             @Override
             public void onSizeReady(int width, int height) {
                 textView.setText(String.format("图片尺寸:%d*%d", width, height));
-
             }
         });
 

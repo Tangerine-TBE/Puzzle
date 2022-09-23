@@ -28,4 +28,6 @@
     <string name="custom_pic">自定义选择</string>
     <string name="three_pic">三张图片</string>
     <string name="four_pic">四张图片</string>
+    <string name="lr_flip">左右翻转</string>
+    <string name="tb_flip">上下翻转</string>
 </resources>

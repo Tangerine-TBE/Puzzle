@@ -11,33 +11,27 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.Crop;
-import com.luck.picture.lib.config.CustomIntentKey;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
-import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.manager.SelectedManager;
 import com.luck.picture.lib.utils.DateUtils;
-import com.luck.picture.lib.utils.ToastUtils;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateEditDialog;
+import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.ImageCropEngine;
@@ -45,12 +39,9 @@ import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import com.weilai.jigsawpuzzle.util.L;
 import com.weilai.jigsawpuzzle.weight.template.TemplateView;
 import com.weilai.jigsawpuzzle.weight.template.TemplateViewInfo;
-import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.security.Security;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -58,11 +49,8 @@ import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.ObservableSource;
 import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
@@ -274,8 +262,8 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
     @Override
     public void onConfirmClicked(String path) {
         /*生成图片*/
-        TemplateSaveFragment templateSaveFragment = TemplateSaveFragment.getInstance(path);
-        start(templateSaveFragment);
+        SaveFragment saveFragment = SaveFragment.getInstance(path);
+        start(saveFragment);
 
     }
     private void doOnBackGround(Bitmap bitmap){

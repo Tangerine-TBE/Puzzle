@@ -58,7 +58,7 @@ public interface PuzzleLayout {
     public float padding;
     public float radian;
     public int color;
-
+    public boolean isSelected;
     public float left;
     public float top;
     public float right;

@@ -11,6 +11,7 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.utils.ToastUtils;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
@@ -64,6 +65,8 @@ public class PuzzleFragment extends BaseFragment implements View.OnClickListener
 
         }
     }
+    private int type = -1;
+    private int theme = -1;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -74,8 +77,15 @@ public class PuzzleFragment extends BaseFragment implements View.OnClickListener
                 ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
                 if (list != null) {
                     int size = list.size();
-                    if (size > 0){
-
+                    if (size >= 2){
+                        ArrayList<String> arrayList = new ArrayList<>();
+                        for (LocalMedia localMedia : list){
+                            arrayList.add(localMedia.getAvailablePath());
+                        }
+                        PuzzleEditFragment puzzleEditFragment = PuzzleEditFragment.getInstance(size,type,theme,arrayList);
+                        start(puzzleEditFragment);
+                    }else{
+                        ToastUtils.showToast(getContext(),"必须选择两张或以上的照片!");
                     }
                 }
             }

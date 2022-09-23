@@ -1,17 +1,41 @@
 package com.weilai.jigsawpuzzle.fragment.puzzle;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.SeekBar;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.luck.picture.lib.basic.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.SelectMimeType;
+import com.luck.picture.lib.config.SelectModeConfig;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.adapter.puzzle.PuzzleSizeAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.bean.TabEntity;
+import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
+import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
+import com.weilai.jigsawpuzzle.fragment.template.TemplateEditFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
-import com.weilai.jigsawpuzzle.weight.puzzle.slant.OneSlantLayout;
+import com.weilai.jigsawpuzzle.util.GlideEngine;
+import com.weilai.jigsawpuzzle.util.PuzzleUtil;
+import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.slant.ThreeSlantLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.slant.TwoSlantLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.EightStraightLayout;
@@ -22,10 +46,14 @@ import com.weilai.jigsawpuzzle.weight.puzzle.straight.SevenStraightLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.SixStraightLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.ThreeStraightLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.TwoStraightLayout;
+import com.weilai.library.listener.CustomTabEntity;
+import com.weilai.library.listener.OnTabSelectListener;
 import com.xiaopo.flying.puzzle.PuzzleLayout;
 import com.xiaopo.flying.puzzle.PuzzlePiece;
 import com.xiaopo.flying.puzzle.PuzzleView;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,15 +66,21 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class PuzzleEditFragment extends BaseFragment {
-    private PuzzleLayout mPuzzleLayout;
+public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapter.OnItemClickListener, PuzzleView.OnPieceSelectedListener, View.OnClickListener, OnTabSelectListener, SeekBar.OnSeekBarChangeListener, TemplateConfirmDialog.OnConfirmClickedListener {
+    private final String[] title = new String[]{"布局", "边框"};
     private PuzzleView mPuzzleView;
+    private RecyclerView recyclerView;
+    private AppCompatSeekBar mBorderSeekBar;
+    private AppCompatSeekBar mConnerSeekBar;
+    private int picSize = 0;
+    private LinearLayoutCompat llTips;
+    private static final int FILTER_CODE = 1;
 
     private PuzzleEditFragment() {
 
     }
 
-    public static PuzzleEditFragment getInstance(int size, int type, int theme, ArrayList<String > bitMapPaths) {
+    public static PuzzleEditFragment getInstance(int size, int type, int theme, ArrayList<String> bitMapPaths) {
         Bundle bundle = new Bundle();
         bundle.putInt("size", size);
         bundle.putInt("type", type);
@@ -65,55 +99,96 @@ public class PuzzleEditFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        int picSize = getArguments().getInt("size");
+        ArrayList<CustomTabEntity> arrayList = new ArrayList<>();
+        for (String tile : title) {
+            TabEntity tabEntity = new TabEntity(tile);
+            arrayList.add(tabEntity);
+        }
+        FlyTabLayout flyTabLayout = view.findViewById(R.id.tabLayout);
+        flyTabLayout.setTabData(arrayList);
+        flyTabLayout.setCurrentTab(0);
+        flyTabLayout.setOnTabSelectListener(this);
+
+        AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
+        tvTitle.setText("拼图");
+        view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pop();
+            }
+        });
+        view.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
+        llTips = view.findViewById(R.id.tips);
+        mBorderSeekBar = view.findViewById(R.id.border_seekbar);
+        mConnerSeekBar = view.findViewById(R.id.conner_seekbar);
+        picSize = getArguments().getInt("size");
         int type = getArguments().getInt("type");
         int theme = getArguments().getInt("theme");
-        ArrayList<String > bitmaps = getArguments().getStringArrayList("bitmaps");
-        PuzzleLayout puzzleLayout = choosePuzzleTemplate(picSize, type, theme);//no 1 no 0
+        PuzzleLayout mPuzzleLayout = choosePuzzleTemplate(picSize, type, theme);//no 1 no 0
         mPuzzleView = view.findViewById(R.id.puzzle_view);
-        mPuzzleView.setPuzzleLayout(puzzleLayout);
+        ArrayList<String> bitmaps = getArguments().getStringArrayList("bitmaps");
+        mPuzzleView.setPuzzleLayout(mPuzzleLayout);
         mPuzzleView.setTouchEnable(true);
         mPuzzleView.setNeedDrawLine(false);
         mPuzzleView.setNeedDrawOuterLine(false);
         mPuzzleView.setLineSize(4);
-        mPuzzleView.setLineColor(Color.BLACK);
-        mPuzzleView.setSelectedLineColor(Color.BLACK);
-        mPuzzleView.setHandleBarColor(Color.BLACK);
+        mPuzzleView.setLineColor(getResources().getColor(R.color.sel_text_main_color));
+        mPuzzleView.setSelectedLineColor(getResources().getColor(R.color.sel_text_main_color));
+        mPuzzleView.setHandleBarColor(getResources().getColor(R.color.sel_text_main_color));
         mPuzzleView.setAnimateDuration(300);
-        mPuzzleView.setOnPieceSelectedListener(new PuzzleView.OnPieceSelectedListener() {
-            @Override
-            public void onPieceSelected(PuzzlePiece piece, int position) {
-            }
-        });
-        mPuzzleView.setPiecePadding(10);
+        mPuzzleView.setOnPieceSelectedListener(this);
         loadPhoto(bitmaps);
+        recyclerView = view.findViewById(R.id.rv_change_item);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
     }
-    public final ArrayList<Bitmap> arrayList = new ArrayList<>();
-    private void loadPhoto(List<String> bitmaps){
-        Observable.create(new ObservableOnSubscribe<List<Bitmap>>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<List<Bitmap>> emitter) throws Throwable {
-                if (bitmaps == null || bitmaps.size() == 0){
-                    emitter.onError(new RuntimeException("bitmaps is null"));
-                }else{
-                    for (String bitMapInfo:bitmaps){
-                        if (!TextUtils.isEmpty(bitMapInfo)){
-                            Bitmap bitmap = FileUtil.getBitmapFromCache(bitMapInfo);
-                            arrayList.add(bitmap);
+
+    private void loadAboutPuzzle(int size, List<PuzzleLayout> puzzleLayouts) {
+        puzzleLayouts.addAll(PuzzleUtil.getAboutSizeLayouts(size));
+    }
+    private void loadPhoto(List<String> bitmaps) {
+        Observable.create((ObservableOnSubscribe<List<Bitmap>>) emitter -> {
+            if (bitmaps == null || bitmaps.size() == 0) {
+                emitter.onError(new RuntimeException("bitmaps is null"));
+            } else {
+                ArrayList<Bitmap> arrayList = new ArrayList<>();
+                for (String bitMapInfo : bitmaps) {
+                    if (!TextUtils.isEmpty(bitMapInfo)) {
+                        Uri srcUri;
+                        if (PictureMimeType.isContent(bitMapInfo) || PictureMimeType.isHasHttp(bitMapInfo)) {
+                            srcUri = Uri.parse(bitMapInfo);
+                        } else {
+                            srcUri = Uri.fromFile(new File(bitMapInfo));
+                        }
+                        if (srcUri != null) {
+                            InputStream stream = _mActivity.getContentResolver().openInputStream(srcUri);
+                            Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                            if (bitmap != null) {
+                                arrayList.add(bitmap);
+                            }
                         }
                     }
-                    emitter.onNext();
                 }
+                emitter.onNext(arrayList);
             }
-        }) .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-
+                mDisposable = d;
             }
 
             @Override
-            public void onNext(@NonNull List<Bitmap> aBoolean) {
-
+            public void onNext(@NonNull List<Bitmap> bitmaps) {
+                if (bitmaps.isEmpty()) {
+                    onError(new RuntimeException("bitmaps is 0"));
+                } else {
+                    mPuzzleView.addPieces(bitmaps);
+                    List<PuzzleLayout> puzzleLayouts = new ArrayList<>();
+                    loadAboutPuzzle(picSize, puzzleLayouts);
+                    PuzzleSizeAdapter puzzleSizeAdapter = new PuzzleSizeAdapter(getContext(), puzzleLayouts, PuzzleEditFragment.this, bitmaps,mPuzzleView.getPuzzleLayout());
+                    recyclerView.setAdapter(puzzleSizeAdapter);
+                }
             }
 
             @Override
@@ -125,11 +200,52 @@ public class PuzzleEditFragment extends BaseFragment {
             public void onComplete() {
 
             }
-        })
-
+        });
 
 
     }
+    private void loadPhoto(String path) {
+        Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> {
+            if (path == null || path.isEmpty()) {
+                emitter.onError(new RuntimeException("bitmaps is null"));
+            } else {
+                Uri srcUri;
+                if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
+                    srcUri = Uri.parse(path);
+                } else {
+                    srcUri = Uri.fromFile(new File(path));
+                }
+                if (srcUri != null) {
+                    InputStream stream = _mActivity.getContentResolver().openInputStream(srcUri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                    if (bitmap != null) {
+                        emitter.onNext(bitmap);
+                    }
+                }
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Bitmap>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                mDisposable1 = d;
+            }
+
+            @Override
+            public void onNext(@NonNull Bitmap bitmap) {
+                mPuzzleView.replace(bitmap, "");
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+    private Disposable mDisposable1;
     private PuzzleLayout choosePuzzleTemplate(int pics, int type, int theme) {
 
         //pic Size to first selection
@@ -143,7 +259,7 @@ public class PuzzleEditFragment extends BaseFragment {
                         puzzleLayout = new TwoStraightLayout(theme);
                     }
                 } else {
-                    puzzleLayout = new TwoSlantLayout(theme);
+                    puzzleLayout = new TwoSlantLayout(0);
                 }
                 break;
             case 3:
@@ -154,7 +270,7 @@ public class PuzzleEditFragment extends BaseFragment {
                         puzzleLayout = new ThreeStraightLayout(theme);
                     }
                 } else {
-                    puzzleLayout = new ThreeSlantLayout(theme);
+                    puzzleLayout = new ThreeSlantLayout(0);
                 }
                 break;
             case 4:
@@ -204,9 +320,194 @@ public class PuzzleEditFragment extends BaseFragment {
         }
         return puzzleLayout;
     }
+    private Bitmap shotScrollView(int x, int y , int width,int height) {
+        Bitmap bitmap;
+        mPuzzleView.setBackgroundColor(Color.parseColor("#ffffff"));
+        bitmap = Bitmap.createBitmap(mPuzzleView.getWidth(), mPuzzleView.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bitmap);
+        mPuzzleView.draw(canvas);
+        bitmap = Bitmap.createBitmap(bitmap,0,0,width,height);
+        return bitmap;
+    }
+    private void doOnBackGround(){
+        Bitmap bitmap = shotScrollView((int) mPuzzleView.getX(), (int) mPuzzleView.getY(), mPuzzleView.getWidth(), mPuzzleView.getHeight());
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Throwable {
+                String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
+                if (!bitmap.isRecycled()){
+                    bitmap.recycle();
+                }
+                emitter.onNext(filePath);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                mDisposable2 = d;
+            }
+
+            @Override
+            public void onNext(@NonNull String s) {
+                new TemplateConfirmDialog(getContext(), PuzzleEditFragment.this,s).show();
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
 
     @Override
     protected void initListener(View view) {
+        view.findViewById(R.id.ll_replace).setOnClickListener(this);
+        view.findViewById(R.id.ll_rorate).setOnClickListener(this);
+        view.findViewById(R.id.ll_LeftRightFlip).setOnClickListener(this);
+        view.findViewById(R.id.ll_UpDownFlip).setOnClickListener(this);
+        view.findViewById(R.id.tv_save).setOnClickListener(this);
+        mBorderSeekBar.setOnSeekBarChangeListener(this);
+        mConnerSeekBar.setOnSeekBarChangeListener(this);
+    }
 
+    @Override
+    public void onItemClick(PuzzleLayout puzzleLayout, List<Bitmap> pics) {
+        mPuzzleView.setPuzzleLayout(puzzleLayout);
+        mPuzzleView.addPieces(pics);
+        if (llTips.getVisibility() == View.VISIBLE) {
+            llTips.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    @Override
+    public void onPieceUnSelected() {
+        if (llTips.getVisibility() == View.VISIBLE) {
+            llTips.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onPieceSelected(PuzzlePiece piece, int position) {
+        if (llTips.getVisibility() != View.VISIBLE) {
+            llTips.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.ll_replace) {
+            PictureSelector.create(this)
+                    .openGallery(SelectMimeType.ofImage())
+                    .isDisplayCamera(true)
+                    .setImageEngine(GlideEngine.createGlideEngine())
+                    .isPreviewImage(true)
+                    .setSelectionMode(SelectModeConfig.SINGLE)
+                    .forResult(FILTER_CODE);
+        } else if (v.getId() == R.id.ll_rorate) {
+            mPuzzleView.rotate(90f);
+        } else if (v.getId() == R.id.ll_LeftRightFlip) {
+            mPuzzleView.flipVertically();
+
+        } else if (v.getId() == R.id.ll_UpDownFlip) {
+            mPuzzleView.flipHorizontally();
+        }else if (v.getId() == R.id.tv_save){
+                mPuzzleView.setNeedDrawLine(false);
+                mPuzzleView.setNeedDrawOuterLine(false);
+            doOnBackGround();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == FILTER_CODE) {
+            if (data != null) {
+                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+                if (list != null) {
+                    int size = list.size();
+                    if (size > 0) {
+                        String path = list.get(0).getAvailablePath();
+                        loadPhoto(path);
+                    }
+                }
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onTabSelect(int position) {
+        switch (position){
+            case 0:
+                recyclerView.setVisibility(View.VISIBLE);
+                mBorderSeekBar.setVisibility(View.GONE);
+                mConnerSeekBar.setVisibility(View.GONE);
+                break;
+            case 1:
+                recyclerView.setVisibility(View.GONE);
+                mBorderSeekBar.setVisibility(View.VISIBLE);
+                mConnerSeekBar.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onTabReselect(int position) {
+
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (mBorderSeekBar == seekBar){
+            mPuzzleView.setPiecePadding(progress);
+        }else if (mConnerSeekBar == seekBar){
+            mPuzzleView.setPieceRadian(progress);
+        }
+
+    }
+    private Disposable mDisposable;
+    private Disposable mDisposable2;
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mDisposable != null) {
+            if (!mDisposable.isDisposed()) {
+                mDisposable.dispose();
+            }
+        }
+        if (mDisposable1 !=null){
+            if (!mDisposable1.isDisposed()){
+                mDisposable1.dispose();
+            }
+        }
+        if (mDisposable2 != null){
+            if (!mDisposable2.isDisposed()){
+                mDisposable2.dispose();
+            }
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onConfirmClicked(String path) {
+        SaveFragment saveFragment = SaveFragment.getInstance(path);
+        start(saveFragment);
     }
 }

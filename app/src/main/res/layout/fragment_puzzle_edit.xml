@@ -1,14 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="MissingDefaultResource">
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/layout_title"
+        layout="@layout/layout_title_back" />
+
     <com.xiaopo.flying.puzzle.SquarePuzzleView
-        app:radian="30"
         android:id="@+id/puzzle_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</androidx.appcompat.widget.LinearLayoutCompat>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_title"
+        android:layout_marginTop="20dp"
+       />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/tips"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/puzzle_view"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_background_radius_30"
+        android:backgroundTint="#1E1E1E"
+        android:gravity="center"
+        android:paddingStart="20dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="5dp"
+        android:visibility="invisible">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_replace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_replace" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/replace"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_rorate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_rorate" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/ucrop_rotate"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_UpDownFlip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_lr_flip" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/lr_flip"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_LeftRightFlip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_tb_flip" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/tb_flip"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/content_change"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:layout_above="@id/tabLayout">
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/border_seekbar"
+            android:progress="0"
+            android:splitTrack="false"
+            android:maxHeight="4dp"
+            android:visibility="gone"
+            android:thumb="@drawable/seek_bar_thumb"
+            android:progressDrawable="@drawable/seek_bar_progress"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/conner_seekbar"
+            android:progress="0"
+            android:maxHeight="4dp"
+            android:splitTrack="false"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:thumb="@drawable/seek_bar_thumb"
+            android:progressDrawable="@drawable/seek_bar_progress"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_change_item"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.weilai.jigsawpuzzle.weight.main.FlyTabLayout
+        android:id="@+id/tabLayout"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingTop="2dp"
+        app:tl_iconVisible="false"
+        app:tl_indicator_color="@color/sel_text_main_color"
+        app:tl_indicator_corner_radius="8dp"
+        app:tl_indicator_margin_top="2dp"
+        app:tl_indicator_width="30dp"
+        app:tl_tab_padding="0dp"
+        app:tl_textSelectColor="@color/sel_text_main_color"
+        app:tl_textUnselectColor="@color/unl_text_main_color"
+        app:tl_textsize="17sp"
+        app:tl_underline_color="@color/white"
+        android:background="@color/white"
+        app:tl_underline_height="2dp" />
+</RelativeLayout>
