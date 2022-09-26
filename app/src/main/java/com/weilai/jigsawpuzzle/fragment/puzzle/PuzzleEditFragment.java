@@ -31,7 +31,6 @@ import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
-import com.weilai.jigsawpuzzle.fragment.template.TemplateEditFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.PuzzleUtil;
@@ -147,6 +146,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     private void loadAboutPuzzle(int size, List<PuzzleLayout> puzzleLayouts) {
         puzzleLayouts.addAll(PuzzleUtil.getAboutSizeLayouts(size));
     }
+
     private void loadPhoto(List<String> bitmaps) {
         Observable.create((ObservableOnSubscribe<List<Bitmap>>) emitter -> {
             if (bitmaps == null || bitmaps.size() == 0) {
@@ -186,7 +186,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
                     mPuzzleView.addPieces(bitmaps);
                     List<PuzzleLayout> puzzleLayouts = new ArrayList<>();
                     loadAboutPuzzle(picSize, puzzleLayouts);
-                    PuzzleSizeAdapter puzzleSizeAdapter = new PuzzleSizeAdapter(getContext(), puzzleLayouts, PuzzleEditFragment.this, bitmaps,mPuzzleView.getPuzzleLayout());
+                    PuzzleSizeAdapter puzzleSizeAdapter = new PuzzleSizeAdapter(getContext(), puzzleLayouts, PuzzleEditFragment.this, bitmaps, mPuzzleView.getPuzzleLayout());
                     recyclerView.setAdapter(puzzleSizeAdapter);
 //                    recyclerView.scrollToPosition(puzzleSizeAdapter.getCurrentPosition());
                 }
@@ -205,6 +205,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
 
     }
+
     private void loadPhoto(String path) {
         Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> {
             if (path == null || path.isEmpty()) {
@@ -246,7 +247,9 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
         });
     }
+
     private Disposable mDisposable1;
+
     private PuzzleLayout choosePuzzleTemplate(int pics, int type, int theme) {
 
         //pic Size to first selection
@@ -321,26 +324,25 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
         }
         return puzzleLayout;
     }
-    private Bitmap shotScrollView(int x, int y , int width,int height) {
+
+    private Bitmap shotScrollView(int width, int height) {
         Bitmap bitmap;
         mPuzzleView.setBackgroundColor(Color.parseColor("#ffffff"));
         bitmap = Bitmap.createBitmap(mPuzzleView.getWidth(), mPuzzleView.getHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         mPuzzleView.draw(canvas);
-        bitmap = Bitmap.createBitmap(bitmap,0,0,width,height);
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);
         return bitmap;
     }
-    private void doOnBackGround(){
-        Bitmap bitmap = shotScrollView((int) mPuzzleView.getX(), (int) mPuzzleView.getY(), mPuzzleView.getWidth(), mPuzzleView.getHeight());
-        Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Throwable {
-                String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
-                if (!bitmap.isRecycled()){
-                    bitmap.recycle();
-                }
-                emitter.onNext(filePath);
+
+    private void doOnBackGround() {
+        Bitmap bitmap = shotScrollView( mPuzzleView.getWidth(), mPuzzleView.getHeight());
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
+            if (!bitmap.isRecycled()) {
+                bitmap.recycle();
             }
+            emitter.onNext(filePath);
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -349,7 +351,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
             @Override
             public void onNext(@NonNull String s) {
-                new TemplateConfirmDialog(getContext(), PuzzleEditFragment.this,s).show();
+                new TemplateConfirmDialog(getContext(), PuzzleEditFragment.this, s).show();
             }
 
             @Override
@@ -416,9 +418,9 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
         } else if (v.getId() == R.id.ll_UpDownFlip) {
             mPuzzleView.flipHorizontally();
-        }else if (v.getId() == R.id.tv_save){
-                mPuzzleView.setNeedDrawLine(false);
-                mPuzzleView.setNeedDrawOuterLine(false);
+        } else if (v.getId() == R.id.tv_save) {
+            mPuzzleView.setNeedDrawLine(false);
+            mPuzzleView.setNeedDrawOuterLine(false);
             doOnBackGround();
         }
     }
@@ -443,7 +445,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
     @Override
     public void onTabSelect(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 recyclerView.setVisibility(View.VISIBLE);
                 mBorderSeekBar.setVisibility(View.GONE);
@@ -466,13 +468,14 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (mBorderSeekBar == seekBar){
+        if (mBorderSeekBar == seekBar) {
             mPuzzleView.setPiecePadding(progress);
-        }else if (mConnerSeekBar == seekBar){
+        } else if (mConnerSeekBar == seekBar) {
             mPuzzleView.setPieceRadian(progress);
         }
 
     }
+
     private Disposable mDisposable;
     private Disposable mDisposable2;
 
@@ -493,13 +496,13 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
                 mDisposable.dispose();
             }
         }
-        if (mDisposable1 !=null){
-            if (!mDisposable1.isDisposed()){
+        if (mDisposable1 != null) {
+            if (!mDisposable1.isDisposed()) {
                 mDisposable1.dispose();
             }
         }
-        if (mDisposable2 != null){
-            if (!mDisposable2.isDisposed()){
+        if (mDisposable2 != null) {
+            if (!mDisposable2.isDisposed()) {
                 mDisposable2.dispose();
             }
         }

@@ -2,10 +2,7 @@ package com.weilai.jigsawpuzzle.fragment.puzzle;
 
 import android.content.Intent;
 import android.view.View;
-
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
-
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -15,7 +12,6 @@ import com.luck.picture.lib.utils.ToastUtils;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
-
 import java.util.ArrayList;
 
 /**

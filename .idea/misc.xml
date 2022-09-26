@@ -3,7 +3,6 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/fragment_puzzle.xml" value="0.3614583333333333" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_down.xml" value="0.325" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_item.xml" value="0.1365" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_selected.xml" value="0.1365" />
@@ -31,6 +30,7 @@
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_mine.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle.xml" value="0.17277726856095327" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle_edit.xml" value="0.29957264957264956" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle_qr.xml" value="0.20854700854700856" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle_test.xml" value="0.18632478632478633" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_template_save.xml" value="0.18" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_main_tab.xml" value="0.17264957264957265" />

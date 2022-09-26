@@ -30,6 +30,7 @@
         </activity>
         <activity android:name=".activity.template.TemplateBaseActivity" android:exported="true"/>
         <activity android:name=".activity.puzzle.PuzzleBaseActivity" android:exported="true"/>
+        <activity android:name=".activity.puzzleQr.PuzzleQrBaseActivity" android:exported="true"/>
     </application>
 
 </manifest>
