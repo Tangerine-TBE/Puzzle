@@ -117,6 +117,7 @@ public class PuzzleFragment extends BaseFragment implements View.OnClickListener
         view.findViewById(R.id.tv_814).setOnClickListener(this);
         view.findViewById(R.id.tv_821).setOnClickListener(this);
         view.findViewById(R.id.tv_822).setOnClickListener(this);
+        view.findViewById(R.id.tv_823).setOnClickListener(this);
         view.findViewById(R.id.tv_91).setOnClickListener(this);
         view.findViewById(R.id.tv_92).setOnClickListener(this);
         view.findViewById(R.id.tv_93).setOnClickListener(this);
@@ -135,16 +136,513 @@ public class PuzzleFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        int minNum =2;
-        int maxNum =2;
-        switch (v.getId()){
-            case R.id.tv_add:
+        int minNum = 2;
+        int maxNum = 2;
+        switch (v.getId()) {
+            case (R.id.tv_add):
                 maxNum = 9;
                 break;
-            case R.id.tv_21:
+            case (R.id.tv_21):
+                theme = 0;
+                type = 0;
+                break;
+            case (R.id.tv_22):
+                theme = 1;
+                type = 0;
+                break;
+            case (R.id.tv_23):
+                theme = 0;
+                type = 1;
+                break;
+            case (R.id.tv_24):
+                theme = 1;
+                type = 1;
+                break;
+            case (R.id.tv_212):
+                theme = 2;
+                type = 1;
+                break;
+            case (R.id.tv_211):
+                theme = 3;
+                type = 1;
+                break;
+            case (R.id.tv_213):
+                theme = 4;
+                type = 1;
+                break;
+            case (R.id.tv_214):
+                theme = 5;
+                type = 1;
+                break;
+            case (R.id.tv_31):
+                maxNum = 3;
+                minNum = 3;
+                theme = 0;
+                type = 0;
+                break;
+            case (R.id.tv_32):
+                maxNum = 3;
+                minNum = 3;
+                theme = 1;
+                type = 0;
+                break;
+            case (R.id.tv_33):
+                maxNum = 3;
+                minNum = 3;
+                theme = 2;
+                type = 0;
+                break;
 
-                maxNum = 2;
+            case (R.id.tv_34):
+                maxNum = 3;
+                minNum = 3;
+                theme = 3;
+                type = 0;
+                break;
 
+
+            case (R.id.tv_311):
+                maxNum = 3;
+                minNum = 3;
+                theme = 4;
+                type = 0;
+                break;
+
+            case (R.id.tv_312):
+                maxNum = 3;
+                minNum = 3;
+                theme = 5;
+                type = 0;
+                break;
+            case (R.id.tv_313):
+                maxNum = 3;
+                minNum = 3;
+                theme = 1;
+                type = 1;
+                break;
+            case (R.id.tv_314):
+                maxNum = 3;
+                minNum = 3;
+                theme = 0;
+                type = 1;
+                break;
+            case (R.id.tv_321):
+                maxNum = 3;
+                minNum = 3;
+                theme = 2;
+                type = 1;
+                break;
+            case (R.id.tv_322):
+                maxNum = 3;
+                minNum = 3;
+                theme = 3;
+                type = 1;
+                break;
+            case (R.id.tv_323):
+                maxNum = 3;
+                minNum = 3;
+                theme = 4;
+                type = 1;
+                break;
+
+            case (R.id.tv_324):
+                maxNum = 3;
+                minNum = 3;
+                theme = 5;
+                type = 1;
+                break;
+            case (R.id.tv_41):
+                maxNum = 4;
+                minNum = 4;
+                type = 1;
+                theme = 2;
+                break;
+
+            case (R.id.tv_42):
+                maxNum = 4;
+                minNum = 4;
+                type = 1;
+                theme = 3;
+                break;
+
+
+            case (R.id.tv_43):
+                maxNum = 4;
+                minNum = 4;
+                type = 1;
+                theme = 4;
+                break;
+
+            case (R.id.tv_44):
+                maxNum = 4;
+                minNum = 4;
+                type = 1;
+                theme = 6;
+                break;
+
+            case (R.id.tv_411):
+                maxNum = 4;
+                minNum = 4;
+                type = 1;
+                theme = 5;
+                break;
+            case (R.id.tv_412):
+                maxNum = 4;
+                minNum = 4;
+                type = 1;
+                theme = 7;
+                break;
+
+            case (R.id.tv_413):
+                maxNum = 4;
+                minNum = 4;
+                type = 1;
+                theme = 8;
+                break;
+
+            case (R.id.tv_414):
+                maxNum = 4;
+                minNum = 4;
+                type = 1;
+                theme = 0;
+                break;
+            case (R.id.tv_51):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 2;
+                break;
+            case (R.id.tv_52):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 3;
+                break;
+            case (R.id.tv_53):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 4;
+                break;
+            case (R.id.tv_54):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 5;
+                break;
+            case (R.id.tv_511):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 6;
+                break;
+            case (R.id.tv_512):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 7;
+                break;
+            case (R.id.tv_513):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 8;
+                break;
+            case (R.id.tv_514):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 9;//
+                break;
+
+            case (R.id.tv_521):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 10;//
+                break;
+
+            case (R.id.tv_522):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 11;//
+                break;
+            case (R.id.tv_523):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 12;//532
+                break;
+            case (R.id.tv_524):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 14;
+                break;
+            case (R.id.tv_531):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 15;
+                break;
+            case (R.id.tv_532):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 13;
+                break;
+            case (R.id.tv_533):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 16;
+                break;
+            case (R.id.tv_534):
+                maxNum = 5;
+                minNum = 5;
+                type = 1;
+                theme = 0;
+                break;
+            case (R.id.tv_61):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 0;
+                break;
+            case (R.id.tv_62):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 1;
+                break;
+            case (R.id.tv_63):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 4;
+                break;
+            case (R.id.tv_64):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 3;
+                break;
+            case (R.id.tv_611):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 2;
+                break;
+            case (R.id.tv_612):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 5;
+                break;
+            case (R.id.tv_613):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 6;
+                break;
+            case (R.id.tv_614):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 7;
+                break;
+            case (R.id.tv_621):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 8;
+                break;
+            case (R.id.tv_622):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 9;
+                break;
+            case (R.id.tv_623):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 11;
+                break;
+            case (R.id.tv_624):
+                maxNum = 6;
+                minNum = 6;
+                type = 1;
+                theme = 10;
+                break;
+            case (R.id.tv_71):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 0;
+                break;
+            case (R.id.tv_72):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 1;
+                break;
+            case (R.id.tv_73):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 2;
+                break;
+            case (R.id.tv_74):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 3;
+                break;
+            case (R.id.tv_711):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 4;
+                break;
+            case (R.id.tv_712):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 5;
+                break;
+            case (R.id.tv_713):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 6;
+                break;
+            case (R.id.tv_714):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 7;
+                break;
+            case (R.id.tv_721):
+                maxNum = 7;
+                minNum = 7;
+                type = 1;
+                theme = 8;
+                break;
+            case (R.id.tv_81):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 0;
+                break;
+            case (R.id.tv_82):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 1;
+                break;
+            case (R.id.tv_83):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 2;
+                break;
+            case (R.id.tv_84):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 4;
+                break;
+            case (R.id.tv_811):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 3;
+                break;
+            case (R.id.tv_812):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 5;
+                break;
+            case (R.id.tv_813):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 6;
+                break;
+            case (R.id.tv_814):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 7;
+                break;
+            case (R.id.tv_821):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 8;
+                break;
+            case (R.id.tv_822):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 9;
+                break;
+            case (R.id.tv_823):
+                maxNum = 8;
+                minNum = 8;
+                type = 1;
+                theme = 10;
+                break;
+            case (R.id.tv_91):
+                maxNum = 9;
+                minNum = 9;
+                type = 1;
+                theme =0;
+                break;
+            case (R.id.tv_92):
+                maxNum = 9;
+                minNum = 9;
+                type = 1;
+                theme =1;
+                break;
+            case (R.id.tv_93):
+                maxNum = 9;
+                minNum = 9;
+                type = 1;
+                theme =2;
+                break;
+            case (R.id.tv_94):
+                maxNum = 9;
+                minNum = 9;
+                type = 1;
+                theme =3;
+                break;
+            case (R.id.tv_911):
+                maxNum = 9;
+                minNum = 9;
+                type = 1;
+                theme =4;
+                break;
+            case (R.id.tv_912):
+                maxNum = 9;
+                minNum = 9;
+                type = 1;
+                theme =5;
+                break;
+            case (R.id.tv_913):
+                maxNum = 9;
+                minNum = 9;
+                type = 1;
+                theme =6;
+                break;
+            case (R.id.tv_914):
+                maxNum = 9;
+                minNum = 9;
+                type = 1;
+                theme =7;
                 break;
             default:
                 break;

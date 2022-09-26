@@ -188,6 +188,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
                     loadAboutPuzzle(picSize, puzzleLayouts);
                     PuzzleSizeAdapter puzzleSizeAdapter = new PuzzleSizeAdapter(getContext(), puzzleLayouts, PuzzleEditFragment.this, bitmaps,mPuzzleView.getPuzzleLayout());
                     recyclerView.setAdapter(puzzleSizeAdapter);
+//                    recyclerView.scrollToPosition(puzzleSizeAdapter.getCurrentPosition());
                 }
             }
 

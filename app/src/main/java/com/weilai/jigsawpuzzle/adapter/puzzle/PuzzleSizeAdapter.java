@@ -49,7 +49,6 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
          View view = LayoutInflater.from(mContext).inflate(R.layout.item_puzzle_view, parent, false);
         return new ViewHolder(view);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PuzzleLayout puzzleLayout = mPuzzleLayouts.get(position);
@@ -85,7 +84,9 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
             public void onClick(View v) {
                 if (holder.frameLayout != mCurrentView){
                         holder.frameLayout.setSelected(true);
-                        mCurrentView.setSelected(false);
+                        if (mCurrentView != null){
+                            mCurrentView.setSelected(false);
+                        }
                         mCurrentView = holder.frameLayout;
                         mCurrentPuzzleLayout = puzzleLayout;
                         if (mOnItemClickListener != null){

@@ -12,10 +12,10 @@ import androidx.fragment.app.Fragment;
 import com.weilai.jigsawpuzzle.R;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/13
- */
+ ** DATE: 2022/9/26
+ ** Author:tangerine
+ ** Description:
+ **/
 public class MineFragment  extends Fragment {
     @Nullable
     @Override

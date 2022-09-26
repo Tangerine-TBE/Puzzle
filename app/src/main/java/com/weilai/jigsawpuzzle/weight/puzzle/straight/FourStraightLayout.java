@@ -45,8 +45,11 @@ public class FourStraightLayout extends NumberStraightLayout {
         break;
       case 7:
         addLine(0, Line.Direction.VERTICAL, 1f / 2);
-        addLine(1, Line.Direction.HORIZONTAL, 2f / 3);
-        addLine(1, Line.Direction.HORIZONTAL, 1f / 3);
+        cutAreaEqualPart(1,3,Line.Direction.HORIZONTAL);
+        break;
+      case 8:
+        addLine(0, Line.Direction.VERTICAL, 1f / 2);
+        cutAreaEqualPart(0,3,Line.Direction.HORIZONTAL);
         break;
       default:
         cutAreaEqualPart(0, 4, Line.Direction.HORIZONTAL);
