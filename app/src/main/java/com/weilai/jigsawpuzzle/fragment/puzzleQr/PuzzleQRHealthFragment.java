@@ -4,22 +4,32 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.SeekBar;
 
+import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.bean.TabEntity;
+import com.weilai.jigsawpuzzle.dialog.ProcessDialog;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.fragment.puzzle.PuzzleEditFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.FourStraightLayout;
+import com.weilai.library.listener.CustomTabEntity;
+import com.weilai.library.listener.OnTabSelectListener;
+import com.xiaopo.flying.puzzle.PuzzleLayout;
 import com.xiaopo.flying.puzzle.PuzzlePiece;
 import com.xiaopo.flying.puzzle.PuzzleView;
 
@@ -41,10 +51,17 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * * Author:tangerine
  * * Description:
  **/
-public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.OnPieceSelectedListener, TemplateConfirmDialog.OnConfirmClickedListener {
+public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.OnPieceSelectedListener, TemplateConfirmDialog.OnConfirmClickedListener, OnTabSelectListener, SeekBar.OnSeekBarChangeListener {
     private Disposable mDisposable;
     private PuzzleView mPuzzleView;
     private Disposable mDisposable2;
+    private LinearLayoutCompat llFrame;
+    private LinearLayoutCompat llRorate;
+    private LinearLayoutCompat llMirror;
+    private AppCompatTextView mTvRoRate;
+    private AppCompatTextView mTvConner;
+    private AppCompatTextView mTvFrame;
+    private final String[] titles = {"边框", "旋转", "翻转"};
 
     private PuzzleQRHealthFragment() {
 
@@ -64,6 +81,9 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
     }
 
     private void loadPhoto(List<String> bitmaps) {
+        ProcessDialog processDialog = new ProcessDialog(_mActivity);
+        processDialog.setType(ProcessDialog.ProgressType.loading);
+        processDialog.show();
         Observable.create((ObservableOnSubscribe<List<Bitmap>>) emitter -> {
             if (bitmaps == null || bitmaps.size() == 0) {
                 emitter.onError(new RuntimeException("bitmaps is null"));
@@ -102,12 +122,16 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
                     int size = bitmaps.size();
                     if (4 - size != 0) {
                         int length = 4 - size;
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.template32);
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template_23);
                         for (int i = 0; i < length; i++) {
                             bitmaps.add(bitmap);
                         }
                     }
                     mPuzzleView.addPieces(bitmaps);
+                    if (processDialog.isShowing()) {
+                        processDialog.dismiss();
+                        processDialog.cancel();
+                    }
                 }
 
             }
@@ -130,9 +154,23 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
     protected void initView(View view) {
         assert getArguments() != null;
         ArrayList<String> data = getArguments().getStringArrayList("data");
-
+        ArrayList<CustomTabEntity> arrayList = new ArrayList<>();
+        for (String tile : titles) {
+            TabEntity tabEntity = new TabEntity(tile);
+            arrayList.add(tabEntity);
+        }
+        FlyTabLayout flyTabLayout = view.findViewById(R.id.tabLayout);
+        flyTabLayout.setTabData(arrayList);
+        flyTabLayout.setCurrentTab(0);
+        flyTabLayout.setOnTabSelectListener(this);
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
         tvTitle.setText("健康码");
+        llRorate = view.findViewById(R.id.ll_rorate);
+        llFrame = view.findViewById(R.id.ll_frame);
+        llMirror = view.findViewById(R.id.ll_mirror);
+        mTvRoRate = view.findViewById(R.id.rorate_text);
+        mTvConner = view.findViewById(R.id.conner_text);
+        mTvFrame = view.findViewById(R.id.frame_text);
         view.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
         mPuzzleView = view.findViewById(R.id.puzzle_view);
         mPuzzleView.setTouchEnable(true);
@@ -149,6 +187,8 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
 
     }
 
+    private AppCompatSeekBar rorateSeekBar;
+
     @Override
     protected void initListener(View view) {
         view.findViewById(R.id.layout_back).setOnClickListener(v -> pop());
@@ -156,6 +196,40 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
             mPuzzleView.setNeedDrawLine(false);
             mPuzzleView.setNeedDrawOuterLine(false);
             doOnBackGround();
+        });
+        AppCompatSeekBar frameSeekBar = view.findViewById(R.id.frame_seekbar);
+        AppCompatSeekBar connerSeekBar = view.findViewById(R.id.conner_seekbar);
+        rorateSeekBar = view.findViewById(R.id.rorate_seekbar);
+
+        frameSeekBar.setOnSeekBarChangeListener(this);
+        connerSeekBar.setOnSeekBarChangeListener(this);
+        rorateSeekBar.setOnSeekBarChangeListener(this);
+        view.findViewById(R.id.hz_mirror).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPuzzleView.flipVertically();
+            }
+        });
+        view.findViewById(R.id.vt_mirror).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            mPuzzleView.flipHorizontally();
+            }
+        });
+        view.findViewById(R.id.reset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Bitmap> bitmaps = new ArrayList<>();
+                List<PuzzlePiece> list = mPuzzleView.getPuzzlePieces();
+                for (PuzzlePiece piece : list) {
+                    BitmapDrawable drawable = (BitmapDrawable) piece.getDrawable();
+                    bitmaps.add(drawable.getBitmap());
+                }
+                PuzzleLayout puzzleLayout = mPuzzleView.getPuzzleLayout();
+                mPuzzleView.reset();
+                mPuzzleView.setPuzzleLayout(puzzleLayout);
+                mPuzzleView.addPieces(bitmaps);
+            }
         });
     }
 
@@ -205,19 +279,35 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
 
     }
 
+    private int currentAngle = 90;
+    private int currentPosition = -1;
+
     @Override
     public void onPieceSelected(PuzzlePiece piece, int position) {
+        if (position != currentPosition) {
+            currentPosition = position;
+            rorateSeekBar.setProgress(90);
+            currentAngle = 90;
+            rightAngle = 0;
+            mTvRoRate.setText(rightAngle + "");
+        }
 
     }
 
     @Override
     public void onDestroy() {
-        if (mDisposable.isDisposed()) {
-            mDisposable.dispose();
+        if (mDisposable != null) {
+            if (mDisposable.isDisposed()) {
+                mDisposable.dispose();
+            }
         }
-        if (mDisposable2.isDisposed()){
-            mDisposable2.dispose();
+
+        if (mDisposable2 != null) {
+            if (mDisposable2.isDisposed()) {
+                mDisposable2.dispose();
+            }
         }
+
         super.onDestroy();
     }
 
@@ -225,5 +315,71 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
     public void onConfirmClicked(String path) {
         SaveFragment saveFragment = SaveFragment.getInstance(path);
         start(saveFragment);
+    }
+
+    @Override
+    public void onTabSelect(int position) {
+        switch (position) {
+            case 0:
+                llFrame.setVisibility(View.VISIBLE);
+                llRorate.setVisibility(View.GONE);
+                llMirror.setVisibility(View.GONE);
+                break;
+            case 1:
+                llFrame.setVisibility(View.GONE);
+                llRorate.setVisibility(View.VISIBLE);
+                llMirror.setVisibility(View.GONE);
+                break;
+            case 2:
+                llFrame.setVisibility(View.GONE);
+                llRorate.setVisibility(View.GONE);
+                llMirror.setVisibility(View.VISIBLE);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onTabReselect(int position) {
+
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (!fromUser) {
+            return;
+        }
+        int id = seekBar.getId();
+        switch (id) {
+            case (R.id.conner_seekbar):
+                mPuzzleView.setPieceRadian(progress);
+                mTvConner.setText("" + progress);
+                break;
+            case (R.id.rorate_seekbar):
+                int angle = (progress - currentAngle) * 3;
+                mPuzzleView.rotate(angle);
+                currentAngle = progress;
+                rightAngle = rightAngle + angle;
+                mTvRoRate.setText(rightAngle + "");
+                break;
+            case (R.id.frame_seekbar):
+                mPuzzleView.setPiecePadding(progress);
+                mTvFrame.setText("" + progress);
+
+                break;
+        }
+    }
+
+    private int rightAngle = 0;
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }

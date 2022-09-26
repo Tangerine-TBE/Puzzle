@@ -128,38 +128,40 @@
         android:id="@+id/content_change"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:orientation="vertical"
-        android:layout_above="@id/tabLayout">
+        android:layout_above="@id/tabLayout"
+        android:orientation="vertical">
+
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/border_seekbar"
-            android:progress="0"
-            android:splitTrack="false"
-            android:maxHeight="4dp"
-            android:visibility="gone"
-            android:thumb="@drawable/seek_bar_thumb"
-            android:progressDrawable="@drawable/seek_bar_progress"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:maxHeight="4dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/seek_bar_progress"
+            android:splitTrack="false"
+            android:thumb="@drawable/seek_bar_thumb"
+            android:visibility="gone" />
+
         <androidx.appcompat.widget.AppCompatSeekBar
             android:id="@+id/conner_seekbar"
-            android:progress="0"
-            android:maxHeight="4dp"
-            android:splitTrack="false"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:thumb="@drawable/seek_bar_thumb"
-            android:progressDrawable="@drawable/seek_bar_progress"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:maxHeight="4dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/seek_bar_progress"
+            android:splitTrack="false"
+            android:thumb="@drawable/seek_bar_thumb"
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_change_item"
-            android:visibility="visible"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="visible" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.weilai.jigsawpuzzle.weight.main.FlyTabLayout

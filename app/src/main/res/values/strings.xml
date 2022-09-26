@@ -31,4 +31,7 @@
     <string name="lr_flip">左右翻转</string>
     <string name="tb_flip">上下翻转</string>
     <string name="puzzle_qr_tip">可调整图片至合适位置</string>
+    <string name="loading">加载中...</string>
+    <string name="submitting">提交中...</string>
+    <string name="edit">编辑</string>
 </resources>
