@@ -16,7 +16,6 @@ import com.weilai.jigsawpuzzle.util.MResource;
  ** Description:
  **/
 public class ProcessDialog extends AppCompatDialog {
-    private AVLoadingIndicatorView mProgress;
     private final Context context;
     private TextView mTvMessage;
 
@@ -27,7 +26,6 @@ public class ProcessDialog extends AppCompatDialog {
     }
     private void init() {
         setContentView(MResource.getIdByName(context, "layout", "dialog_progress"));
-        mProgress=(AVLoadingIndicatorView)findViewById(MResource.getIdByName(context, "id", "progressBar"));
         mTvMessage=(TextView)findViewById(MResource.getIdByName(context, "id", "tv_message"));
     }
     public void setType(ProgressType type){

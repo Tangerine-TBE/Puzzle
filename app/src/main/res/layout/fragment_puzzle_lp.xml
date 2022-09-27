@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title_back" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_lp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="12dp"
+            android:layout_height="match_parent">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="20dp"
+                android:id="@+id/tv_selected_color"
+                android:layout_marginEnd="10dp"
+                android:layout_height="20dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_color"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/ll_frame"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:gravity="center"
+            android:layout_height="50dp">
+            <RelativeLayout
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:src="@mipmap/icon_lp_frame" />
+                <androidx.appcompat.widget.AppCompatSeekBar
+                    android:id="@+id/conner_seekbar"
+                    android:layout_width="270dp"
+                    android:layout_centerInParent="true"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:maxHeight="4dp"
+                    android:progress="0"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="12dp"
+                    android:progressDrawable="@drawable/seek_bar_progress"
+                    android:splitTrack="false"
+                    android:thumb="@drawable/seek_bar_thumb"
+                    android:visibility="visible" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/conner_text"
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/sel_text_main_color"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.weilai.jigsawpuzzle.weight.main.FlyTabLayout
+
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white"
+            android:paddingTop="2dp"
+            app:tl_iconVisible="false"
+            app:tl_indicator_color="@color/sel_text_main_color"
+            app:tl_indicator_corner_radius="8dp"
+            app:tl_indicator_margin_top="2dp"
+            app:tl_indicator_width="30dp"
+            app:tl_tab_padding="0dp"
+            app:tl_textSelectColor="@color/sel_text_main_color"
+            app:tl_textUnselectColor="@color/unl_text_main_color"
+            app:tl_textsize="17sp"
+            app:tl_underline_color="@color/white"
+            app:tl_underline_height="2dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

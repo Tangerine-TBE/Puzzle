@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -191,7 +192,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
 
     @Override
     protected void initListener(View view) {
-        view.findViewById(R.id.layout_back).setOnClickListener(v -> pop());
+        view.findViewById(R.id.layout_back).setOnClickListener(v -> _mActivity.finish());
         view.findViewById(R.id.tv_save).setOnClickListener(v -> {
             mPuzzleView.setNeedDrawLine(false);
             mPuzzleView.setNeedDrawOuterLine(false);
@@ -244,6 +245,8 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
     }
 
     private void doOnBackGround() {
+        ProcessDialog processDialog = new ProcessDialog(_mActivity);
+        processDialog.show();
         Bitmap bitmap = shotScrollView((int) mPuzzleView.getX(), (int) mPuzzleView.getY(), mPuzzleView.getWidth(), mPuzzleView.getHeight());
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
@@ -259,7 +262,13 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
 
             @Override
             public void onNext(@NonNull String s) {
-                new TemplateConfirmDialog(getContext(), PuzzleQRHealthFragment.this, s).show();
+                if (processDialog.isShowing()){
+                    processDialog.dismiss();
+                    processDialog.cancel();
+
+                }
+                SaveFragment saveFragment = SaveFragment.getInstance(s);
+                start(saveFragment);
             }
 
             @Override
@@ -313,8 +322,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
 
     @Override
     public void onConfirmClicked(String path) {
-        SaveFragment saveFragment = SaveFragment.getInstance(path);
-        start(saveFragment);
+
     }
 
     @Override

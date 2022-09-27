@@ -29,6 +29,7 @@ import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzle.PuzzleSizeAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
+import com.weilai.jigsawpuzzle.dialog.ProcessDialog;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
@@ -336,6 +337,8 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     }
 
     private void doOnBackGround() {
+       ProcessDialog processDialog =  new ProcessDialog(_mActivity);
+       processDialog.show();
         Bitmap bitmap = shotScrollView( mPuzzleView.getWidth(), mPuzzleView.getHeight());
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
@@ -351,7 +354,12 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
             @Override
             public void onNext(@NonNull String s) {
-                new TemplateConfirmDialog(getContext(), PuzzleEditFragment.this, s).show();
+                    if (processDialog.isShowing()){
+                        processDialog.dismiss();
+                        processDialog.cancel();
+                    }
+                SaveFragment saveFragment = SaveFragment.getInstance(s);
+                start(saveFragment);
             }
 
             @Override
@@ -511,7 +519,6 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
     @Override
     public void onConfirmClicked(String path) {
-        SaveFragment saveFragment = SaveFragment.getInstance(path);
-        start(saveFragment);
+
     }
 }

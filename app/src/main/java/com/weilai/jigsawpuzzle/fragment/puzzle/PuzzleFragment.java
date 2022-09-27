@@ -126,7 +126,12 @@ public class PuzzleFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     protected void initListener(View view) {
-
+        view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _mActivity.finish();
+            }
+        });
 
     }
 

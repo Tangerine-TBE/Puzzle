@@ -17,6 +17,7 @@ import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.activity.puzzle.PuzzleBaseActivity;
+import com.weilai.jigsawpuzzle.activity.puzzleLP.PuzzleLPBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
 import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.main.ImageBannerAdapter;
@@ -34,7 +35,8 @@ import java.util.Arrays;
  * * Description:首页
  **/
 public class CrossDressFragment extends Fragment implements View.OnClickListener {
-    private static final int FILTER_CODE = 1;
+    private static final int FILTER_PUZZLE_QR_CODE = 1;
+    private static final int FILTER_PUZZLE_LP_CODE = 2;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,11 +83,19 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                     .setImageEngine(GlideEngine.createGlideEngine())
                     .isPreviewImage(true)
                     .setSelectionMode(SelectModeConfig.MULTIPLE)
-                    .forResult(FILTER_CODE);
+                    .forResult(FILTER_PUZZLE_QR_CODE);
         } else if (view.getId() == R.id.tv_splic_hori) {
 
         } else if (view.getId() == R.id.tv_l_pic) {
-
+            PictureSelector.create(this)
+                    .openGallery(SelectMimeType.ofImage())
+                    .isDisplayCamera(true)
+                    .setMinSelectNum(1)
+                    .setMaxSelectNum(10)
+                    .setImageEngine(GlideEngine.createGlideEngine())
+                    .isPreviewImage(true)
+                    .setSelectionMode(SelectModeConfig.MULTIPLE)
+                    .forResult(FILTER_PUZZLE_LP_CODE);
         } else if (view.getId() == R.id.tv_lines) {
 
         } else if (view.getId() == R.id.tv_lattice) {
@@ -98,24 +108,28 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FILTER_CODE) {
-            if (data != null) {
-                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
-                if (list != null) {
-                    int size = list.size();
-                    if (size > 0) {
-                        ArrayList<String> arrayList = new ArrayList<>();
-
-                        for (LocalMedia localMedia : list) {
-                            arrayList.add(localMedia.getAvailablePath());
-                        }
-                        Intent intent = new Intent(getContext(), PuzzleQrBaseActivity.class);
-                        intent.putStringArrayListExtra("data", arrayList);
-                        startActivity(intent);
+        if (data != null) {
+            ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+            if (list != null) {
+                int size = list.size();
+                if (size > 0) {
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    for (LocalMedia localMedia : list) {
+                        arrayList.add(localMedia.getAvailablePath());
                     }
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra("data", arrayList);
+                    if (requestCode == FILTER_PUZZLE_QR_CODE) {
+                        intent.setClass(getContext(),PuzzleQrBaseActivity.class);
+                    }else if (requestCode == FILTER_PUZZLE_LP_CODE){
+                        intent.setClass(getContext(), PuzzleLPBaseActivity.class);
+                    }
+                    startActivity(intent);
 
                 }
+
             }
         }
+
     }
 }
