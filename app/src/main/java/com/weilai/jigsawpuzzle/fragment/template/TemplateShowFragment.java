@@ -60,6 +60,8 @@ public class TemplateShowFragment extends BaseFragment {
             Glide.with(getContext()).load(R.mipmap.template_show_rorate_11).into(imageView);
         }else if (bitMapInfo.getBitmap().equals("角度模板3:2")){
             Glide.with(getContext()).load(R.mipmap.template_show_rorate_32).into(imageView);
+        }else if (bitMapInfo.getBitmap().equals("测试图形")){
+            Glide.with(getContext()).load(R.mipmap.template_test_1231233).into(imageView);
         }
         
         

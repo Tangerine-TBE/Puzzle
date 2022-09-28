@@ -7,12 +7,12 @@
     android:background="@drawable/bg_card_item_template"
     android:id="@+id/layout_content"
     android:elevation="2dp"
-    android:layout_height="240dp">
+    android:layout_height="wrap_content">
         <com.weilai.jigsawpuzzle.weight.template.RadioImageView
             android:id="@+id/aiv_image"
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
-            android:layout_height="0dp"
+            android:layout_height="240dp"
             app:left_top_radius="12dp"
             app:right_top_radius = "12dp"
             android:layout_weight="1"/>

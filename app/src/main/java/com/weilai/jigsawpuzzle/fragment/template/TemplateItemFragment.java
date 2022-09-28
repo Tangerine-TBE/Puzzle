@@ -50,6 +50,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private TemplateItemFragment() {
 
     }
+
     @Override
     protected void initView(View view) {
         list = new ArrayList<>();
@@ -84,6 +85,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
                 initData2();
                 initData3();
                 initData4();
+                initData5();
                 _mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -122,7 +124,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         FileUtil.saveBitmapToCache("角度模板1:1", bitmap);
         bitMapInfo.setBitmap("角度模板1:1");
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
-        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.195f, 0.29f, 30, 0.44f, 0.27f, 1, 1);
+        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.1946f, 0.2946f, 30, 0.44f, 0.27f, 1, 1);
         BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.55f, 0.33f, 0, 0.44f, 0.74f, 1, 1);
         sizeInfos.add(sizeInfo1);
         sizeInfos.add(sizeInfo2);
@@ -159,6 +161,24 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         bitMapInfo.setSizeInfos(sizeInfos);
         list.add(bitMapInfo);
 
+
+    }
+
+    private void initData5() {
+        BitMapInfo bitMapInfo = new BitMapInfo();
+        bitMapInfo.setName("测试图形");
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template_test_1231233);
+        FileUtil.saveBitmapToCache("测试图形", bitmap);
+        bitMapInfo.setBitmap("测试图形");
+        List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
+        BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.12147f, 0.09815f, 15, 0.2454f , 0.2086f, 1, 1);
+        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.614f, 0.080f, 15, 0.2453f, 0.7607f, 2, 3);
+        BitMapInfo.SizeInfo sizeInfo3 = new BitMapInfo.SizeInfo(0.28466f, 0.44171f, 15, 0.6319f, 0.39263f, 1, 1);
+        sizeInfos.add(sizeInfo1);
+        sizeInfos.add(sizeInfo2);
+        sizeInfos.add(sizeInfo3);
+        bitMapInfo.setSizeInfos(sizeInfos);
+        list.add(bitMapInfo);
 
     }
 

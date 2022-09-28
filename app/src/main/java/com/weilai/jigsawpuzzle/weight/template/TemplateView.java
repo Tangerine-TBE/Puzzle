@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -18,6 +19,8 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.weilai.jigsawpuzzle.util.L;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -112,8 +115,7 @@ public class TemplateView extends View {
                 //逆时针旋转30度  -30
                 //那么我要复原就是 +30 顺时针旋转
                 //已经知旋转前点的位置(x1,y1)和旋转的角度(a)，求旋转后点的新位置(x2,y2)
-                double degrees = 30;
-                double radians = Math.toRadians(degrees);
+                double radians = Math.toRadians(angle);
                 //获取逆时针旋转前的坐标
                 if (angle == 0) {
                     @SuppressLint("DrawAllocation")
@@ -166,6 +168,7 @@ public class TemplateView extends View {
                         int beforeRotateRightY = (int) (v3 - v7 + centerY);
                         TemplateViewInfo templateViewInfo = null;
                         BitMapInfo.SizeInfo sizeInfo = sizeInfos.get(i);
+                        RectF rectF = new RectF();
                         if (mSize > 0) {
                             templateViewInfo = mAreaTouch.get(i);
                             if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
