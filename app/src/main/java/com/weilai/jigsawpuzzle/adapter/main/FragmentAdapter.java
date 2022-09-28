@@ -8,10 +8,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.List;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/13
- */
+ ** DATE: 2022/9/27
+ ** Author:tangerine
+ ** Description:
+ **/
 public class FragmentAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments;
     public FragmentAdapter(@NonNull  FragmentManager fm, int behavior, List<Fragment>fragments) {

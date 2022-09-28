@@ -82,9 +82,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
     }
 
     private void loadPhoto(List<String> bitmaps) {
-        ProcessDialog processDialog = new ProcessDialog(_mActivity);
-        processDialog.setType(ProcessDialog.ProgressType.loading);
-        processDialog.show();
+        showProcessDialog();
         Observable.create((ObservableOnSubscribe<List<Bitmap>>) emitter -> {
             if (bitmaps == null || bitmaps.size() == 0) {
                 emitter.onError(new RuntimeException("bitmaps is null"));
@@ -129,10 +127,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
                         }
                     }
                     mPuzzleView.addPieces(bitmaps);
-                    if (processDialog.isShowing()) {
-                        processDialog.dismiss();
-                        processDialog.cancel();
-                    }
+                    hideProcessDialog();
                 }
 
             }
@@ -245,8 +240,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
     }
 
     private void doOnBackGround() {
-        ProcessDialog processDialog = new ProcessDialog(_mActivity);
-        processDialog.show();
+        showProcessDialog();
         Bitmap bitmap = shotScrollView((int) mPuzzleView.getX(), (int) mPuzzleView.getY(), mPuzzleView.getWidth(), mPuzzleView.getHeight());
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
@@ -262,11 +256,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
 
             @Override
             public void onNext(@NonNull String s) {
-                if (processDialog.isShowing()){
-                    processDialog.dismiss();
-                    processDialog.cancel();
-
-                }
+                hideProcessDialog();
                 SaveFragment saveFragment = SaveFragment.getInstance(s);
                 start(saveFragment);
             }

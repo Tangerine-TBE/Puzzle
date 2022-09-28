@@ -70,7 +70,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-
+        showProcessDialog();
         /*這裏先這樣模擬網絡加載*/
         new Thread(new Runnable() {
             @Override
@@ -87,6 +87,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
                 _mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        hideProcessDialog();
                         mRvTemplate.addItemDecoration(new SpacesItemDecoration(2, arrayMap, true));
                         templateAdapter.notifyDataSetChanged();
                     }

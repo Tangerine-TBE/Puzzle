@@ -149,6 +149,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     }
 
     private void loadPhoto(List<String> bitmaps) {
+        showProcessDialog();
         Observable.create((ObservableOnSubscribe<List<Bitmap>>) emitter -> {
             if (bitmaps == null || bitmaps.size() == 0) {
                 emitter.onError(new RuntimeException("bitmaps is null"));
@@ -189,6 +190,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
                     loadAboutPuzzle(picSize, puzzleLayouts);
                     PuzzleSizeAdapter puzzleSizeAdapter = new PuzzleSizeAdapter(getContext(), puzzleLayouts, PuzzleEditFragment.this, bitmaps, mPuzzleView.getPuzzleLayout());
                     recyclerView.setAdapter(puzzleSizeAdapter);
+                    hideProcessDialog();
 //                    recyclerView.scrollToPosition(puzzleSizeAdapter.getCurrentPosition());
                 }
             }
@@ -208,6 +210,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     }
 
     private void loadPhoto(String path) {
+        showProcessDialog();
         Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> {
             if (path == null || path.isEmpty()) {
                 emitter.onError(new RuntimeException("bitmaps is null"));
@@ -235,6 +238,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             @Override
             public void onNext(@NonNull Bitmap bitmap) {
                 mPuzzleView.replace(bitmap, "");
+                hideProcessDialog();
             }
 
             @Override
@@ -337,8 +341,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     }
 
     private void doOnBackGround() {
-       ProcessDialog processDialog =  new ProcessDialog(_mActivity);
-       processDialog.show();
+        showProcessDialog();
         Bitmap bitmap = shotScrollView( mPuzzleView.getWidth(), mPuzzleView.getHeight());
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
@@ -354,10 +357,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
             @Override
             public void onNext(@NonNull String s) {
-                    if (processDialog.isShowing()){
-                        processDialog.dismiss();
-                        processDialog.cancel();
-                    }
+                hideProcessDialog();
                 SaveFragment saveFragment = SaveFragment.getInstance(s);
                 start(saveFragment);
             }

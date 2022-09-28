@@ -33,6 +33,7 @@
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_edit_image.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_mine.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle.xml" value="0.17277726856095327" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle9p.xml" value="0.288034188034188" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle_edit.xml" value="0.29957264957264956" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle_lp.xml" value="0.22" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/fragment_puzzle_qr.xml" value="0.33" />
@@ -41,6 +42,7 @@
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_color.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_main_tab.xml" value="0.17264957264957265" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_pic_long.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_puzzle_9p.xml" value="0.21953125" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_puzzle_view.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/item_template.xml" value="0.25" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/layout_title_back.xml" value="0.22" />

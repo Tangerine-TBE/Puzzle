@@ -9,6 +9,7 @@
     <include layout="@layout/layout_title_back" />
 
     <ScrollView
+        android:overScrollMode="never"
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

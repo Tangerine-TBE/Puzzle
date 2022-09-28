@@ -11,7 +11,6 @@ import android.widget.SeekBar;
 
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,9 +21,10 @@ import com.weilai.jigsawpuzzle.adapter.puzzleLP.ColorItemAdapter;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
-import com.weilai.jigsawpuzzle.dialog.ProcessDialog;
 import com.weilai.jigsawpuzzle.util.AssetsUtil;
+import com.weilai.jigsawpuzzle.util.L;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
+import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
 import com.weilai.library.listener.CustomTabEntity;
 import com.weilai.library.listener.OnTabSelectListener;
 
@@ -100,16 +100,16 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             @Override
             public void onColorPicked(String color) {
                 appCompatTextView.setBackgroundColor(Color.parseColor(color));
+                mRvLP.setBackgroundColor(Color.parseColor(color));
             }
         });
         mRvColor.setAdapter(colorItemAdapter);
         loadPhoto(bitmaps);
+
     }
 
     private void loadPhoto(List<String> bitmaps) {
-        ProcessDialog processDialog = new ProcessDialog(_mActivity);
-        processDialog.setType(ProcessDialog.ProgressType.loading);
-        processDialog.show();
+        showProcessDialog();
         Observable.create((ObservableOnSubscribe<List<Bitmap>>) emitter -> {
             if (bitmaps == null || bitmaps.size() == 0) {
                 emitter.onError(new RuntimeException("bitmaps is null"));
@@ -146,10 +146,9 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 } else {
                     LongPicItemAdapter longPicItemAdapter = new LongPicItemAdapter(_mActivity, bitmaps);
                     mRvLP.setAdapter(longPicItemAdapter);
-                    if (processDialog.isShowing()) {
-                        processDialog.dismiss();
-                        processDialog.cancel();
-                    }
+                    paddingItemDecoration = new PaddingItemDecoration();
+                    mRvLP.addItemDecoration(paddingItemDecoration);
+                    hideProcessDialog();
                 }
 
             }
@@ -188,10 +187,21 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     public void onTabReselect(int position) {
 
     }
-
+    private int mCurrentProgress = 0 ;
+    private PaddingItemDecoration paddingItemDecoration ;
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        if (fromUser){
+           int offsetProgress =progress-mCurrentProgress;
+            //向右滑动 0-5  5-8
+            if (offsetProgress > 0){
+                paddingItemDecoration.setProcess(progress);
+            }else if (offsetProgress < 0){
+                paddingItemDecoration.setProcess(progress);
+            }
+            mCurrentProgress = progress;
+            mRvLP.requestLayout();
+        }
     }
 
     @Override

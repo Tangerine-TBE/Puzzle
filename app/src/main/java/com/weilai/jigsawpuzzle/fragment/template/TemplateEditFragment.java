@@ -58,7 +58,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * * Author:tangerine
  * * Description:1.After Show the template
  **/
-public class TemplateEditFragment extends BaseFragment implements TemplateView.OutRectClickListener, TemplateEditDialog.TemplateDialogItemListener, TemplateConfirmDialog.OnConfirmClickedListener,TemplateView.DrawFinish {
+public class TemplateEditFragment extends BaseFragment implements TemplateView.OutRectClickListener, TemplateEditDialog.TemplateDialogItemListener, TemplateConfirmDialog.OnConfirmClickedListener, TemplateView.DrawFinish {
     private TemplateView templateEditView;
     private BitMapInfo bitMapInfo;
     private static final int FILTER_CODE = 1;
@@ -137,7 +137,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
                     templateEditView.createBitmap();
                 }
             }).show();
-        }else{
+        } else {
             templateEditView.createBitmap();
         }
     }
@@ -266,12 +266,14 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         start(saveFragment);
 
     }
-    private void doOnBackGround(Bitmap bitmap){
-         Observable.create(new ObservableOnSubscribe<String>() {
+
+    private void doOnBackGround(Bitmap bitmap) {
+        showProcessDialog();
+        Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Throwable {
                 String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
-                if (!bitmap.isRecycled()){
+                if (!bitmap.isRecycled()) {
                     bitmap.recycle();
                 }
                 emitter.onNext(filePath);
@@ -284,7 +286,8 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
 
             @Override
             public void onNext(@NonNull String s) {
-                new TemplateConfirmDialog(getContext(), TemplateEditFragment.this,s).show();
+                hideProcessDialog();
+                new TemplateConfirmDialog(getContext(), TemplateEditFragment.this, s).show();
             }
 
             @Override
@@ -298,6 +301,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             }
         });
     }
+
     @Override
     public void onDestroy() {
         if (mDisposable != null) {
@@ -308,18 +312,18 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         super.onDestroy();
     }
 
-    private Bitmap shotScrollView(int x, int y , int width,int height) {
+    private Bitmap shotScrollView(int x, int y, int width, int height) {
         Bitmap bitmap;
         templateEditView.setBackgroundColor(Color.parseColor("#ffffff"));
         bitmap = Bitmap.createBitmap(templateEditView.getWidth(), templateEditView.getHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         templateEditView.draw(canvas);
-        bitmap = Bitmap.createBitmap(bitmap,x,y,width,height);
+        bitmap = Bitmap.createBitmap(bitmap, x, y, width, height);
         return bitmap;
     }
 
     @Override
-    public void drawFinish(int x ,int y , int width ,int height) {
+    public void drawFinish(int x, int y, int width, int height) {
         Bitmap bitmap = shotScrollView(x, y, width, height);
         templateEditView.resetState();
         doOnBackGround(bitmap);

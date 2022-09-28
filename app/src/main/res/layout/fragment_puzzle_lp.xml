@@ -6,17 +6,22 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_title_back" />
+    <include android:id="@+id/title" layout="@layout/layout_title_back" app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_gravity="center"
+        android:overScrollMode="never"
         android:id="@+id/rv_lp"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+       />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
+        android:background="@color/white"
+        android:id="@+id/none"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
@@ -56,16 +61,18 @@
                     android:layout_width="40dp"
                     android:layout_height="20dp"
                     android:src="@mipmap/icon_lp_frame" />
+
                 <androidx.appcompat.widget.AppCompatSeekBar
-                    android:id="@+id/conner_seekbar"
+                    android:id="@+id/frame_seekbar"
                     android:layout_width="270dp"
-                    android:layout_centerInParent="true"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:maxHeight="4dp"
-                    android:progress="0"
-                    android:layout_marginEnd="12dp"
                     android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:maxHeight="4dp"
+                    android:max="50"
+                    android:progress="0"
                     android:progressDrawable="@drawable/seek_bar_progress"
                     android:splitTrack="false"
                     android:thumb="@drawable/seek_bar_thumb"
