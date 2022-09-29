@@ -15,10 +15,10 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.weilai.jigsawpuzzle.R;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/20
- */
+ ** DATE: 2022/9/29
+ ** Author:tangerine
+ ** Description:
+ **/
 public class RadioImageView extends AppCompatImageView {
     private float width, height;
     private int defaultRadius = 0;

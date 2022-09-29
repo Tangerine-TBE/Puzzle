@@ -10,12 +10,12 @@
     android:layout_height="wrap_content">
         <com.weilai.jigsawpuzzle.weight.template.RadioImageView
             android:id="@+id/aiv_image"
-            android:layout_width="match_parent"
+            android:layout_width="160dp"
             android:scaleType="centerCrop"
             android:layout_height="240dp"
             app:left_top_radius="12dp"
             app:right_top_radius = "12dp"
-            android:layout_weight="1"/>
+            />
         <androidx.appcompat.widget.AppCompatTextView
             android:textSize="16sp"
             android:textColor="#86909C"

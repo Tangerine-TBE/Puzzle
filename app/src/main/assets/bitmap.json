@@ -1,0 +1,535 @@
+[
+  {
+    "bitmap": "From Service",
+    "template": "From Service",
+    "name": "水墨画",
+    "size": [
+      {
+        "x": 0.0736,
+        "y": 0.1905,
+        "angle": 0,
+        "center_y": 0.507936,
+        "center_x": 0.196319,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.3742,
+        "y": 0.1905,
+        "angle": 0,
+        "center_y": 0.507936,
+        "center_x": 0.4969332,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.6748,
+        "y": 0.1905,
+        "angle": 0,
+        "center_y": 0.507936,
+        "center_x": 0.797546,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "template": "From Service",
+    "name": "新年快乐",
+    "size": [
+      {
+        "x": 0.1043,
+        "y": 0.1557,
+        "angle": 0,
+        "center_y": 0.227459,
+        "center_x": 0.288343,
+        "ratio_width": 4,
+        "ratio_height": 3
+      },
+      {
+        "x": 0.5337,
+        "y": 0.1557,
+        "angle": 0,
+        "center_y": 0.227459,
+        "center_x": 0.717791,
+        "ratio_width": 4,
+        "ratio_height": 3
+      },
+      {
+        "x": 0.1043,
+        "y": 0.3975,
+        "angle": 0,
+        "center_y": 0.489754,
+        "center_x": 0.288343,
+        "ratio_width": 4,
+        "ratio_height": 3
+      },
+      {
+        "x": 0.5337,
+        "y": 0.3975,
+        "angle": 0,
+        "center_y": 0.489754,
+        "center_x": 0.717791,
+        "ratio_width": 4,
+        "ratio_height": 3
+      },
+      {
+        "x": 0.1043,
+        "y": 0.6434,
+        "angle": 0,
+        "center_y": 0.735655,
+        "center_x": 0.288343,
+        "ratio_width": 4,
+        "ratio_height": 3
+      },
+      {
+        "x": 0.5337,
+        "y": 0.6434,
+        "angle": 0,
+        "center_y": 0.735655,
+        "center_x": 0.717791,
+        "ratio_width": 4,
+        "ratio_height": 3
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "template": "From Service",
+    "name": "水波",
+    "size": [
+      {
+        "x": 0.1963,
+        "y": 0.0902,
+        "angle": 0,
+        "center_y": 0.20696,
+        "center_x": 0.50306,
+        "ratio_width": 16,
+        "ratio_height": 9
+      },
+      {
+        "x": 0.1963,
+        "y": 0.3893,
+        "angle": 0,
+        "center_y": 0.50614,
+        "center_x": 0.50306,
+        "ratio_width": 16,
+        "ratio_height": 9
+      },
+      {
+        "x": 0.1963,
+        "y": 0.6885,
+        "angle": 0,
+        "center_y": 0.80532,
+        "center_x": 0.50306,
+        "ratio_width": 16,
+        "ratio_height": 9
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "美食不可辜负",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0368,
+        "y": 0.0491,
+        "angle": 0,
+        "center_y": 0.51533,
+        "center_x": 0.50306,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "黄色",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.092,
+        "y": 0.2213,
+        "angle": 0,
+        "center_y": 0.344262,
+        "center_x": 0.276073,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.546,
+        "y": 0.2213,
+        "angle": 0,
+        "center_y": 0.344262,
+        "center_x": 0.730061,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.092,
+        "y": 0.5287,
+        "angle": 0,
+        "center_y": 0.651639,
+        "center_x": 0.276073,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.546,
+        "y": 0.5287,
+        "angle": 0,
+        "center_y": 0.651639,
+        "center_x": 0.730061,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "夏日",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0552,
+        "y": 0.1104,
+        "angle": 0,
+        "center_y": 0.441717,
+        "center_x": 0.5,
+        "ratio_width": 4,
+        "ratio_height": 3
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "蓝色",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.092,
+        "y": 0.2213,
+        "angle": 0,
+        "center_y": 0.34426,
+        "center_x": 0.27607,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.546,
+        "y": 0.2213,
+        "angle": 0,
+        "center_y": 0.34426,
+        "center_x": 0.73006,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.092,
+        "y": 0.5287,
+        "angle": 0,
+        "center_y": 0.65163,
+        "center_x": 0.27607,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.546,
+        "y": 0.5287,
+        "angle": 0,
+        "center_y": 0.65163,
+        "center_x": 0.73006,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "水彩",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.184,
+        "y": 0.1595,
+        "angle": 0,
+        "center_y": 0.523926,
+        "center_x": 0.499202,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "蓝花",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0245,
+        "y": 0.0429,
+        "angle": 0,
+        "center_y": 0.304447,
+        "center_x": 0.286042,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.546,
+        "y": 0.5644,
+        "angle": 0,
+        "center_y": 0.760736,
+        "center_x": 0.742331,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "春天色卡",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0552,
+        "y": 0.0794,
+        "angle": 0,
+        "center_y": 0.523809,
+        "center_x": 0.269938,
+        "ratio_width": 4,
+        "ratio_height": 3
+      },
+      {
+        "x": 0.5153,
+        "y": 0.0794,
+        "angle": 0,
+        "center_y": 0.523809,
+        "center_x": 0.73,
+        "ratio_width": 4,
+        "ratio_height": 3
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "绿色",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0675,
+        "y": 0.1472,
+        "angle": 0,
+        "center_y": 0.481595,
+        "center_x": 0.512269,
+        "ratio_width": 4,
+        "ratio_height": 3
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "橙色卡",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.092,
+        "y": 0.2213,
+        "angle": 0,
+        "center_y": 0.344262,
+        "center_x": 0.276073,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.546,
+        "y": 0.2213,
+        "angle": 0,
+        "center_y": 0.344262,
+        "center_x": 0.730061,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.5287,
+        "y": 0.092,
+        "angle": 0,
+        "center_y": 0.651639,
+        "center_x": 0.276073,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.546,
+        "y": 0.5287,
+        "angle": 0,
+        "center_y": 0.651639,
+        "center_x": 0.730061,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "莫兰迪色",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0552,
+        "y": 0.0675,
+        "angle": 0,
+        "center_y": 0.512269,
+        "center_x": 0.5,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "花蝴蝶",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0552,
+        "y": 0.1104,
+        "angle": 0,
+        "center_y": 0.44478,
+        "center_x": 0.5,
+        "ratio_width": 4,
+        "ratio_height": 3
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "水彩",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0552,
+        "y": 0.1656,
+        "angle": 0,
+        "center_y": 0.5,
+        "center_x": 0.5,
+        "ratio_width": 4,
+        "ratio_height": 3
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "小美好",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.4233,
+        "y": 0.0615,
+        "angle": 0,
+        "center_y": 0.21516,
+        "center_x": 0.65337,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.0675,
+        "y": 0.3033,
+        "angle": 0,
+        "center_y": 0.428278,
+        "center_x": 0.254601,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.5399,
+        "y": 0.4877,
+        "angle": 0,
+        "center_y": 0.620901,
+        "center_x": 0.739263,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.1411,
+        "y": 0.6803,
+        "angle": 0,
+        "center_y": 0.780737,
+        "center_x": 0.291411,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+
+  {
+    "bitmap": "From Service",
+    "name": "花花",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.0613,
+        "y": 0.0369,
+        "angle": 0,
+        "center_y": 0.2242213,
+        "center_x": 0.3517791,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.5521,
+        "y": 0.4262,
+        "angle": 0,
+        "center_y": 0.551680,
+        "center_x": 0.739938,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.092,
+        "y": 0.6762,
+        "angle": 0,
+        "center_y": 0.829918,
+        "center_x": 0.322085,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "bitmap": "From Service",
+    "name": "卡通",
+    "template": "From Service",
+    "size": [
+      {
+        "x": 0.205582,
+        "y": 0.09504,
+        "angle": 15,
+        "center_y": 0.1339344,
+        "center_x": 0.4723926,
+        "ratio_width": 16,
+        "ratio_height": 9
+      },
+      {
+        "x": 0.276993,
+        "y": 0.281352,
+        "angle": -15,
+        "center_y": 0.409836,
+        "center_x": 0.472392,
+        "ratio_width": 16,
+        "ratio_height": 9
+      },
+      {
+        "x": 0.205582,
+        "y": 0.633237,
+        "angle": 15,
+        "center_y": 0.6803278,
+        "center_x": 0.472392,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  }
+
+]

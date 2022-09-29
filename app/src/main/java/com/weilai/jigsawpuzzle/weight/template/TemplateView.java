@@ -45,7 +45,8 @@ public class TemplateView extends View {
     private int mTemplateWidth;
     private boolean mDrawView;
     private BitMapInfo mBitmapInfo;
-    private Bitmap mTemplate32;
+    private Bitmap mTemplate43;
+    private Bitmap mTemplate169;
     private boolean shouldCreateBitmap;
     private final ArrayList<TemplateViewInfo> mAreaTouch = new ArrayList<>();
 
@@ -136,20 +137,24 @@ public class TemplateView extends View {
                             canvas.drawBitmap(extracted(templateViewInfo.getLocalMedia()), null, rect, mPaint);
                         } else {
                             if (!shouldCreateBitmap) {
-                                if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                if (sizeInfo.getAspectRatioWidth() == 1) {
                                     canvas.drawBitmap(mTemplate11, null, rect, mPaint);
-                                } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
-                                    canvas.drawBitmap(mTemplate32, null, rect, mPaint);
+                                } else if (sizeInfo.getAspectRatioWidth() == 4) {
+                                    canvas.drawBitmap(mTemplate43, null, rect, mPaint);
+                                } else if (sizeInfo.getAspectRatioWidth() == 16) {
+                                    canvas.drawBitmap(mTemplate169, null, rect, mPaint);
                                 }
                             }
                         }
                         mAreaTouch.remove(i);
                     } else {
                         if (!shouldCreateBitmap) {
-                            if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                            if (sizeInfo.getAspectRatioWidth() == 1) {
                                 canvas.drawBitmap(mTemplate11, null, rect, mPaint);
-                            } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
-                                canvas.drawBitmap(mTemplate32, null, rect, mPaint);
+                            } else if (sizeInfo.getAspectRatioWidth() == 4) {
+                                canvas.drawBitmap(mTemplate43, null, rect, mPaint);
+                            } else if (sizeInfo.getAspectRatioWidth() == 16) {
+                                canvas.drawBitmap(mTemplate169, null, rect, mPaint);
                             }
                             //收录一下绘制范围，做监听使用,是否有圖片等
                             Region region = new Region(rect);
@@ -222,18 +227,24 @@ public class TemplateView extends View {
                                 canvas.drawBitmap(bitmap, matrix, mPaint);
                             } else {
                                 if (!shouldCreateBitmap) {
-                                    if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                    if (sizeInfo.getAspectRatioWidth() == 1) {
                                         matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
                                         matrix.postRotate(angle);
                                         matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                         matrix.postTranslate(centerX + templateX, centerY + templateY);
                                         canvas.drawBitmap(mTemplate11, matrix, mPaint);
-                                    } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
-                                        matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
+                                    } else if (sizeInfo.getAspectRatioWidth() == 4) {
+                                        matrix.setTranslate(-mTemplate43.getWidth() / 2, -mTemplate43.getHeight() / 2);
                                         matrix.postRotate(angle);
-                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate32.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate32.getHeight());
+                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                         matrix.postTranslate(centerX + templateX, centerY + templateY);
-                                        canvas.drawBitmap(mTemplate32, matrix, mPaint);
+                                        canvas.drawBitmap(mTemplate43, matrix, mPaint);
+                                    } else if (sizeInfo.getAspectRatioWidth() == 16) {
+                                        matrix.setTranslate(-mTemplate169.getWidth() / 2, -mTemplate169.getHeight() / 2);
+                                        matrix.postRotate(angle);
+                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
+                                        matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                        canvas.drawBitmap(mTemplate169, matrix, mPaint);
                                     }
                                 }
 
@@ -241,18 +252,24 @@ public class TemplateView extends View {
                             mAreaTouch.remove(i);
                         } else {
                             if (!shouldCreateBitmap) {
-                                if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                if (sizeInfo.getAspectRatioWidth() == 1) {
                                     matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
                                     matrix.postRotate(angle);
                                     matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                     matrix.postTranslate(centerX + templateX, centerY + templateY);
                                     canvas.drawBitmap(mTemplate11, matrix, mPaint);
-                                } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
-                                    matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
+                                } else if (sizeInfo.getAspectRatioWidth() == 4) {
+                                    matrix.setTranslate(-mTemplate43.getWidth() / 2, -mTemplate43.getHeight() / 2);
                                     matrix.postRotate(angle);
-                                    matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate32.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate32.getHeight());
+                                    matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                     matrix.postTranslate(centerX + templateX, centerY + templateY);
-                                    canvas.drawBitmap(mTemplate32, matrix, mPaint);
+                                    canvas.drawBitmap(mTemplate43, matrix, mPaint);
+                                } else if (sizeInfo.getAspectRatioWidth() == 16) {
+                                    matrix.setTranslate(-mTemplate169.getWidth() / 2, -mTemplate169.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate169, matrix, mPaint);
                                 }
                                 Region region = new Region();
                                 RectF rectF = new RectF();
@@ -321,41 +338,53 @@ public class TemplateView extends View {
                                 Bitmap bitmap = extracted(templateViewInfo.getLocalMedia());
                                 matrix.setTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
                                 matrix.postRotate(angle);
-                                matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / bitmap.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / bitmap.getHeight());
+                                matrix.postScale((beforeRotateRightTopX - beforeRotateLeftTopX) / bitmap.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / bitmap.getHeight());
                                 matrix.postTranslate(centerX + templateX, centerY + templateY);
                                 canvas.drawBitmap(bitmap, matrix, mPaint);
                             } else {
                                 if (!shouldCreateBitmap) {
-                                    if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                    if (sizeInfo.getAspectRatioWidth() == 1) {
                                         matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
                                         matrix.postRotate(angle);
                                         matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                         matrix.postTranslate(centerX + templateX, centerY + templateY);
                                         canvas.drawBitmap(mTemplate11, matrix, mPaint);
-                                    } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
-                                        matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
+                                    } else if (sizeInfo.getAspectRatioWidth() == 4) {
+                                        matrix.setTranslate(-mTemplate43.getWidth() / 2, -mTemplate43.getHeight() / 2);
                                         matrix.postRotate(angle);
-                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate32.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
+                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                         matrix.postTranslate(centerX + templateX, centerY + templateY);
-                                        canvas.drawBitmap(mTemplate32, matrix, mPaint);
+                                        canvas.drawBitmap(mTemplate43, matrix, mPaint);
+                                    } else if (sizeInfo.getAspectRatioWidth() == 16) {
+                                        matrix.setTranslate(-mTemplate169.getWidth() / 2, -mTemplate169.getHeight() / 2);
+                                        matrix.postRotate(angle);
+                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
+                                        matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                        canvas.drawBitmap(mTemplate169, matrix, mPaint);
                                     }
                                 }
                             }
                             mAreaTouch.remove(i);
                         } else {
                             if (!shouldCreateBitmap) {
-                                if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
+                                if (sizeInfo.getAspectRatioWidth() == 1) {
                                     matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
                                     matrix.postRotate(angle);
                                     matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                     matrix.postTranslate(centerX + templateX, centerY + templateY);
                                     canvas.drawBitmap(mTemplate11, matrix, mPaint);
-                                } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
-                                    matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
+                                } else if (sizeInfo.getAspectRatioWidth() == 4) {
+                                    matrix.setTranslate(-mTemplate43.getWidth() / 2, -mTemplate43.getHeight() / 2);
                                     matrix.postRotate(angle);
-                                    matrix.postScale((beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate32.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate32.getHeight());
+                                    matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                     matrix.postTranslate(centerX + templateX, centerY + templateY);
-                                    canvas.drawBitmap(mTemplate32, matrix, mPaint);
+                                    canvas.drawBitmap(mTemplate43, matrix, mPaint);
+                                } else if (sizeInfo.getAspectRatioWidth() == 16) {
+                                    matrix.setTranslate(-mTemplate169.getWidth() / 2, -mTemplate169.getHeight() / 2);
+                                    matrix.postRotate(angle);
+                                    matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
+                                    matrix.postTranslate(centerX + templateX, centerY + templateY);
+                                    canvas.drawBitmap(mTemplate169, matrix, mPaint);
                                 }
                                 Region region = new Region();
                                 RectF rectF = new RectF();
@@ -464,24 +493,24 @@ public class TemplateView extends View {
                     currentTime = System.currentTimeMillis();
                 }
                 for (TemplateViewInfo templateViewInfo : mAreaTouch) {
-                  Region region =   templateViewInfo.getRegion();
-                 if (region.contains(upX,upY)){
-                     if (event.getAction() == MotionEvent.ACTION_UP && hasTarget) {
-                         hasTarget = false;
-                         if (listener != null) {
-                             listener.onRectClick(templateViewInfo.hasPic());
-                             mSettingPosition = templateViewInfo.getPosition();
-                             break;
-                         }
-                     } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                         if (currentTime - mLastTime < 500) {
-                             break;
-                         }
-                         mLastTime = currentTime;
-                         hasTarget = true;
-                     }
-                     break;
-                 }
+                    Region region = templateViewInfo.getRegion();
+                    if (region.contains(upX, upY)) {
+                        if (event.getAction() == MotionEvent.ACTION_UP && hasTarget) {
+                            hasTarget = false;
+                            if (listener != null) {
+                                listener.onRectClick(templateViewInfo.hasPic());
+                                mSettingPosition = templateViewInfo.getPosition();
+                                break;
+                            }
+                        } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            if (currentTime - mLastTime < 500) {
+                                break;
+                            }
+                            mLastTime = currentTime;
+                            hasTarget = true;
+                        }
+                        break;
+                    }
                 }
                 break;
             default:
@@ -495,7 +524,8 @@ public class TemplateView extends View {
         mPaint = new Paint();
         matrix = new Matrix();
         mTemplate11 = BitmapFactory.decodeResource(getResources(), R.mipmap.template11);
-        mTemplate32 = BitmapFactory.decodeResource(getResources(), R.mipmap.template32);
+        mTemplate43 = BitmapFactory.decodeResource(getResources(), R.mipmap.template43);
+        mTemplate169 = BitmapFactory.decodeResource(getResources(), R.mipmap.template169);
 
     }
 }

@@ -1,5 +1,6 @@
 package com.weilai.jigsawpuzzle.fragment.puzzleLPic;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -9,20 +10,27 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.SeekBar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONArray;
+import com.luck.picture.lib.basic.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.SelectMimeType;
+import com.luck.picture.lib.config.SelectModeConfig;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.ColorItemAdapter;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
 import com.weilai.jigsawpuzzle.util.AssetsUtil;
-import com.weilai.jigsawpuzzle.util.L;
+import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
 import com.weilai.library.listener.CustomTabEntity;
@@ -51,7 +59,11 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     private RecyclerView mRvLP;
     private RecyclerView mRvColor;
     private AppCompatSeekBar mFrameSeekBar;
-
+    private LinearLayoutCompat mLayoutColor;
+    private LinearLayoutCompat mLayoutFrame;
+    private ArrayList<String> bitmaps;
+    private static final int FILTER_PUZZLE_LP_CODE = 1;
+    private LongPicItemAdapter longPicItemAdapter;
     private PuzzleLongPicFragment() {
 
     }
@@ -71,6 +83,8 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     @Override
     protected void initView(View view) {
+        mLayoutColor = view.findViewById(R.id.layout_color);
+        mLayoutFrame = view.findViewById(R.id.ll_frame);
         view.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
         mRvLP = view.findViewById(R.id.rv_lp);
         mRvColor = view.findViewById(R.id.rv_color);
@@ -93,80 +107,22 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         AppCompatTextView appCompatTextView = view.findViewById(R.id.tv_selected_color);
         //遍历所有的Bitmap
         assert getArguments() != null;
-        ArrayList<String> bitmaps = getArguments().getStringArrayList("data");
+        bitmaps = getArguments().getStringArrayList("data");
         String colorStr = AssetsUtil.getAssertString(_mActivity, "color.json");
         JSONArray jsonArray = JSONArray.parseArray(colorStr);
         ColorItemAdapter colorItemAdapter = new ColorItemAdapter(_mActivity, jsonArray, new ColorItemAdapter.OnColorPickedListener() {
             @Override
             public void onColorPicked(String color) {
                 appCompatTextView.setBackgroundColor(Color.parseColor(color));
-                mRvLP.setBackgroundColor(Color.parseColor(color));
+                paddingItemDecoration.setBackground(color);
             }
         });
         mRvColor.setAdapter(colorItemAdapter);
-        loadPhoto(bitmaps);
-
+         longPicItemAdapter = new LongPicItemAdapter(_mActivity, bitmaps);
+        mRvLP.setAdapter(longPicItemAdapter);
+        paddingItemDecoration = new PaddingItemDecoration();
+        mRvLP.addItemDecoration(paddingItemDecoration);
     }
-
-    private void loadPhoto(List<String> bitmaps) {
-        showProcessDialog();
-        Observable.create((ObservableOnSubscribe<List<Bitmap>>) emitter -> {
-            if (bitmaps == null || bitmaps.size() == 0) {
-                emitter.onError(new RuntimeException("bitmaps is null"));
-            } else {
-                ArrayList<Bitmap> arrayList = new ArrayList<>();
-                for (String bitMapInfo : bitmaps) {
-                    if (!TextUtils.isEmpty(bitMapInfo)) {
-                        Uri srcUri;
-                        if (PictureMimeType.isContent(bitMapInfo) || PictureMimeType.isHasHttp(bitMapInfo)) {
-                            srcUri = Uri.parse(bitMapInfo);
-                        } else {
-                            srcUri = Uri.fromFile(new File(bitMapInfo));
-                        }
-                        if (srcUri != null) {
-                            InputStream stream = _mActivity.getContentResolver().openInputStream(srcUri);
-                            Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                            if (bitmap != null) {
-                                arrayList.add(bitmap);
-                            }
-                        }
-                    }
-                }
-                emitter.onNext(arrayList);
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-            }
-
-            @Override
-            public void onNext(@NonNull List<Bitmap> bitmaps) {
-                if (bitmaps.isEmpty()) {
-                    onError(new RuntimeException("bitmaps is 0"));
-                } else {
-                    LongPicItemAdapter longPicItemAdapter = new LongPicItemAdapter(_mActivity, bitmaps);
-                    mRvLP.setAdapter(longPicItemAdapter);
-                    paddingItemDecoration = new PaddingItemDecoration();
-                    mRvLP.addItemDecoration(paddingItemDecoration);
-                    hideProcessDialog();
-                }
-
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
-
-    }
-
     @Override
     protected void initListener(View view) {
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
@@ -180,7 +136,29 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     @Override
     public void onTabSelect(int position) {
+        switch (position){
+            case 0:
+                mLayoutFrame.setVisibility(View.VISIBLE);
+                mLayoutColor.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                mLayoutColor.setVisibility(View.GONE);
+                mLayoutFrame.setVisibility(View.GONE);
+                PictureSelector.create(this).openGallery(SelectMimeType.ofImage())
+                        .isDisplayCamera(true)
+                        .setSelectionMode(SelectModeConfig.SINGLE)
+                        .setImageEngine(GlideEngine.createGlideEngine())
+                        .forResult(FILTER_PUZZLE_LP_CODE);
+                break;
+            case 2:
 
+
+
+
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -200,7 +178,6 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 paddingItemDecoration.setProcess(progress);
             }
             mCurrentProgress = progress;
-            mRvLP.requestLayout();
         }
     }
 
@@ -212,5 +189,23 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILTER_PUZZLE_LP_CODE){
+            if (data != null){
+                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+                if (list != null) {
+                    int size = list.size();
+                    if (size > 0) {
+                        String path = list.get(0).getAvailablePath();
+                        bitmaps.add(path);
+                        longPicItemAdapter.notifyItemInserted(bitmaps.size());
+                    }
+                }
+            }
+        }
     }
 }

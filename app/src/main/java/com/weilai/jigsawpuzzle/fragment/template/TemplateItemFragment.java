@@ -105,7 +105,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private void initData1() {
         BitMapInfo bitMapInfo = new BitMapInfo();
         bitMapInfo.setName("模板1:1");
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template_template11);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template11);
         FileUtil.saveBitmapToCache("模板1:1", bitmap);
         bitMapInfo.setBitmap("模板1:1");
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
@@ -120,7 +120,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private void initData2() {
         BitMapInfo bitMapInfo = new BitMapInfo();
         bitMapInfo.setName("角度模板1:1");
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template_template_rorate11);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template11);
         FileUtil.saveBitmapToCache("角度模板1:1", bitmap);
         bitMapInfo.setBitmap("角度模板1:1");
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
@@ -135,7 +135,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private void initData3() {
         BitMapInfo bitMapInfo = new BitMapInfo();
         bitMapInfo.setName("模板3:2");
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template_template32);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template32);
         FileUtil.saveBitmapToCache("模板3:2", bitmap);
         bitMapInfo.setBitmap("模板3:2");
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
@@ -150,7 +150,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private void initData4() {
         BitMapInfo bitMapInfo = new BitMapInfo();
         bitMapInfo.setName("角度模板3:2");
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template_template_rorate32);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template32);
         FileUtil.saveBitmapToCache("角度模板3:2", bitmap);
         bitMapInfo.setBitmap("角度模板3:2");
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
@@ -167,12 +167,12 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private void initData5() {
         BitMapInfo bitMapInfo = new BitMapInfo();
         bitMapInfo.setName("测试图形");
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template_test_1231233);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template169);
         FileUtil.saveBitmapToCache("测试图形", bitmap);
         bitMapInfo.setBitmap("测试图形");
         List<BitMapInfo.SizeInfo> sizeInfos = new ArrayList<>();
         BitMapInfo.SizeInfo sizeInfo1 = new BitMapInfo.SizeInfo(0.12147f, 0.09815f, 15, 0.2454f , 0.2086f, 1, 1);
-        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.614f, 0.080f, 15, 0.2453f, 0.7607f, 2, 3);
+        BitMapInfo.SizeInfo sizeInfo2 = new BitMapInfo.SizeInfo(0.614f, 0.080f, 15, 0.2453f, 0.7607f, 9, 16);
         BitMapInfo.SizeInfo sizeInfo3 = new BitMapInfo.SizeInfo(0.28466f, 0.44171f, 15, 0.6319f, 0.39263f, 1, 1);
         sizeInfos.add(sizeInfo1);
         sizeInfos.add(sizeInfo2);
