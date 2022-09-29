@@ -166,7 +166,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
 
         int i = templateEditView.getSettingPosition();
         if (i >= 0) {
-            BitMapInfo.SizeInfo sizeInfo = bitMapInfo.getSizeInfos().get(0);
+            BitMapInfo.SizeInfo sizeInfo = bitMapInfo.getSizeInfos().get(i);
             mSelector.openGallery(SelectMimeType.ofImage())
                     .setImageEngine(GlideEngine.createGlideEngine())
                     .setCropEngine(new ImageCropEngine(sizeInfo.getAspectRatioWidth(), sizeInfo.getAspectRatioHeight()))

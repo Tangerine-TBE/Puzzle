@@ -2,6 +2,7 @@ package com.weilai.jigsawpuzzle.weight.template;
 
 
 import android.graphics.Bitmap;
+import android.graphics.Region;
 
 import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.keep.IBean;
@@ -15,6 +16,7 @@ public class TemplateViewInfo implements IBean {
     private  boolean mHasPic;
     private  String mUrl;
     private LocalMedia localMedia;
+    private Region mRegion;
     public LocalMedia getLocalMedia() {
         return localMedia;
     }
@@ -30,8 +32,20 @@ public class TemplateViewInfo implements IBean {
         this.mLeftY = leftY;
         this.mUrl = url;
     }
+    public TemplateViewInfo(Region region ,int position,boolean hasPic,String url){
+        this.mRegion = region;
+        this.mPosition = position;
+        this.mHasPic = hasPic;
+        this.mUrl = url;
+    }
     public TemplateViewInfo(){
 
+    }
+    public void setRegion(Region region){
+        this.mRegion = region;
+    }
+    public Region getRegion(){
+        return mRegion;
     }
     public void setLeftX(int mLeftX) {
         this.mLeftX = mLeftX;

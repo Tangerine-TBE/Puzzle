@@ -8,13 +8,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Region;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.annotation.Nullable;
+
 import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
@@ -28,9 +33,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- ** DATE: 2022/9/20
- ** Author:tangerine
- ** Description:
+ * * DATE: 2022/9/20
+ * * Author:tangerine
+ * * Description:
  **/
 public class TemplateView extends View {
     private Paint mPaint;
@@ -110,6 +115,8 @@ public class TemplateView extends View {
                 int outAreaLeftY = templateY + y;
                 int outAreaRightX = templateX + centerX - x + centerX;
                 int outAreaRightY = templateY + centerY - y + centerY;
+                int centerYInTemplate = centerY + templateY;
+                int centerXInTemplate = centerX + templateX;
                 //计算选择前的坐标 以centerX centerY 为中心开始 逆时针旋转 旋转后的坐标为
                 //以(x0,y0)为旋转中心点，
                 //逆时针旋转30度  -30
@@ -119,20 +126,20 @@ public class TemplateView extends View {
                 //获取逆时针旋转前的坐标
                 if (angle == 0) {
                     @SuppressLint("DrawAllocation")
-                    RectF rectF = new RectF(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY);
+                    Rect rect = new Rect(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY);
                     TemplateViewInfo templateViewInfo = null;
                     BitMapInfo.SizeInfo sizeInfo = sizeInfos.get(i);
                     if (mSize > 0) {
                         templateViewInfo = mAreaTouch.get(i);
                         if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
                             //不是占位图
-                            canvas.drawBitmap(extracted(templateViewInfo.getLocalMedia()), null, rectF, mPaint);
+                            canvas.drawBitmap(extracted(templateViewInfo.getLocalMedia()), null, rect, mPaint);
                         } else {
                             if (!shouldCreateBitmap) {
                                 if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
-                                    canvas.drawBitmap(mTemplate11, null, rectF, mPaint);
+                                    canvas.drawBitmap(mTemplate11, null, rect, mPaint);
                                 } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
-                                    canvas.drawBitmap(mTemplate32, null, rectF, mPaint);
+                                    canvas.drawBitmap(mTemplate32, null, rect, mPaint);
                                 }
                             }
                         }
@@ -140,35 +147,67 @@ public class TemplateView extends View {
                     } else {
                         if (!shouldCreateBitmap) {
                             if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
-                                canvas.drawBitmap(mTemplate11, null, rectF, mPaint);
+                                canvas.drawBitmap(mTemplate11, null, rect, mPaint);
                             } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
-                                canvas.drawBitmap(mTemplate32, null, rectF, mPaint);
+                                canvas.drawBitmap(mTemplate32, null, rect, mPaint);
                             }
                             //收录一下绘制范围，做监听使用,是否有圖片等
-                            templateViewInfo = new TemplateViewInfo(outAreaLeftX, outAreaLeftY, outAreaRightX, outAreaRightY, i, false, null);
+                            Region region = new Region(rect);
+                            templateViewInfo = new TemplateViewInfo(region, i, false, null);
                         }
                     }
                     if (templateViewInfo != null) {
                         mAreaTouch.add(i, templateViewInfo);
                     }
                 } else {
-                    double v0 = (outAreaLeftX - centerX) * Math.cos(radians);
-                    double v1 = (outAreaLeftY - centerY) * Math.cos(radians);
-                    double v2 = (outAreaRightX - centerX) * Math.cos(radians);
-                    double v3 = (outAreaRightY - centerY) * Math.cos(radians);
-                    double v4 = (outAreaLeftY - centerY) * Math.sin(radians);
-                    double v5 = (outAreaLeftX - centerX) * Math.sin(radians);
-                    double v6 = (outAreaRightY - centerY) * Math.sin(radians);
-                    double v7 = (outAreaRightX - centerX) * Math.sin(radians);
                     if (angle > 0) { //顺时针旋转
                         @SuppressLint("DrawAllocation")
-                        int beforeRotateLeftX = (int) (v0 + v4 + centerX);
-                        int beforeRotateLeftY = (int) (v1 - v5 + centerY);
-                        int beforeRotateRightX = (int) (v2 + v6 + centerX);
-                        int beforeRotateRightY = (int) (v3 - v7 + centerY);
+                        double resetRadians = Math.toRadians(-angle);
+                        //旋转前左上坐标
+                        float beforeRotateLeftTopX = (float) ((outAreaLeftX - centerXInTemplate) * Math.cos(resetRadians)
+                                - (outAreaLeftY - centerYInTemplate) * Math.sin(resetRadians) + centerXInTemplate);
+                        float beforeRotateLeftTopY = (float) ((outAreaLeftY - centerYInTemplate) * Math.cos(resetRadians)
+                                + (outAreaLeftX - centerXInTemplate) * Math.sin(resetRadians) + centerYInTemplate);
+                        //根据旋转前左上角坐标和中心点求出 旋转前右上 右下 左下坐标
+                        //旋转前右上坐标
+                        float beforeRotateRightTopX = beforeRotateLeftTopX + (centerXInTemplate - beforeRotateLeftTopX) * 2;
+                        //旋转前右下坐标
+                        float beforeRotateRightBottomY = beforeRotateLeftTopY + (centerYInTemplate - beforeRotateLeftTopY) * 2;
+                        //旋转前左下坐标
+                        /*for Test */
+//                        Path path1 = new Path();
+//                        path1.moveTo(beforeRotateLeftTopX, beforeRotateLeftTopY);
+//                        path1.lineTo(beforeRotateRightTopX, beforeRotateRightTopY);
+//                        path1.lineTo(beforeRotateRightBottomX, beforeRotateRightBottomY);
+//                        path1.lineTo(beforeRotateLeftBottomX, beforeRotateLeftBottomY);
+//                        path1.close();
+//                        mPaint.setColor(Color.GREEN);
+//                        canvas.drawPath(path1, mPaint);
+                        //此时四点坐标求出后,再求旋转后的四点坐标
+                        //旋转angle后 左上角坐标
+                        //右上角坐标
+                        double v1 = (beforeRotateRightTopX - centerXInTemplate) * Math.cos(radians);
+                        double v2 = (beforeRotateRightTopX - centerXInTemplate) * Math.sin(radians);
+                        double v3 = (beforeRotateRightBottomY - centerYInTemplate) * Math.sin(radians);
+                        double v4 = (beforeRotateRightBottomY - centerYInTemplate) * Math.cos(radians);
+                        float afterRotateRightTopX = (float) (v1
+                                - (beforeRotateLeftTopY - centerYInTemplate) * Math.sin(radians) + centerXInTemplate);
+                        float afterRotateRightTopY = (float) ((beforeRotateLeftTopY - centerYInTemplate) * Math.cos(radians)
+                                + v2 + centerYInTemplate);
+                        //右下角坐标
+                        float afterRotateRightBottomX = (float) (v1 - v3 + centerXInTemplate);
+                        float afterRotateRightBottomY = (float) (v4 + v2 + centerYInTemplate);
+                        //坐下角坐标
+                        float afterRotateLeftBottomX = (float) ((beforeRotateLeftTopX - centerXInTemplate) * Math.cos(radians) - v3 + centerXInTemplate);
+                        float afterRotateLeftBottomY = (float) (v4 + (beforeRotateLeftTopX - centerXInTemplate) * Math.sin(radians) + centerYInTemplate);
+                        Path path = new Path();
+                        path.moveTo((float) outAreaLeftX, (float) outAreaLeftY);
+                        path.lineTo(afterRotateRightTopX, afterRotateRightTopY);
+                        path.lineTo(afterRotateRightBottomX, afterRotateRightBottomY);
+                        path.lineTo(afterRotateLeftBottomX, afterRotateLeftBottomY);
+                        path.close();
                         TemplateViewInfo templateViewInfo = null;
                         BitMapInfo.SizeInfo sizeInfo = sizeInfos.get(i);
-                        RectF rectF = new RectF();
                         if (mSize > 0) {
                             templateViewInfo = mAreaTouch.get(i);
                             if (!TextUtils.isEmpty(templateViewInfo.getUrl())) {
@@ -176,8 +215,8 @@ public class TemplateView extends View {
                                 Bitmap bitmap = extracted(templateViewInfo.getLocalMedia());
                                 matrix.setTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
                                 matrix.postRotate(angle);
-                                float postScaleX = (float) (beforeRotateRightX - beforeRotateLeftX) / bitmap.getWidth();
-                                float postScaleY = (float) (beforeRotateRightY - beforeRotateLeftY) / bitmap.getHeight();
+                                float postScaleX = (beforeRotateRightTopX - beforeRotateLeftTopX) / bitmap.getWidth();
+                                float postScaleY = (beforeRotateRightBottomY - beforeRotateLeftTopY) / bitmap.getHeight();
                                 matrix.postScale(postScaleX, postScaleY);
                                 matrix.postTranslate(centerX + templateX, centerY + templateY);
                                 canvas.drawBitmap(bitmap, matrix, mPaint);
@@ -186,13 +225,13 @@ public class TemplateView extends View {
                                     if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
                                         matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
                                         matrix.postRotate(angle);
-                                        matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / mTemplate11.getWidth(), (float) (beforeRotateRightY - beforeRotateLeftY) / mTemplate11.getHeight());
+                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                         matrix.postTranslate(centerX + templateX, centerY + templateY);
                                         canvas.drawBitmap(mTemplate11, matrix, mPaint);
                                     } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
                                         matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
                                         matrix.postRotate(angle);
-                                        matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / mTemplate32.getWidth(), (float) (beforeRotateRightY - beforeRotateLeftY) / mTemplate32.getHeight());
+                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate32.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate32.getHeight());
                                         matrix.postTranslate(centerX + templateX, centerY + templateY);
                                         canvas.drawBitmap(mTemplate32, matrix, mPaint);
                                     }
@@ -205,28 +244,74 @@ public class TemplateView extends View {
                                 if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
                                     matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
                                     matrix.postRotate(angle);
-                                    matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / mTemplate11.getWidth(), (float) (beforeRotateRightY - beforeRotateLeftY) / mTemplate11.getHeight());
+                                    matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                     matrix.postTranslate(centerX + templateX, centerY + templateY);
                                     canvas.drawBitmap(mTemplate11, matrix, mPaint);
                                 } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
                                     matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
                                     matrix.postRotate(angle);
-                                    matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / mTemplate32.getWidth(), (float) (beforeRotateRightY - beforeRotateLeftY) / mTemplate32.getHeight());
+                                    matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate32.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate32.getHeight());
                                     matrix.postTranslate(centerX + templateX, centerY + templateY);
                                     canvas.drawBitmap(mTemplate32, matrix, mPaint);
                                 }
-                                //收录一下绘制范围，做监听使用,是否有圖片等
-                                templateViewInfo = new TemplateViewInfo(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, false, null);
+                                Region region = new Region();
+                                RectF rectF = new RectF();
+                                path.computeBounds(rectF, true);
+                                region.setPath(path, new Region((int) rectF.left,
+                                        (int) rectF.top,
+                                        (int) rectF.right,
+                                        (int) rectF.bottom));
+                                templateViewInfo = new TemplateViewInfo(region, i, false, null);
                             }
                         }
                         if (templateViewInfo != null) {
                             mAreaTouch.add(i, templateViewInfo);
                         }
                     } else if (angle < 0) { //逆时针旋转
-                        int beforeRotateLeftX = (int) (v0 - v4 + centerX);
-                        int beforeRotateLeftY = (int) (v1 + v5 + centerY);
-                        int beforeRotateRightX = (int) (v2 - v6 + centerX);
-                        int beforeRotateRightY = (int) (v3 + v7 + centerY);
+                        double resetRadians = Math.toRadians(angle);
+                        //旋转前左上坐标
+                        float beforeRotateLeftTopX = (float) ((outAreaLeftX - centerXInTemplate) * Math.cos(resetRadians)
+                                - (outAreaLeftY - centerYInTemplate) * Math.sin(resetRadians) + centerXInTemplate);
+                        float beforeRotateLeftTopY = (float) ((outAreaLeftY - centerYInTemplate) * Math.cos(resetRadians)
+                                + (outAreaLeftX - centerXInTemplate) * Math.sin(resetRadians) + centerYInTemplate);
+                        //根据旋转前左上角坐标和中心点求出 旋转前右上 右下 左下坐标
+                        //旋转前右上坐标
+                        float beforeRotateRightTopX = beforeRotateLeftTopX + (centerXInTemplate - beforeRotateLeftTopX) * 2;
+                        //旋转前右下坐标
+                        float beforeRotateRightBottomY = beforeRotateLeftTopY + (centerYInTemplate - beforeRotateLeftTopY) * 2;
+                        //旋转前左下坐标
+                        /*for Test */
+//                        Path path1 = new Path();
+//                        path1.moveTo(beforeRotateLeftTopX, beforeRotateLeftTopY);
+//                        path1.lineTo(beforeRotateRightTopX, beforeRotateRightTopY);
+//                        path1.lineTo(beforeRotateRightBottomX, beforeRotateRightBottomY);
+//                        path1.lineTo(beforeRotateLeftBottomX, beforeRotateLeftBottomY);
+//                        path1.close();
+//                        mPaint.setColor(Color.GREEN);
+//                        canvas.drawPath(path1, mPaint);
+                        //此时四点坐标求出后,再求旋转后的四点坐标
+                        //旋转angle后 左上角坐标
+                        //右上角坐标
+                        double v1 = (beforeRotateRightTopX - centerXInTemplate) * Math.cos(radians);
+                        double v2 = (beforeRotateRightTopX - centerXInTemplate) * Math.sin(radians);
+                        double v3 = (beforeRotateRightBottomY - centerYInTemplate) * Math.sin(radians);
+                        double v4 = (beforeRotateRightBottomY - centerYInTemplate) * Math.cos(radians);
+                        float afterRotateRightTopX = (float) (v1
+                                - (beforeRotateLeftTopY - centerYInTemplate) * Math.sin(radians) + centerXInTemplate);
+                        float afterRotateRightTopY = (float) ((beforeRotateLeftTopY - centerYInTemplate) * Math.cos(radians)
+                                + v2 + centerYInTemplate);
+                        //右下角坐标
+                        float afterRotateRightBottomX = (float) (v1 - v3 + centerXInTemplate);
+                        float afterRotateRightBottomY = (float) (v4 + v2 + centerYInTemplate);
+                        //坐下角坐标
+                        float afterRotateLeftBottomX = (float) ((beforeRotateLeftTopX - centerXInTemplate) * Math.cos(radians) - v3 + centerXInTemplate);
+                        float afterRotateLeftBottomY = (float) (v4 + (beforeRotateLeftTopX - centerXInTemplate) * Math.sin(radians) + centerYInTemplate);
+                        Path path = new Path();
+                        path.moveTo((float) outAreaLeftX, (float) outAreaLeftY);
+                        path.lineTo(afterRotateRightTopX, afterRotateRightTopY);
+                        path.lineTo(afterRotateRightBottomX, afterRotateRightBottomY);
+                        path.lineTo(afterRotateLeftBottomX, afterRotateLeftBottomY);
+                        path.close();
                         TemplateViewInfo templateViewInfo = null;
                         BitMapInfo.SizeInfo sizeInfo = sizeInfos.get(i);
                         if (mSize > 0) {
@@ -236,7 +321,7 @@ public class TemplateView extends View {
                                 Bitmap bitmap = extracted(templateViewInfo.getLocalMedia());
                                 matrix.setTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
                                 matrix.postRotate(angle);
-                                matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / bitmap.getWidth(), (beforeRotateRightY - beforeRotateLeftY) / bitmap.getHeight());
+                                matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / bitmap.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / bitmap.getHeight());
                                 matrix.postTranslate(centerX + templateX, centerY + templateY);
                                 canvas.drawBitmap(bitmap, matrix, mPaint);
                             } else {
@@ -244,13 +329,13 @@ public class TemplateView extends View {
                                     if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
                                         matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
                                         matrix.postRotate(angle);
-                                        matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / mTemplate11.getWidth(), (beforeRotateRightY - beforeRotateLeftY) / mTemplate11.getHeight());
+                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                         matrix.postTranslate(centerX + templateX, centerY + templateY);
                                         canvas.drawBitmap(mTemplate11, matrix, mPaint);
                                     } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
                                         matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
                                         matrix.postRotate(angle);
-                                        matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / mTemplate32.getWidth(), (beforeRotateRightY - beforeRotateLeftY) / mTemplate11.getHeight());
+                                        matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate32.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                         matrix.postTranslate(centerX + templateX, centerY + templateY);
                                         canvas.drawBitmap(mTemplate32, matrix, mPaint);
                                     }
@@ -262,18 +347,24 @@ public class TemplateView extends View {
                                 if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1) {
                                     matrix.setTranslate(-mTemplate11.getWidth() / 2, -mTemplate11.getHeight() / 2);
                                     matrix.postRotate(angle);
-                                    matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / mTemplate11.getWidth(), (beforeRotateRightY - beforeRotateLeftY) / mTemplate11.getHeight());
+                                    matrix.postScale((float) (beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate11.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate11.getHeight());
                                     matrix.postTranslate(centerX + templateX, centerY + templateY);
                                     canvas.drawBitmap(mTemplate11, matrix, mPaint);
                                 } else if (sizeInfo.getAspectRatioWidth() / sizeInfo.getAspectRatioHeight() == 1.5) {
                                     matrix.setTranslate(-mTemplate32.getWidth() / 2, -mTemplate32.getHeight() / 2);
                                     matrix.postRotate(angle);
-                                    matrix.postScale((float) (beforeRotateRightX - beforeRotateLeftX) / mTemplate32.getWidth(), (beforeRotateRightY - beforeRotateLeftY) / mTemplate32.getHeight());
+                                    matrix.postScale((beforeRotateRightTopX - beforeRotateLeftTopX) / mTemplate32.getWidth(), (beforeRotateRightBottomY - beforeRotateLeftTopY) / mTemplate32.getHeight());
                                     matrix.postTranslate(centerX + templateX, centerY + templateY);
                                     canvas.drawBitmap(mTemplate32, matrix, mPaint);
                                 }
-                                //收录一下绘制范围，做监听使用,是否有圖片等
-                                templateViewInfo = new TemplateViewInfo(beforeRotateLeftX, beforeRotateLeftY, beforeRotateRightX, beforeRotateRightY, i, false, null);
+                                Region region = new Region();
+                                RectF rectF = new RectF();
+                                path.computeBounds(rectF, true);
+                                region.setPath(path, new Region((int) rectF.left,
+                                        (int) rectF.top,
+                                        (int) rectF.right,
+                                        (int) rectF.bottom));
+                                templateViewInfo = new TemplateViewInfo(region, i, false, null);
                             }
 
                         }
@@ -287,7 +378,7 @@ public class TemplateView extends View {
             if (shouldCreateBitmap && drawBySystem == 1) {
                 if (drawFinish != null) {
                     drawBySystem++;
-                    drawFinish.drawFinish(templateX,templateY,mTemplateWidth,mTemplateHeight);
+                    drawFinish.drawFinish(templateX, templateY, mTemplateWidth, mTemplateHeight);
                 }
             }
         }
@@ -295,7 +386,7 @@ public class TemplateView extends View {
     }
 
     public interface DrawFinish {
-        void drawFinish(int x,int y ,int width,int height);
+        void drawFinish(int x, int y, int width, int height);
     }
 
     private boolean hasTarget;
@@ -346,7 +437,8 @@ public class TemplateView extends View {
         shouldCreateBitmap = true;
         invalidate();
     }
-    public final void resetState(){
+
+    public final void resetState() {
         drawBySystem = 1;
         shouldCreateBitmap = false;
         invalidate();
@@ -372,27 +464,24 @@ public class TemplateView extends View {
                     currentTime = System.currentTimeMillis();
                 }
                 for (TemplateViewInfo templateViewInfo : mAreaTouch) {
-                    if (upX < templateViewInfo.getLeftX() || upX > templateViewInfo.getRightX()) {
-                        continue;
-                    }
-                    if (upY < templateViewInfo.getLeftY() || upY > templateViewInfo.getRightY()) {
-                        continue;
-                    }
-                    if (event.getAction() == MotionEvent.ACTION_UP && hasTarget) {
-                        hasTarget = false;
-                        if (listener != null) {
-                            listener.onRectClick(templateViewInfo.hasPic());
-                            mSettingPosition = templateViewInfo.getPosition();
-                            break;
-                        }
-                    } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        if (currentTime - mLastTime < 500) {
-                            break;
-                        }
-                        mLastTime = currentTime;
-                        hasTarget = true;
-                    }
-                    break;
+                  Region region =   templateViewInfo.getRegion();
+                 if (region.contains(upX,upY)){
+                     if (event.getAction() == MotionEvent.ACTION_UP && hasTarget) {
+                         hasTarget = false;
+                         if (listener != null) {
+                             listener.onRectClick(templateViewInfo.hasPic());
+                             mSettingPosition = templateViewInfo.getPosition();
+                             break;
+                         }
+                     } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                         if (currentTime - mLastTime < 500) {
+                             break;
+                         }
+                         mLastTime = currentTime;
+                         hasTarget = true;
+                     }
+                     break;
+                 }
                 }
                 break;
             default:
@@ -407,5 +496,6 @@ public class TemplateView extends View {
         matrix = new Matrix();
         mTemplate11 = BitmapFactory.decodeResource(getResources(), R.mipmap.template11);
         mTemplate32 = BitmapFactory.decodeResource(getResources(), R.mipmap.template32);
+
     }
 }
