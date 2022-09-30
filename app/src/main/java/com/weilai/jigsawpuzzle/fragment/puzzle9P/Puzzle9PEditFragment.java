@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.ArrayMap;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,13 +26,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * * DATE: 2022/9/28
@@ -98,7 +98,7 @@ public class Puzzle9PEditFragment extends BaseFragment {
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-
+                mDisposable.add(d);
             }
 
             @Override
@@ -126,7 +126,6 @@ public class Puzzle9PEditFragment extends BaseFragment {
         });
     }
 
-    private Disposable mDisposable2;
 
     private void doOnBackGround() {
         showProcessDialog();
@@ -140,7 +139,7 @@ public class Puzzle9PEditFragment extends BaseFragment {
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-                mDisposable2 = d;
+                mDisposable.add(d);
             }
 
             @Override
@@ -162,15 +161,7 @@ public class Puzzle9PEditFragment extends BaseFragment {
         });
     }
 
-    @Override
-    public void onDestroy() {
-        if (mDisposable2 != null) {
-            if (!mDisposable2.isDisposed()) {
-                mDisposable2.dispose();
-            }
-        }
-        super.onDestroy();
-    }
+
 
     private Bitmap shotScrollView(int width, int height) {
         Bitmap bitmap;

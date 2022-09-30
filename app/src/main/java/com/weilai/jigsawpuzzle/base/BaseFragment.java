@@ -10,6 +10,10 @@ import androidx.annotation.Nullable;
 
 import com.weilai.jigsawpuzzle.dialog.ProcessDialog;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.disposables.Disposable;
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.SupportFragment;
 
@@ -22,6 +26,7 @@ public abstract class BaseFragment extends SupportFragment {
     protected abstract void initListener(View view);
 
     private ProcessDialog mProcessDialog;
+    public List<Disposable> mDisposable = new ArrayList<>();
 
     @Nullable
     @Override
@@ -61,4 +66,20 @@ public abstract class BaseFragment extends SupportFragment {
         return (SupportActivity) _mActivity;
     }
 
+    @Override
+    public void onDestroy() {
+        if (mDisposable != null) {
+            if (!mDisposable.isEmpty()) {
+                for (Disposable disposable : mDisposable) {
+                    if (disposable != null) {
+                        if (!disposable.isDisposed()) {
+                            disposable.dispose();
+                        }
+                    }
+                }
+            }
+        }
+        super.onDestroy();
+
+    }
 }

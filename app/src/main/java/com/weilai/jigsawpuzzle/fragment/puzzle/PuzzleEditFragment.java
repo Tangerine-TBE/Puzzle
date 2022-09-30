@@ -29,7 +29,6 @@ import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzle.PuzzleSizeAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
-import com.weilai.jigsawpuzzle.dialog.ProcessDialog;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
@@ -57,14 +56,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableEmitter;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapter.OnItemClickListener, PuzzleView.OnPieceSelectedListener, View.OnClickListener, OnTabSelectListener, SeekBar.OnSeekBarChangeListener, TemplateConfirmDialog.OnConfirmClickedListener {
     private final String[] title = new String[]{"布局", "边框"};
@@ -176,12 +173,12 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
             @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                mDisposable = d;
+            public void onSubscribe( Disposable d) {
+                mDisposable.add(d);
             }
 
             @Override
-            public void onNext(@NonNull List<Bitmap> bitmaps) {
+            public void onNext( List<Bitmap> bitmaps) {
                 if (bitmaps.isEmpty()) {
                     onError(new RuntimeException("bitmaps is 0"));
                 } else {
@@ -196,7 +193,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
 
             @Override
-            public void onError(@NonNull Throwable e) {
+            public void onError( Throwable e) {
 
             }
 
@@ -231,18 +228,18 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Bitmap>() {
             @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                mDisposable1 = d;
+            public void onSubscribe( Disposable d) {
+                mDisposable.add(d);
             }
 
             @Override
-            public void onNext(@NonNull Bitmap bitmap) {
+            public void onNext( Bitmap bitmap) {
                 mPuzzleView.replace(bitmap, "");
                 hideProcessDialog();
             }
 
             @Override
-            public void onError(@NonNull Throwable e) {
+            public void onError(Throwable e) {
 
             }
 
@@ -252,9 +249,6 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
         });
     }
-
-    private Disposable mDisposable1;
-
     private PuzzleLayout choosePuzzleTemplate(int pics, int type, int theme) {
 
         //pic Size to first selection
@@ -351,19 +345,19 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             emitter.onNext(filePath);
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                mDisposable2 = d;
+            public void onSubscribe( Disposable d) {
+                mDisposable.add(d);
             }
 
             @Override
-            public void onNext(@NonNull String s) {
+            public void onNext( String s) {
                 hideProcessDialog();
                 SaveFragment saveFragment = SaveFragment.getInstance(s);
                 start(saveFragment);
             }
 
             @Override
-            public void onError(@NonNull Throwable e) {
+            public void onError( Throwable e) {
 
             }
 
@@ -484,8 +478,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
     }
 
-    private Disposable mDisposable;
-    private Disposable mDisposable2;
+
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
@@ -497,25 +490,6 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
     }
 
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null) {
-            if (!mDisposable.isDisposed()) {
-                mDisposable.dispose();
-            }
-        }
-        if (mDisposable1 != null) {
-            if (!mDisposable1.isDisposed()) {
-                mDisposable1.dispose();
-            }
-        }
-        if (mDisposable2 != null) {
-            if (!mDisposable2.isDisposed()) {
-                mDisposable2.dispose();
-            }
-        }
-        super.onDestroy();
-    }
 
     @Override
     public void onConfirmClicked(String path) {

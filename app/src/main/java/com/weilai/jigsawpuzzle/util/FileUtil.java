@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +15,8 @@ import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.weilai.jigsawpuzzle.configure.Config;
 
 import java.io.BufferedOutputStream;
@@ -61,6 +64,7 @@ public class FileUtil {
         }
         return bitmap;
     }
+
     public static String saveScreenShot(Bitmap bitmap, String fileNameStr) throws Exception {
         FileOutputStream fos;
         File file;

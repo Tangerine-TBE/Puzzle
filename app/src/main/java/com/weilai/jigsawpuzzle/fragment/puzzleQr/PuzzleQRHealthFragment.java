@@ -11,19 +11,17 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
-import com.weilai.jigsawpuzzle.dialog.ProcessDialog;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
-import com.weilai.jigsawpuzzle.fragment.puzzle.PuzzleEditFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.FourStraightLayout;
@@ -37,15 +35,14 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * * DATE: 2022/9/26
@@ -53,9 +50,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * * Description:
  **/
 public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.OnPieceSelectedListener, TemplateConfirmDialog.OnConfirmClickedListener, OnTabSelectListener, SeekBar.OnSeekBarChangeListener {
-    private Disposable mDisposable;
     private PuzzleView mPuzzleView;
-    private Disposable mDisposable2;
     private LinearLayoutCompat llFrame;
     private LinearLayoutCompat llRorate;
     private LinearLayoutCompat llMirror;
@@ -109,8 +104,8 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
             @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                mDisposable = d;
+            public void onSubscribe( Disposable d) {
+                mDisposable .add(d) ;
             }
 
             @Override
@@ -251,7 +246,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-                mDisposable2 = d;
+                mDisposable.add(d);
             }
 
             @Override
@@ -293,22 +288,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
 
     }
 
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null) {
-            if (mDisposable.isDisposed()) {
-                mDisposable.dispose();
-            }
-        }
 
-        if (mDisposable2 != null) {
-            if (mDisposable2.isDisposed()) {
-                mDisposable2.dispose();
-            }
-        }
-
-        super.onDestroy();
-    }
 
     @Override
     public void onConfirmClicked(String path) {

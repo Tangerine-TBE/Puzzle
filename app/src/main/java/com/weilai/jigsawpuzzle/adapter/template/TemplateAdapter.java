@@ -49,19 +49,8 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
        BitMapInfo bitMapInfo =  mapInfos.get(position);
        if (bitMapInfo != null){
-           String name = bitMapInfo.getName();
-           holder.textView.setText(name);
-           if (name.equals("模板1:1")){
-               Glide.with(mContext).load(R.mipmap.template_show_11).into(holder.imageView);
-           }else if (name.equals("模板3:2")){
-               Glide.with(mContext).load(R.mipmap.template_shhow_32).into(holder.imageView);
-           }else if (name.equals("角度模板1:1")){
-               Glide.with(mContext).load(R.mipmap.template_show_rorate_11).into(holder.imageView);
-           }else if (name.equals("角度模板3:2")){
-               Glide.with(mContext).load(R.mipmap.template_show_rorate_32).into(holder.imageView);
-           }else if (name.equals("测试图形")){
-               Glide.with(mContext).load(R.mipmap.template_test_1231233).into(holder.imageView);
-           }
+           holder.textView.setText(bitMapInfo.getName());
+           Glide.with(mContext).load(bitMapInfo.getBitmap()).into(holder.imageView);
            String valueJson = JSONObject.toJSONString(bitMapInfo);
             holder.layoutContent.setOnClickListener(new View.OnClickListener() {
                 @Override
