@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.ContentFrameLayout;
 
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.util.EvenUtil;
 
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;

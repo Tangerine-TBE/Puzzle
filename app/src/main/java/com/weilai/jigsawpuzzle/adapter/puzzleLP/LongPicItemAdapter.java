@@ -70,10 +70,10 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                 bitmap = BitmapFactory.decodeStream(stream);
+                bitmap = BitmapFactory.decodeStream(stream);
             }
         }
-        if (bitmap == null){
+        if (bitmap == null) {
             return;
         }
         int bitMapWidth = bitmap.getWidth();
@@ -97,32 +97,40 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
             place.setSelected(position == mLastSelectedPosition);
         }
         place.setOnClickListener(v -> {
-            if (mLastSelectedView != null) {
-                if (mLastSelectedView != v) {
-                    mLastSelectedView.setSelected(false);
-                    v.setSelected(true);
-                    mLastSelectedView = v;
-                    mLastSelectedPosition = holder.getAdapterPosition();
-                } else {
-                    if (v.isSelected()) {
-                        v.setSelected(false);
-                        mLastSelectedView = null;
-                        mLastSelectedPosition = -1;
-                    } else {
+            if (canSelected) {
+                if (mLastSelectedView != null) {
+                    if (mLastSelectedView != v) {
+                        mLastSelectedView.setSelected(false);
                         v.setSelected(true);
                         mLastSelectedView = v;
                         mLastSelectedPosition = holder.getAdapterPosition();
-                    }
+                    } else {
+                        if (v.isSelected()) {
+                            v.setSelected(false);
+                            mLastSelectedView = null;
+                            mLastSelectedPosition = -1;
+                        } else {
+                            v.setSelected(true);
+                            mLastSelectedView = v;
+                            mLastSelectedPosition = holder.getAdapterPosition();
+                        }
 
+                    }
+                } else {
+                    v.setSelected(true);
+                    mLastSelectedView = v;
+                    mLastSelectedPosition = holder.getAdapterPosition();
                 }
-            } else {
-                v.setSelected(true);
-                mLastSelectedView = v;
-                mLastSelectedPosition = holder.getAdapterPosition();
             }
             //弹出多功能模块
 
         });
+    }
+
+    private boolean canSelected = true;
+
+    public final void setCanSelected() {
+        canSelected = false;
     }
 
     @Override
@@ -134,6 +142,7 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         AppCompatImageView ivImage;
         AppCompatImageView ivPlace;
         FrameLayout layoutContent;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.iv_img);

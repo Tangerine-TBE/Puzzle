@@ -23,6 +23,7 @@ import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * * DATE: 2022/9/14
@@ -52,19 +53,8 @@ public class TemplateShowFragment extends BaseFragment {
     protected void initView(View view) {
         BitMapInfo bitMapInfo = JSONObject.parseObject(getArguments().getString("bitmapInfo"),BitMapInfo.class);
         AppCompatImageView imageView = view.findViewById(R.id.iv_img);
-        if (bitMapInfo.getBitmap().equals("模板1:1")){
-            Glide.with(getContext()).load(R.mipmap.template_show_11).into(imageView);
-        }else if (bitMapInfo.getBitmap().equals("模板3:2")){
-            Glide.with(getContext()).load(R.mipmap.template_shhow_32).into(imageView);
-        }else if (bitMapInfo.getBitmap().equals("角度模板1:1")){
-            Glide.with(getContext()).load(R.mipmap.template_show_rorate_11).into(imageView);
-        }else if (bitMapInfo.getBitmap().equals("角度模板3:2")){
-            Glide.with(getContext()).load(R.mipmap.template_show_rorate_32).into(imageView);
-        }else if (bitMapInfo.getBitmap().equals("测试图形")){
-            Glide.with(getContext()).load(R.mipmap.template_test_1231233).into(imageView);
-        }
-        
-        
+        Glide.with(this).load(bitMapInfo.getBitmap()).into(imageView);
+
         view.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

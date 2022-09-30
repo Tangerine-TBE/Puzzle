@@ -116,7 +116,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
                     int size = bitmaps.size();
                     if (4 - size != 0) {
                         int length = 4 - size;
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template_23);
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.template43);
                         for (int i = 0; i < length; i++) {
                             bitmaps.add(bitmap);
                         }

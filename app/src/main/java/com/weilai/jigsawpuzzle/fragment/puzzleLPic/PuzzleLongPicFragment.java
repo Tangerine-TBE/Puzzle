@@ -29,12 +29,16 @@ import com.weilai.jigsawpuzzle.adapter.puzzleLP.ColorItemAdapter;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
+import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.util.AssetsUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
 import com.weilai.library.listener.CustomTabEntity;
 import com.weilai.library.listener.OnTabSelectListener;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.InputStream;
@@ -57,6 +61,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     private ArrayList<String> bitmaps;
     private static final int FILTER_PUZZLE_LP_CODE = 1;
     private LongPicItemAdapter longPicItemAdapter;
+
     private PuzzleLongPicFragment() {
 
     }
@@ -83,7 +88,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         mRvColor = view.findViewById(R.id.rv_color);
         LinearLayoutManager picVerManager = new LinearLayoutManager(_mActivity);
         mRvLP.setLayoutManager(picVerManager);
-        LinearLayoutManager colorHorManager = new LinearLayoutManager(_mActivity, LinearLayoutManager.HORIZONTAL,true);
+        LinearLayoutManager colorHorManager = new LinearLayoutManager(_mActivity, LinearLayoutManager.HORIZONTAL, true);
         mRvColor.setLayoutManager(colorHorManager);
         mFrameSeekBar = view.findViewById(R.id.frame_seekbar);
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
@@ -111,11 +116,12 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             }
         });
         mRvColor.setAdapter(colorItemAdapter);
-         longPicItemAdapter = new LongPicItemAdapter(_mActivity, bitmaps);
+        longPicItemAdapter = new LongPicItemAdapter(_mActivity, bitmaps);
         mRvLP.setAdapter(longPicItemAdapter);
         paddingItemDecoration = new PaddingItemDecoration();
         mRvLP.addItemDecoration(paddingItemDecoration);
     }
+
     @Override
     protected void initListener(View view) {
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
@@ -129,7 +135,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     @Override
     public void onTabSelect(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 mLayoutFrame.setVisibility(View.VISIBLE);
                 mLayoutColor.setVisibility(View.VISIBLE);
@@ -144,30 +150,32 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                         .forResult(FILTER_PUZZLE_LP_CODE);
                 break;
             case 2:
-
-
-
-
+                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(bitmaps);
+                start(puzzleLPSortFragment);
                 break;
             default:
                 break;
         }
     }
 
+    private PuzzleLPSortFragment puzzleLPSortFragment = null;
+
     @Override
     public void onTabReselect(int position) {
 
     }
-    private int mCurrentProgress = 0 ;
-    private PaddingItemDecoration paddingItemDecoration ;
+
+    private int mCurrentProgress = 0;
+    private PaddingItemDecoration paddingItemDecoration;
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser){
-           int offsetProgress =progress-mCurrentProgress;
+        if (fromUser) {
+            int offsetProgress = progress - mCurrentProgress;
             //向右滑动 0-5  5-8
-            if (offsetProgress > 0){
+            if (offsetProgress > 0) {
                 paddingItemDecoration.setProcess(progress);
-            }else if (offsetProgress < 0){
+            } else if (offsetProgress < 0) {
                 paddingItemDecoration.setProcess(progress);
             }
             mCurrentProgress = progress;
@@ -184,11 +192,19 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataSortChange(LpSortEvent event) {
+        bitmaps = (ArrayList<String>) event.data;
+        longPicItemAdapter.notifyDataSetChanged();
+        puzzleLPSortFragment.pop();
+        puzzleLPSortFragment = null;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FILTER_PUZZLE_LP_CODE){
-            if (data != null){
+        if (requestCode == FILTER_PUZZLE_LP_CODE) {
+            if (data != null) {
                 ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
                 if (list != null) {
                     int size = list.size();

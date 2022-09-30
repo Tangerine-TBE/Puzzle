@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.weilai.jigsawpuzzle.dialog.ProcessDialog;
+import com.weilai.jigsawpuzzle.util.EvenUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public abstract class BaseFragment extends SupportFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        EvenUtil.register(this);
         final View view;
         if (setLayout() != null) {
             if (setLayout() instanceof View) {
@@ -79,6 +81,7 @@ public abstract class BaseFragment extends SupportFragment {
                 }
             }
         }
+        EvenUtil.unregister(this);
         super.onDestroy();
 
     }

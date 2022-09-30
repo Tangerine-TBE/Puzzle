@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateEditDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
+import com.weilai.jigsawpuzzle.net.base.NetConfig;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.ImageCropEngine;
@@ -44,14 +46,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.ObservableEmitter;
-import io.reactivex.rxjava3.core.ObservableOnSubscribe;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 
 /**
  * * DATE: 2022/9/14
@@ -94,7 +96,6 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         mSelector = PictureSelector
                 .create(this);
         templateEditView = view.findViewById(R.id.icon);
-        templateEditView.setTemplateBitmap(bitMapInfo);
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
         tvTitle.setText(getString(R.string.preview_template));
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
@@ -111,6 +112,35 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
                 checkNumOfPicSelected();
             }
         });
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        NetConfig.getInstance().getINetService().getPhoto(bitMapInfo.getTemplate()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ResponseBody>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                mDisposable.add(d);
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+                if (responseBody != null) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream()) ;
+                    templateEditView.setTemplateBitmap(bitMapInfo,bitmap);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                L.e(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+        super.onLazyInitView(savedInstanceState);
     }
 
     private void checkNumOfPicSelected() {
@@ -166,10 +196,10 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
 
         int i = templateEditView.getSettingPosition();
         if (i >= 0) {
-            BitMapInfo.SizeInfo sizeInfo = bitMapInfo.getSizeInfos().get(i);
+            BitMapInfo.Size sizeInfo = bitMapInfo.getSize().get(i);
             mSelector.openGallery(SelectMimeType.ofImage())
                     .setImageEngine(GlideEngine.createGlideEngine())
-                    .setCropEngine(new ImageCropEngine(sizeInfo.getAspectRatioWidth(), sizeInfo.getAspectRatioHeight()))
+                    .setCropEngine(new ImageCropEngine(sizeInfo.getRatioWidth(), sizeInfo.getRatioHeight()))
                     .isPreviewImage(true)
                     .isDisplayCamera(false)
                     .setSelectionMode(SelectModeConfig.SINGLE)
@@ -184,7 +214,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         LocalMedia localMedia = templateEditView.getInfoFromView();
         int i = templateEditView.getSettingPosition();
         if (i >= 0) {
-            BitMapInfo.SizeInfo sizeInfo = bitMapInfo.getSizeInfos().get(0);
+            BitMapInfo.Size sizeInfo = bitMapInfo.getSize().get(0);
             if (localMedia == null) {
                 return;
             }
@@ -203,7 +233,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             File externalFilesDir = getBaseActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
             File outputFile = new File(externalFilesDir.getAbsolutePath(), fileName);
             destinationUri = Uri.fromFile(outputFile);
-            cropFileEngine = new ImageCropEngine(sizeInfo.getAspectRatioWidth(), sizeInfo.getAspectRatioHeight());
+            cropFileEngine = new ImageCropEngine(sizeInfo.getRatioWidth(), sizeInfo.getRatioHeight());
             SelectedManager.addSelectResult(localMedia);
             cropFileEngine.onStartCrop(this, srcUri, destinationUri, dataCropSource, CROPPER_CODE);
         }
@@ -257,7 +287,6 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private Disposable mDisposable;
 
     @Override
     public void onConfirmClicked(String path) {
@@ -271,8 +300,13 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         showProcessDialog();
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Throwable {
-                String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
+            public void subscribe(ObservableEmitter<String> emitter) {
+                String filePath = null;
+                try {
+                    filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (!bitmap.isRecycled()) {
                     bitmap.recycle();
                 }
@@ -280,18 +314,18 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                mDisposable = d;
+            public void onSubscribe(Disposable d) {
+                mDisposable.add(d);
             }
 
             @Override
-            public void onNext(@NonNull String s) {
+            public void onNext(String s) {
                 hideProcessDialog();
                 new TemplateConfirmDialog(getContext(), TemplateEditFragment.this, s).show();
             }
 
             @Override
-            public void onError(@NonNull Throwable e) {
+            public void onError(Throwable e) {
 
             }
 
@@ -302,28 +336,21 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         });
     }
 
-    @Override
-    public void onDestroy() {
-        if (mDisposable != null) {
-            if (!mDisposable.isDisposed()) {
-                mDisposable.dispose();
-            }
-        }
-        super.onDestroy();
-    }
 
-    private Bitmap shotScrollView(int x, int y, int width, int height) {
+    private Bitmap shotScrollView(float x, float y, float width, float height) {
         Bitmap bitmap;
         templateEditView.setBackgroundColor(Color.parseColor("#ffffff"));
         bitmap = Bitmap.createBitmap(templateEditView.getWidth(), templateEditView.getHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         templateEditView.draw(canvas);
-        bitmap = Bitmap.createBitmap(bitmap, x, y, width, height);
+        bitmap = Bitmap.createBitmap(bitmap, (int)x, (int)y, (int)width, (int)height);
         return bitmap;
     }
 
+
+
     @Override
-    public void drawFinish(int x, int y, int width, int height) {
+    public void drawFinish(float x, float y, float width, float height) {
         Bitmap bitmap = shotScrollView(x, y, width, height);
         templateEditView.resetState();
         doOnBackGround(bitmap);
