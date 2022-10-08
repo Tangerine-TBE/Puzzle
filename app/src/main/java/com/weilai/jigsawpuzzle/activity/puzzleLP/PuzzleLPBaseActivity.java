@@ -22,6 +22,7 @@ public class PuzzleLPBaseActivity extends BaseFragmentActivity {
     @Override
     public void setStatusBar() {
         StatusBarUtil.setTranslucentForImageViewInFragment(this, 0, null);
-        StatusBarUtil.setLightMode(this);
+        super.setStatusBar();
+
     }
 }

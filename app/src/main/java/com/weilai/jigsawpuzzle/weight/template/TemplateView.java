@@ -51,6 +51,11 @@ public class TemplateView extends View {
     private boolean shouldCreateBitmap;
     private float templateScale;
     private final ArrayList<TemplateViewInfo> mAreaTouch = new ArrayList<>();
+    private boolean hasTarget;
+    private Matrix matrix;
+    private int drawBySystem = 1;
+    private DrawFinish drawFinish;
+    private OutRectClickListener listener;
 
     public TemplateView(Context context) {
         this(context, null);
@@ -428,11 +433,6 @@ public class TemplateView extends View {
         void drawFinish(float x, float y, float width, float height);
     }
 
-    private boolean hasTarget;
-    private Matrix matrix;
-    private int drawBySystem = 1;
-    private DrawFinish drawFinish;
-    private OutRectClickListener listener;
 
 
     public final void setDrawFinish(DrawFinish drawFinish) {

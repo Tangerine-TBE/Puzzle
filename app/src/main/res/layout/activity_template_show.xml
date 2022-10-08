@@ -6,7 +6,6 @@
     android:fitsSystemWindows="true"
     android:paddingEnd="16dp"
     android:paddingBottom="16dp"
-    android:background="@color/card_view_color"
     android:layout_height="match_parent">
     <include
         layout="@layout/layout_title_back"/>

@@ -8,6 +8,8 @@ import androidx.appcompat.widget.ContentFrameLayout;
 
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.util.EvenUtil;
+import com.weilai.jigsawpuzzle.util.StatusBarUtil;
+import com.weilai.jigsawpuzzle.util.ThemeUtil;
 
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
@@ -15,7 +17,13 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public abstract class BaseFragmentActivity extends SupportActivity {
     public abstract BaseFragment setRootFragment();
-    public abstract void setStatusBar();
+    public void setStatusBar(){
+        if (ThemeUtil.getDarkModeStatus()) {
+            StatusBarUtil.setDarkMode(this);
+        } else {
+            StatusBarUtil.setLightMode(this);
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

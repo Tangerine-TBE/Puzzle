@@ -5,6 +5,7 @@ import com.weilai.jigsawpuzzle.base.BaseFragmentActivity;
 import com.weilai.jigsawpuzzle.fragment.template.TemplateItemFragment;
 import com.weilai.jigsawpuzzle.fragment.template.TemplateShowFragment;
 import com.weilai.jigsawpuzzle.util.StatusBarUtil;
+import com.weilai.jigsawpuzzle.util.ThemeUtil;
 
 public class TemplateBaseActivity extends BaseFragmentActivity {
     @Override
@@ -16,6 +17,6 @@ public class TemplateBaseActivity extends BaseFragmentActivity {
     @Override
     public void setStatusBar() {
         StatusBarUtil.setTranslucentForImageViewInFragment(this, 0, null);
-        StatusBarUtil.setLightMode(this);
+        super.setStatusBar();
     }
 }
