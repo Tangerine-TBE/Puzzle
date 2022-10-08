@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tips"
+    android:layout_width="350dp"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@drawable/bg_background_radius_30"
+    android:backgroundTint="#1E1E1E"
+    android:gravity="center"
+    android:paddingStart="20dp"
+    android:paddingTop="5dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="5dp"
+    android:visibility="visible">
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+

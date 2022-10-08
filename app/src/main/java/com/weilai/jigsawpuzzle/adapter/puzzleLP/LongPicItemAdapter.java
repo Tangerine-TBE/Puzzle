@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.activity.puzzle.PuzzleBaseActivity;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
 
 import java.io.File;
@@ -121,6 +122,7 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
                     mLastSelectedView = v;
                     mLastSelectedPosition = holder.getAdapterPosition();
                 }
+                mOnItemClickedListener.onItemClicked(holder.itemView);
             }
             //弹出多功能模块
 
@@ -128,11 +130,20 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
     }
 
     private boolean canSelected = true;
-
+    private OnItemClickedListener mOnItemClickedListener;
     public final void setCanSelected() {
         canSelected = false;
     }
-
+    public interface OnItemClickedListener{
+        void onItemClicked(View itemView);
+    }
+    public final void setOnItemClickedListener(OnItemClickedListener onItemClickedListener){
+        this.mOnItemClickedListener = onItemClickedListener;
+    }
+    public final void resetItem(){
+        mLastSelectedView.setSelected(false);
+        mLastSelectedPosition = -1;
+    }
     @Override
     public int getItemCount() {
         return bitmaps.size();

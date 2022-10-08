@@ -475,8 +475,8 @@ public class PuzzleView extends View {
                 onPieceSelectedListener.onPieceSelected(handlingPiece,
                         puzzlePieces.indexOf(handlingPiece));
             }
-        }else{
-            if (onPieceSelectedListener != null){
+        } else {
+            if (onPieceSelectedListener != null) {
                 onPieceSelectedListener.onPieceUnSelected();
             }
         }
@@ -782,7 +782,6 @@ public class PuzzleView extends View {
         this.needDrawLine = needDrawLine;
         handlingPiece = null;
         previousHandlingPiece = null;
-        invalidate();
     }
 
     public boolean isNeedDrawOuterLine() {
@@ -791,7 +790,6 @@ public class PuzzleView extends View {
 
     public void setNeedDrawOuterLine(boolean needDrawOuterLine) {
         this.needDrawOuterLine = needDrawOuterLine;
-        invalidate();
     }
 
     public int getLineColor() {

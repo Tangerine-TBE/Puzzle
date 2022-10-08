@@ -12,12 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.bean.PuzzleEntity;
 import com.weilai.jigsawpuzzle.weight.puzzle.slant.NumberSlantLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.NumberStraightLayout;
 import com.xiaopo.flying.puzzle.PuzzleLayout;
 import com.xiaopo.flying.puzzle.PuzzleView;
-import com.xiaopo.flying.puzzle.SquarePuzzleView;
 
 import java.util.List;
 
@@ -46,24 +44,24 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-         View view = LayoutInflater.from(mContext).inflate(R.layout.item_puzzle_view, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_puzzle_view, parent, false);
         return new ViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PuzzleLayout puzzleLayout = mPuzzleLayouts.get(position);
-        holder.puzzleView.setNeedDrawLine(false);
-        holder.puzzleView.setNeedDrawOuterLine(false);
         holder.puzzleView.setTouchEnable(false);
         holder.puzzleView.setPuzzleLayout(puzzleLayout);
         holder.puzzleView.addPieces(pics);
+
         if (puzzleLayout instanceof NumberSlantLayout && mCurrentPuzzleLayout instanceof NumberSlantLayout) {
             NumberSlantLayout puzzleLayoutNumber = (NumberSlantLayout) puzzleLayout;
             NumberSlantLayout currentLayoutNumber = (NumberSlantLayout) mCurrentPuzzleLayout;
             if (puzzleLayoutNumber.getTheme() == currentLayoutNumber.getTheme()) {
                 holder.frameLayout.setSelected(true);
                 mCurrentView = holder.frameLayout;
-            }else{
+            } else {
                 holder.frameLayout.setSelected(false);
             }
         } else if (puzzleLayout instanceof NumberStraightLayout && mCurrentPuzzleLayout instanceof NumberStraightLayout) {
@@ -72,30 +70,31 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
             if (puzzleLayoutNumber.getTheme() == currentLayoutNumber.getTheme()) {
                 holder.frameLayout.setSelected(true);
                 mCurrentView = holder.frameLayout;
-            }else{
+            } else {
                 holder.frameLayout.setSelected(false);
             }
-        }else{
+        } else {
             holder.frameLayout.setSelected(false);
         }
 
         holder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.frameLayout != mCurrentView){
-                        holder.frameLayout.setSelected(true);
-                        if (mCurrentView != null){
-                            mCurrentView.setSelected(false);
-                        }
-                        mCurrentView = holder.frameLayout;
-                        mCurrentPuzzleLayout = puzzleLayout;
-                        if (mOnItemClickListener != null){
-                            mOnItemClickListener.onItemClick(puzzleLayout, pics);
-                        }
-                    }else{
-                        holder.frameLayout.setSelected(true);
-                        mCurrentPuzzleLayout = puzzleLayout;
+                if (holder.frameLayout != mCurrentView) {
+                    holder.frameLayout.setSelected(true);
+                    if (mCurrentView != null) {
+                        mCurrentView.setSelected(false);
+
                     }
+                    mCurrentView = holder.frameLayout;
+                    mCurrentPuzzleLayout = puzzleLayout;
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemClick(puzzleLayout, pics);
+                    }
+                } else {
+                    holder.frameLayout.setSelected(true);
+                    mCurrentPuzzleLayout = puzzleLayout;
+                }
             }
         });
     }
@@ -106,12 +105,13 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        SquarePuzzleView puzzleView;
+        PuzzleView puzzleView;
         FrameLayout frameLayout;
-        ViewHolder(View view) {
-            super(view);
-            frameLayout = view.findViewById(R.id.layout_content);
-            puzzleView = view.findViewById(R.id.puzzle_view);
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            frameLayout = itemView.findViewById(R.id.layout_content);
+            puzzleView = itemView.findViewById(R.id.puzzle_view);
         }
     }
 

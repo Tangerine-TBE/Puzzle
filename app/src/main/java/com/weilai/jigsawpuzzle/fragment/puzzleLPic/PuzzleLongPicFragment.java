@@ -1,13 +1,11 @@
 package com.weilai.jigsawpuzzle.fragment.puzzleLPic;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
@@ -20,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.fastjson.JSONArray;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -29,8 +26,10 @@ import com.weilai.jigsawpuzzle.adapter.puzzleLP.ColorItemAdapter;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
+import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.util.AssetsUtil;
+import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
@@ -40,10 +39,7 @@ import com.weilai.library.listener.OnTabSelectListener;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -51,7 +47,7 @@ import java.util.List;
  * * Author:tangerine
  * * Description:
  **/
-public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectListener, SeekBar.OnSeekBarChangeListener {
+public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectListener, SeekBar.OnSeekBarChangeListener, PuzzleLpPopUp.OnPopUpDismiss {
     private String titles[] = {"边框", "添加", "排序"};
     private RecyclerView mRvLP;
     private RecyclerView mRvColor;
@@ -61,6 +57,9 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     private ArrayList<String> bitmaps;
     private static final int FILTER_PUZZLE_LP_CODE = 1;
     private LongPicItemAdapter longPicItemAdapter;
+    private PuzzleLpPopUp mPuzzleLpPopUp;
+    private float mActionBarHeight;
+    private FlyTabLayout mFlyTabLayout;
 
     private PuzzleLongPicFragment() {
 
@@ -81,6 +80,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     @Override
     protected void initView(View view) {
+        mPuzzleLpPopUp = new PuzzleLpPopUp(_mActivity, this,null,null);
         mLayoutColor = view.findViewById(R.id.layout_color);
         mLayoutFrame = view.findViewById(R.id.ll_frame);
         view.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
@@ -98,10 +98,10 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             TabEntity tabEntity = new TabEntity(tile);
             entities.add(tabEntity);
         }
-        FlyTabLayout flyTabLayout = view.findViewById(R.id.tabLayout);
-        flyTabLayout.setTabData(entities);
-        flyTabLayout.setCurrentTab(0);
-        flyTabLayout.setOnTabSelectListener(this);
+        mFlyTabLayout = view.findViewById(R.id.tabLayout);
+        mFlyTabLayout.setTabData(entities);
+        mFlyTabLayout.setCurrentTab(0);
+        mFlyTabLayout.setOnTabSelectListener(this);
         AppCompatTextView appCompatTextView = view.findViewById(R.id.tv_selected_color);
         //遍历所有的Bitmap
         assert getArguments() != null;
@@ -120,6 +120,11 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         mRvLP.setAdapter(longPicItemAdapter);
         paddingItemDecoration = new PaddingItemDecoration();
         mRvLP.addItemDecoration(paddingItemDecoration);
+        TypedArray actionbarSizeTypedArray = _mActivity.obtainStyledAttributes(new int[]{
+                android.R.attr.actionBarSize
+        });
+        mActionBarHeight = actionbarSizeTypedArray.getDimension(0, 0);
+        actionbarSizeTypedArray.recycle();
     }
 
     @Override
@@ -131,6 +136,22 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             }
         });
         mFrameSeekBar.setOnSeekBarChangeListener(this);
+        longPicItemAdapter.setOnItemClickedListener(new LongPicItemAdapter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(View itemView) {
+                int rvLp = mRvLP.getHeight();
+                if (mPuzzleLpPopUp.isShowing()) {
+                    mPuzzleLpPopUp.dismiss();
+                }
+                if (itemView.getTop() >= mActionBarHeight) {
+                    mPuzzleLpPopUp.show(itemView, true);
+                } else if (itemView.getBottom() <= rvLp - mActionBarHeight) {
+                    mPuzzleLpPopUp.show(itemView, false);
+                } else {
+                    mPuzzleLpPopUp.show(mFlyTabLayout, true);
+                }
+            }
+        });
     }
 
     @Override
@@ -216,5 +237,15 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 }
             }
         }
+    }
+
+    @Override
+    public void dismiss() {
+        longPicItemAdapter.resetItem();
+    }
+
+    @Override
+    public void clicked(View view) {
+
     }
 }

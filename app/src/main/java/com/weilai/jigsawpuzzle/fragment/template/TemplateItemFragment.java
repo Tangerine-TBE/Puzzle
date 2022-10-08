@@ -1,41 +1,42 @@
 package com.weilai.jigsawpuzzle.fragment.template;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.ArrayMap;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.alibaba.fastjson.JSONArray;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
-import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.template.TemplateAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.net.base.NetConfig;
 import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
-import com.weilai.jigsawpuzzle.util.L;
+import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.weight.template.SpacesItemDecoration;
+import com.weilai.jigsawpuzzle.weight.template.SplitItemDecoration;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 /**
  * * DATE: 2022/9/14
@@ -47,7 +48,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
     private RecyclerView mRvTemplate;
     private List<BitMapInfo> list = new ArrayList<>();
     private TemplateAdapter templateAdapter;
-    private GridLayoutManager gridLayoutManager;
+    private StaggeredGridLayoutManager gridLayoutManager;
     private SmartRefreshLayout mRefreshLayout;
     ArrayMap<String, Integer> arrayMap;
 
@@ -75,15 +76,10 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         mRefreshLayout = view.findViewById(R.id.smart_layout);
         mRvTemplate = view.findViewById(R.id.rv_template_data);
         templateAdapter = new TemplateAdapter(list, getContext(), this);
-        gridLayoutManager = new GridLayoutManager(_mActivity, 2);
+        gridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRvTemplate.setLayoutManager(gridLayoutManager);
         mRvTemplate.setAdapter(templateAdapter);
-        arrayMap = new ArrayMap<>();
-        arrayMap.put(SpacesItemDecoration.TOP_SPACE, 60);
-        arrayMap.put(SpacesItemDecoration.BOTTOM_SPACE, 60);
-        arrayMap.put(SpacesItemDecoration.LEFT_SPACE, 60);
-        arrayMap.put(SpacesItemDecoration.RIGHT_SPACE, 20);
-        mRvTemplate.addItemDecoration(new SpacesItemDecoration(2, arrayMap, true));
+        mRvTemplate.addItemDecoration(new SplitItemDecoration(20));
         mRefreshLayout.setPrimaryColors(new int[]{getResources().getColor(R.color.sel_text_main_color)});
     }
 
@@ -109,14 +105,10 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        NetConfig.getInstance().getINetService().getPicTemplate().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ResponseBody>() {
+        NetConfig.getInstance().getINetService().getPicTemplate().flatMap(new Function<ResponseBody, ObservableSource<List<BitMapInfo>>>() {
             @Override
-            public void onSubscribe(Disposable d) {
-                mDisposable.add(d);
-            }
-
-            @Override
-            public void onNext(ResponseBody responseBody) {
+            public ObservableSource<List<BitMapInfo>> apply(ResponseBody responseBody) throws Exception {
+                ArrayList<BitMapInfo> bitMapInfos = null;
                 if (responseBody != null) {
                     String json = "";
                     try {
@@ -124,19 +116,32 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (list != null){
-                        if (!list.isEmpty()) {
-                            list.clear();
-                        }
-                        try {
-                            list.addAll(JSONArray.parseArray(json, BitMapInfo.class));
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
+                    bitMapInfos = new ArrayList<>(JSONArray.parseArray(json, BitMapInfo.class));
+                    for (BitMapInfo bitMapInfo : bitMapInfos) {
+                        Response<ResponseBody> responseBitmap = NetConfig.getInstance().getINetService().getPhoto(bitMapInfo.getBitmap()).execute();
+                        assert responseBitmap.body() != null;
+                        Bitmap bitmapBitmap = BitmapFactory.decodeStream(responseBitmap.body().byteStream());
+                        String bitmapPath = FileUtil.saveBitmapToCache(bitMapInfo.getName() + "bitmap", bitmapBitmap);
+                        bitMapInfo.setBitmap(bitmapPath);
                     }
-
-
                 }
+                ArrayList<BitMapInfo> finalBitMapInfos = bitMapInfos;
+                return Observable.create(emitter -> emitter.onNext(finalBitMapInfos));
+
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<BitMapInfo>>() {
+            @Override
+            public void onNext(List<BitMapInfo> bitMapInfos) {
+                if (bitMapInfos != null) {
+                    list.addAll(bitMapInfos);
+                    templateAdapter.notifyDataSetChanged();
+                    refreshLayout.finishRefresh();
+                }
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                mDisposable.add(d);
             }
 
             @Override
@@ -146,14 +151,11 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
 
             @Override
             public void onComplete() {
-                templateAdapter.notifyDataSetChanged();
-                refreshLayout.finishRefresh();
+
             }
         });
 
     }
-
-
 
 
 }

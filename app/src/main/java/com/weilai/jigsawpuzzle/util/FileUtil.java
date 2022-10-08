@@ -35,7 +35,7 @@ import java.util.Objects;
  **/
 public class FileUtil {
     private static final String BASE_PATH = getApplicationContext().getDatabasePath("template").getAbsolutePath() ;
-    public static void saveBitmapToCache(String fileName, Bitmap bitmap) {
+    public static String saveBitmapToCache(String fileName, Bitmap bitmap) {
         File file = new File(BASE_PATH);
         if (!file.exists() || !file.isDirectory()) {
             file.mkdir();
@@ -47,6 +47,7 @@ public class FileUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return bitmapFile.getAbsolutePath();
     }
     public static Bitmap getBitmapFromCache(String fileName){
         Bitmap bitmap = null;
@@ -90,7 +91,6 @@ public class FileUtil {
             fos.close();
         }
         savePhotoAlbum(bitmap,new File(filePath));
-
         return filePath;
     }
     private static void savePhotoAlbum(Bitmap src, File file) {

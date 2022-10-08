@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="150dp"
     android:layout_height="150dp"
-    android:id="@+id/layout_content"
-    android:background="@drawable/puzzle_item_select"
-    android:clickable="true"
-    android:focusable="true"
-    android:padding="5dp"
     >
+    <FrameLayout
 
-    <com.xiaopo.flying.puzzle.SquarePuzzleView
-        android:id="@+id/puzzle_view"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent">
+        <com.xiaopo.flying.puzzle.PuzzleView
+            android:id="@+id/puzzle_view"
+            app:line_size="6"
+            app:need_draw_line="true"
+            app:line_color="@color/sel_text_main_color"
+            app:need_draw_outer_line="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/layout_content"
+        android:background="@drawable/puzzle_item_select"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 
 </FrameLayout>
 

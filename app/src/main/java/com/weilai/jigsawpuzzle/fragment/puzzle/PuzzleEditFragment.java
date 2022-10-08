@@ -1,6 +1,9 @@
 package com.weilai.jigsawpuzzle.fragment.puzzle;
 
 
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,10 +12,13 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -29,8 +35,10 @@ import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzle.PuzzleSizeAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
+import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
+import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.PuzzleUtil;
@@ -63,15 +71,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapter.OnItemClickListener, PuzzleView.OnPieceSelectedListener, View.OnClickListener, OnTabSelectListener, SeekBar.OnSeekBarChangeListener, TemplateConfirmDialog.OnConfirmClickedListener {
+public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapter.OnItemClickListener, PuzzleView.OnPieceSelectedListener, View.OnClickListener, OnTabSelectListener, SeekBar.OnSeekBarChangeListener, TemplateConfirmDialog.OnConfirmClickedListener, PuzzleLpPopUp.OnPopUpDismiss {
     private final String[] title = new String[]{"布局", "边框"};
+    private final int[] integers = new int[]{R.mipmap.icon_replace, R.mipmap.icon_rorate, R.mipmap.icon_lr_flip, R.mipmap.icon_tb_flip};
     private PuzzleView mPuzzleView;
     private RecyclerView recyclerView;
     private AppCompatSeekBar mBorderSeekBar;
     private AppCompatSeekBar mConnerSeekBar;
     private int picSize = 0;
-    private LinearLayoutCompat llTips;
     private static final int FILTER_CODE = 1;
+    private PuzzleLpPopUp puzzleLpPopUp;
 
     private PuzzleEditFragment() {
 
@@ -96,6 +105,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
     @Override
     protected void initView(View view) {
+        String[] tipsTitle = new String[]{getString(R.string.replace), getString(R.string.ucrop_rotate), getString(R.string.lr_flip), getString(R.string.tb_flip)};
         ArrayList<CustomTabEntity> arrayList = new ArrayList<>();
         for (String tile : title) {
             TabEntity tabEntity = new TabEntity(tile);
@@ -115,7 +125,9 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
         });
         view.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
-        llTips = view.findViewById(R.id.tips);
+        puzzleLpPopUp = new PuzzleLpPopUp(_mActivity, this, tipsTitle, integers);
+
+
         mBorderSeekBar = view.findViewById(R.id.border_seekbar);
         mConnerSeekBar = view.findViewById(R.id.conner_seekbar);
         picSize = getArguments().getInt("size");
@@ -128,7 +140,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
         mPuzzleView.setTouchEnable(true);
         mPuzzleView.setNeedDrawLine(false);
         mPuzzleView.setNeedDrawOuterLine(false);
-        mPuzzleView.setLineSize(4);
+        mPuzzleView.setLineSize(6);
         mPuzzleView.setLineColor(getResources().getColor(R.color.sel_text_main_color));
         mPuzzleView.setSelectedLineColor(getResources().getColor(R.color.sel_text_main_color));
         mPuzzleView.setHandleBarColor(getResources().getColor(R.color.sel_text_main_color));
@@ -173,12 +185,12 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
             @Override
-            public void onSubscribe( Disposable d) {
+            public void onSubscribe(Disposable d) {
                 mDisposable.add(d);
             }
 
             @Override
-            public void onNext( List<Bitmap> bitmaps) {
+            public void onNext(List<Bitmap> bitmaps) {
                 if (bitmaps.isEmpty()) {
                     onError(new RuntimeException("bitmaps is 0"));
                 } else {
@@ -188,12 +200,11 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
                     PuzzleSizeAdapter puzzleSizeAdapter = new PuzzleSizeAdapter(getContext(), puzzleLayouts, PuzzleEditFragment.this, bitmaps, mPuzzleView.getPuzzleLayout());
                     recyclerView.setAdapter(puzzleSizeAdapter);
                     hideProcessDialog();
-//                    recyclerView.scrollToPosition(puzzleSizeAdapter.getCurrentPosition());
                 }
             }
 
             @Override
-            public void onError( Throwable e) {
+            public void onError(Throwable e) {
 
             }
 
@@ -228,12 +239,12 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Bitmap>() {
             @Override
-            public void onSubscribe( Disposable d) {
+            public void onSubscribe(Disposable d) {
                 mDisposable.add(d);
             }
 
             @Override
-            public void onNext( Bitmap bitmap) {
+            public void onNext(Bitmap bitmap) {
                 mPuzzleView.replace(bitmap, "");
                 hideProcessDialog();
             }
@@ -249,6 +260,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             }
         });
     }
+
     private PuzzleLayout choosePuzzleTemplate(int pics, int type, int theme) {
 
         //pic Size to first selection
@@ -336,7 +348,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
     private void doOnBackGround() {
         showProcessDialog();
-        Bitmap bitmap = shotScrollView( mPuzzleView.getWidth(), mPuzzleView.getHeight());
+        Bitmap bitmap = shotScrollView(mPuzzleView.getWidth(), mPuzzleView.getHeight());
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
             if (!bitmap.isRecycled()) {
@@ -345,19 +357,19 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             emitter.onNext(filePath);
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
-            public void onSubscribe( Disposable d) {
+            public void onSubscribe(Disposable d) {
                 mDisposable.add(d);
             }
 
             @Override
-            public void onNext( String s) {
+            public void onNext(String s) {
                 hideProcessDialog();
                 SaveFragment saveFragment = SaveFragment.getInstance(s);
                 start(saveFragment);
             }
 
             @Override
-            public void onError( Throwable e) {
+            public void onError(Throwable e) {
 
             }
 
@@ -370,10 +382,6 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
 
     @Override
     protected void initListener(View view) {
-        view.findViewById(R.id.ll_replace).setOnClickListener(this);
-        view.findViewById(R.id.ll_rorate).setOnClickListener(this);
-        view.findViewById(R.id.ll_LeftRightFlip).setOnClickListener(this);
-        view.findViewById(R.id.ll_UpDownFlip).setOnClickListener(this);
         view.findViewById(R.id.tv_save).setOnClickListener(this);
         mBorderSeekBar.setOnSeekBarChangeListener(this);
         mConnerSeekBar.setOnSeekBarChangeListener(this);
@@ -383,44 +391,30 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     public void onItemClick(PuzzleLayout puzzleLayout, List<Bitmap> pics) {
         mPuzzleView.setPuzzleLayout(puzzleLayout);
         mPuzzleView.addPieces(pics);
-        if (llTips.getVisibility() == View.VISIBLE) {
-            llTips.setVisibility(View.INVISIBLE);
+        if (puzzleLpPopUp.isShowing()) {
+            puzzleLpPopUp.dismiss();
         }
     }
 
 
     @Override
     public void onPieceUnSelected() {
-        if (llTips.getVisibility() == View.VISIBLE) {
-            llTips.setVisibility(View.INVISIBLE);
+        if (puzzleLpPopUp.isShowing()) {
+            puzzleLpPopUp.dismiss();
         }
     }
 
     @Override
     public void onPieceSelected(PuzzlePiece piece, int position) {
-        if (llTips.getVisibility() != View.VISIBLE) {
-            llTips.setVisibility(View.VISIBLE);
+        if (!puzzleLpPopUp.isShowing()) {
+            puzzleLpPopUp.show(recyclerView, true);
         }
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.ll_replace) {
-            PictureSelector.create(this)
-                    .openGallery(SelectMimeType.ofImage())
-                    .isDisplayCamera(true)
-                    .setImageEngine(GlideEngine.createGlideEngine())
-                    .isPreviewImage(true)
-                    .setSelectionMode(SelectModeConfig.SINGLE)
-                    .forResult(FILTER_CODE);
-        } else if (v.getId() == R.id.ll_rorate) {
-            mPuzzleView.rotate(90f);
-        } else if (v.getId() == R.id.ll_LeftRightFlip) {
-            mPuzzleView.flipVertically();
-
-        } else if (v.getId() == R.id.ll_UpDownFlip) {
-            mPuzzleView.flipHorizontally();
-        } else if (v.getId() == R.id.tv_save) {
+        if (v.getId() == R.id.tv_save) {
             mPuzzleView.setNeedDrawLine(false);
             mPuzzleView.setNeedDrawOuterLine(false);
             doOnBackGround();
@@ -479,7 +473,6 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     }
 
 
-
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
 
@@ -494,5 +487,30 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     @Override
     public void onConfirmClicked(String path) {
 
+    }
+
+    @Override
+    public void dismiss() {
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    public void clicked(View view) {
+        if (view.getId() == 0) {
+            PictureSelector.create(this)
+                    .openGallery(SelectMimeType.ofImage())
+                    .isDisplayCamera(true)
+                    .setImageEngine(GlideEngine.createGlideEngine())
+                    .isPreviewImage(true)
+                    .setSelectionMode(SelectModeConfig.SINGLE)
+                    .forResult(FILTER_CODE);
+        } else if (view.getId() == 1) {
+            mPuzzleView.rotate(90f);
+        } else if (view.getId() == 2) {
+            mPuzzleView.flipVertically();
+
+        } else if (view.getId() == 3) {
+            mPuzzleView.flipHorizontally();
+        }
     }
 }

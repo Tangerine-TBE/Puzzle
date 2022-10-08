@@ -116,7 +116,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        NetConfig.getInstance().getINetService().getPhoto(bitMapInfo.getTemplate()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ResponseBody>() {
+        NetConfig.getInstance().getINetService().getPhoto1(bitMapInfo.getTemplate()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ResponseBody>() {
             @Override
             public void onSubscribe(Disposable d) {
                 mDisposable.add(d);

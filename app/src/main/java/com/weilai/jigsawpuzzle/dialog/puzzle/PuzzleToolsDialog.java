@@ -13,6 +13,5 @@ public class PuzzleToolsDialog {
     private  final AppCompatDialog mDialog;
     public PuzzleToolsDialog(Context context){
         mDialog = new AppCompatDialog(context);
-
     }
 }
