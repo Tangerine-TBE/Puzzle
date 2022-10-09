@@ -108,25 +108,28 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         NetConfig.getInstance().getINetService().getPicTemplate().flatMap(new Function<ResponseBody, ObservableSource<List<BitMapInfo>>>() {
             @Override
             public ObservableSource<List<BitMapInfo>> apply(ResponseBody responseBody) throws Exception {
-                ArrayList<BitMapInfo> bitMapInfos = null;
-                if (responseBody != null) {
-                    String json = "";
-                    try {
+                ArrayList<BitMapInfo> finalBitMapInfos = null;
+                try {
+                    ArrayList<BitMapInfo> bitMapInfos = null;
+                    if (responseBody != null) {
+                        String json = "";
                         json = responseBody.string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        bitMapInfos = new ArrayList<>(JSONArray.parseArray(json, BitMapInfo.class));
+                        for (BitMapInfo bitMapInfo : bitMapInfos) {
+                            Response<ResponseBody> responseBitmap = NetConfig.getInstance().getINetService().getPhoto(bitMapInfo.getBitmap()).execute();
+                            assert responseBitmap.body() != null;
+                            Bitmap bitmapBitmap = BitmapFactory.decodeStream(responseBitmap.body().byteStream());
+                            String bitmapPath = FileUtil.saveBitmapToCache(bitMapInfo.getName() + "bitmap", bitmapBitmap);
+                            bitMapInfo.setBitmap(bitmapPath);
+                        }
                     }
-                    bitMapInfos = new ArrayList<>(JSONArray.parseArray(json, BitMapInfo.class));
-                    for (BitMapInfo bitMapInfo : bitMapInfos) {
-                        Response<ResponseBody> responseBitmap = NetConfig.getInstance().getINetService().getPhoto(bitMapInfo.getBitmap()).execute();
-                        assert responseBitmap.body() != null;
-                        Bitmap bitmapBitmap = BitmapFactory.decodeStream(responseBitmap.body().byteStream());
-                        String bitmapPath = FileUtil.saveBitmapToCache(bitMapInfo.getName() + "bitmap", bitmapBitmap);
-                        bitMapInfo.setBitmap(bitmapPath);
-                    }
+                    finalBitMapInfos = bitMapInfos;
+                } catch (Exception e) {
+                e.printStackTrace();
                 }
-                ArrayList<BitMapInfo> finalBitMapInfos = bitMapInfos;
-                return Observable.create(emitter -> emitter.onNext(finalBitMapInfos));
+
+                ArrayList<BitMapInfo> finalBitMapInfos1 = finalBitMapInfos;
+                return Observable.create(emitter -> emitter.onNext(finalBitMapInfos1));
 
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<BitMapInfo>>() {

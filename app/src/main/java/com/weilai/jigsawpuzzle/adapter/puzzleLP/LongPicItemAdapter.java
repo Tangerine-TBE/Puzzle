@@ -122,7 +122,7 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
                     mLastSelectedView = v;
                     mLastSelectedPosition = holder.getAdapterPosition();
                 }
-                mOnItemClickedListener.onItemClicked(holder.itemView);
+                mOnItemClickedListener.onItemClicked(holder.itemView,position);
             }
             //弹出多功能模块
 
@@ -135,14 +135,16 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         canSelected = false;
     }
     public interface OnItemClickedListener{
-        void onItemClicked(View itemView);
+        void onItemClicked(View itemView,int position);
     }
     public final void setOnItemClickedListener(OnItemClickedListener onItemClickedListener){
         this.mOnItemClickedListener = onItemClickedListener;
     }
     public final void resetItem(){
-        mLastSelectedView.setSelected(false);
-        mLastSelectedPosition = -1;
+        if (mLastSelectedView != null){
+            mLastSelectedView.setSelected(false);
+            mLastSelectedPosition = -1;
+        }
     }
     @Override
     public int getItemCount() {

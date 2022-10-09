@@ -5,31 +5,27 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alibaba.fastjson.JSONArray;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.utils.ToastUtils;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.adapter.puzzleLP.ColorItemAdapter;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
+import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpColorPopUp;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
-import com.weilai.jigsawpuzzle.util.AssetsUtil;
-import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
@@ -47,19 +43,20 @@ import java.util.ArrayList;
  * * Author:tangerine
  * * Description:
  **/
-public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectListener, SeekBar.OnSeekBarChangeListener, PuzzleLpPopUp.OnPopUpDismiss {
-    private String titles[] = {"边框", "添加", "排序"};
+public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectListener, PuzzleLpPopUp.OnPopUpDismiss, PuzzleLpColorPopUp.OnColorChangedListener {
+    private final String[] titles = {"边框", "添加", "排序"};
+    private final int[] titlesIcon = new int[]{R.mipmap.icon_lp_frame, R.mipmap.icon_add, R.mipmap.icon_sort};
     private RecyclerView mRvLP;
-    private RecyclerView mRvColor;
-    private AppCompatSeekBar mFrameSeekBar;
-    private LinearLayoutCompat mLayoutColor;
-    private LinearLayoutCompat mLayoutFrame;
+
     private ArrayList<String> bitmaps;
     private static final int FILTER_PUZZLE_LP_CODE = 1;
+    private static final int FILTER_PUZZLE_LP_SINGLE = 2;
     private LongPicItemAdapter longPicItemAdapter;
     private PuzzleLpPopUp mPuzzleLpPopUp;
     private float mActionBarHeight;
     private FlyTabLayout mFlyTabLayout;
+    private PuzzleLpColorPopUp mPuzzleLpColor;
+    private final int[] integers = new int[]{R.mipmap.icon_split_top, R.mipmap.icon_split_bottom, R.mipmap.icon_edit, R.mipmap.icon_replace, R.mipmap.icon_delete};
 
     private PuzzleLongPicFragment() {
 
@@ -78,44 +75,33 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         return R.layout.fragment_puzzle_lp;
     }
 
+    private PaddingItemDecoration paddingItemDecoration;
+
     @Override
     protected void initView(View view) {
-        mPuzzleLpPopUp = new PuzzleLpPopUp(_mActivity, this,null,null);
-        mLayoutColor = view.findViewById(R.id.layout_color);
-        mLayoutFrame = view.findViewById(R.id.ll_frame);
+        String[] tipsTitle = new String[]{getString(R.string.split_top), getString(R.string.split_bottom), getString(R.string.edit), getString(R.string.replace), getString(R.string.delete)};
+        mPuzzleLpPopUp = new PuzzleLpPopUp(_mActivity, this, tipsTitle, integers);
+        mPuzzleLpColor = new PuzzleLpColorPopUp(_mActivity, this);
+        mPuzzleLpPopUp.setOutSideDismiss(true);
+        mPuzzleLpPopUp.setOutSideTouchable(true);
         view.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
         mRvLP = view.findViewById(R.id.rv_lp);
-        mRvColor = view.findViewById(R.id.rv_color);
         LinearLayoutManager picVerManager = new LinearLayoutManager(_mActivity);
         mRvLP.setLayoutManager(picVerManager);
-        LinearLayoutManager colorHorManager = new LinearLayoutManager(_mActivity, LinearLayoutManager.HORIZONTAL, true);
-        mRvColor.setLayoutManager(colorHorManager);
-        mFrameSeekBar = view.findViewById(R.id.frame_seekbar);
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
         tvTitle.setText("拼长图");
         ArrayList<CustomTabEntity> entities = new ArrayList<>();
-        for (String tile : titles) {
-            TabEntity tabEntity = new TabEntity(tile);
+        for (int i = 0; i < titles.length; i++) {
+            TabEntity tabEntity = new TabEntity(titles[i], titlesIcon[i], titlesIcon[i]);
             entities.add(tabEntity);
         }
         mFlyTabLayout = view.findViewById(R.id.tabLayout);
         mFlyTabLayout.setTabData(entities);
         mFlyTabLayout.setCurrentTab(0);
         mFlyTabLayout.setOnTabSelectListener(this);
-        AppCompatTextView appCompatTextView = view.findViewById(R.id.tv_selected_color);
         //遍历所有的Bitmap
         assert getArguments() != null;
         bitmaps = getArguments().getStringArrayList("data");
-        String colorStr = AssetsUtil.getAssertString(_mActivity, "color.json");
-        JSONArray jsonArray = JSONArray.parseArray(colorStr);
-        ColorItemAdapter colorItemAdapter = new ColorItemAdapter(_mActivity, jsonArray, new ColorItemAdapter.OnColorPickedListener() {
-            @Override
-            public void onColorPicked(String color) {
-                appCompatTextView.setBackgroundColor(Color.parseColor(color));
-                paddingItemDecoration.setBackground(color);
-            }
-        });
-        mRvColor.setAdapter(colorItemAdapter);
         longPicItemAdapter = new LongPicItemAdapter(_mActivity, bitmaps);
         mRvLP.setAdapter(longPicItemAdapter);
         paddingItemDecoration = new PaddingItemDecoration();
@@ -129,26 +115,35 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     @Override
     protected void initListener(View view) {
+        mRvLP.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                mPuzzleLpPopUp.setVisibility();
+                if(longPicItemAdapter != null){
+                    longPicItemAdapter.resetItem();
+                }
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 _mActivity.finish();
             }
         });
-        mFrameSeekBar.setOnSeekBarChangeListener(this);
         longPicItemAdapter.setOnItemClickedListener(new LongPicItemAdapter.OnItemClickedListener() {
             @Override
-            public void onItemClicked(View itemView) {
+            public void onItemClicked(View itemView, int position) {
                 int rvLp = mRvLP.getHeight();
                 if (mPuzzleLpPopUp.isShowing()) {
                     mPuzzleLpPopUp.dismiss();
                 }
                 if (itemView.getTop() >= mActionBarHeight) {
-                    mPuzzleLpPopUp.show(itemView, true);
+                    mPuzzleLpPopUp.show(itemView, true, position);
                 } else if (itemView.getBottom() <= rvLp - mActionBarHeight) {
-                    mPuzzleLpPopUp.show(itemView, false);
+                    mPuzzleLpPopUp.show(itemView, false, position);
                 } else {
-                    mPuzzleLpPopUp.show(mFlyTabLayout, true);
+                    mPuzzleLpPopUp.show(mRvLP, false, position);
                 }
             }
         });
@@ -158,17 +153,21 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     public void onTabSelect(int position) {
         switch (position) {
             case 0:
-                mLayoutFrame.setVisibility(View.VISIBLE);
-                mLayoutColor.setVisibility(View.VISIBLE);
+                //show
+                mPuzzleLpColor.show(mFlyTabLayout, false);
                 break;
             case 1:
-                mLayoutColor.setVisibility(View.GONE);
-                mLayoutFrame.setVisibility(View.GONE);
-                PictureSelector.create(this).openGallery(SelectMimeType.ofImage())
-                        .isDisplayCamera(true)
-                        .setSelectionMode(SelectModeConfig.SINGLE)
-                        .setImageEngine(GlideEngine.createGlideEngine())
-                        .forResult(FILTER_PUZZLE_LP_CODE);
+                if (bitmaps.size() < 10) {
+                    PictureSelector.create(this).openGallery(SelectMimeType.ofImage())
+                            .isDisplayCamera(true)
+                            .setMaxSelectNum(10 - bitmaps.size())
+                            .setSelectionMode(SelectModeConfig.MULTIPLE)
+                            .setImageEngine(GlideEngine.createGlideEngine())
+                            .forResult(FILTER_PUZZLE_LP_CODE);
+                } else {
+                    Toast.makeText(_mActivity, "不能在添加照片了", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case 2:
                 puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(bitmaps);
@@ -183,34 +182,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     @Override
     public void onTabReselect(int position) {
-
-    }
-
-    private int mCurrentProgress = 0;
-    private PaddingItemDecoration paddingItemDecoration;
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-            int offsetProgress = progress - mCurrentProgress;
-            //向右滑动 0-5  5-8
-            if (offsetProgress > 0) {
-                paddingItemDecoration.setProcess(progress);
-            } else if (offsetProgress < 0) {
-                paddingItemDecoration.setProcess(progress);
-            }
-            mCurrentProgress = progress;
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
+        onTabSelect(position);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -230,9 +202,24 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 if (list != null) {
                     int size = list.size();
                     if (size > 0) {
+                        for (LocalMedia localMedia : list) {
+                            String path = localMedia.getAvailablePath();
+                            bitmaps.add(path);
+                            longPicItemAdapter.notifyItemInserted(bitmaps.size());
+                        }
+                    }
+                }
+            }
+        } else if (requestCode == FILTER_PUZZLE_LP_SINGLE) {
+            if (data != null) {
+                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+                if (list != null) {
+                    int size = list.size();
+                    if (size > 0) {
                         String path = list.get(0).getAvailablePath();
-                        bitmaps.add(path);
-                        longPicItemAdapter.notifyItemInserted(bitmaps.size());
+                        bitmaps.remove(selectedPosition);
+                        bitmaps.add(selectedPosition, path);
+                        longPicItemAdapter.notifyItemChanged(selectedPosition);
                     }
                 }
             }
@@ -245,7 +232,75 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     }
 
     @Override
-    public void clicked(View view) {
+    public void onHiddenChanged(boolean hidden) {
+        if (hidden) {
+            mPuzzleLpPopUp.dismiss();
+        }
+        super.onHiddenChanged(hidden);
+    }
 
+    private int selectedPosition = -1;
+
+    @Override
+    public void clicked(View view, int position) {
+        selectedPosition = position;
+        longPicItemAdapter.resetItem();
+        mPuzzleLpPopUp.dismiss();
+        ArrayList<String> bitmapsInfo = new ArrayList<>();
+        switch (view.getId()) {
+            case 0:
+                //裁顶
+                if (selectedPosition == 0) {
+                    bitmapsInfo.add(bitmaps.get(selectedPosition));
+                    start(PuzzleLpSplitFragment.getInstance(bitmaps,1));
+                }
+                break;
+            case 1:
+                bitmapsInfo.add(bitmaps.get(selectedPosition));
+                if (selectedPosition + 1 < bitmaps.size()){
+                    bitmapsInfo.add(bitmaps.get(selectedPosition + 1));
+                }
+                start(PuzzleLpSplitFragment.getInstance(bitmapsInfo,2));
+                //裁底
+                break;
+            case 2:
+                //编辑
+                break;
+            case 3:
+                //替换
+
+                PictureSelector.create(this).openGallery(SelectMimeType.ofImage())
+                        .isDisplayCamera(true)
+                        .setSelectionMode(SelectModeConfig.SINGLE)
+                        .setImageEngine(GlideEngine.createGlideEngine())
+                        .forResult(FILTER_PUZZLE_LP_SINGLE);
+
+                break;
+            case 4:
+                bitmaps.remove(position);
+                longPicItemAdapter.notifyDataSetChanged();
+                //删除
+                break;
+        }
+
+    }
+
+
+    @Override
+    public void onProcessed(int position) {
+        paddingItemDecoration.setProcess(position);
+    }
+
+    @Override
+    public void onColorChanged(String color) {
+        paddingItemDecoration.setBackground(color);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPuzzleLpPopUp.onDestroy();
+        mPuzzleLpColor.onDestroy();
     }
 }

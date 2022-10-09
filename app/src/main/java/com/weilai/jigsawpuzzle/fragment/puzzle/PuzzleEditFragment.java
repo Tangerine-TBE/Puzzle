@@ -492,10 +492,9 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     @Override
     public void dismiss() {
     }
-
     @SuppressLint("ResourceType")
     @Override
-    public void clicked(View view) {
+    public void clicked(View view, int position) {
         if (view.getId() == 0) {
             PictureSelector.create(this)
                     .openGallery(SelectMimeType.ofImage())
@@ -513,4 +512,6 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             mPuzzleView.flipHorizontally();
         }
     }
+
+
 }

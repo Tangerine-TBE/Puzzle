@@ -35,4 +35,7 @@
     <string name="submitting">提交中...</string>
     <string name="edit">编辑</string>
     <string name="save">保存</string>
+    <string name="split_top">裁顶</string>
+    <string name="split_bottom">裁底</string>
+    <string name="delete">删除</string>
 </resources>

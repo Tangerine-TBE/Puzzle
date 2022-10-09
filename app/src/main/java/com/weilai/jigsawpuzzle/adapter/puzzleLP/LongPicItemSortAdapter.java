@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -22,6 +23,8 @@ import com.weilai.jigsawpuzzle.util.DimenUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -71,7 +74,18 @@ public class LongPicItemSortAdapter extends RecyclerView.Adapter<LongPicItemSort
             return;
         }
         AppCompatImageView image = holder.imageView;
+        int bitmapWidth = bitmap.getWidth();
+        int bitmapHeight = bitmap.getHeight();
+        int deviceWidth = DimenUtil.getScreenWidth();
+        int targetWidth = deviceWidth /3;
+        BigDecimal targetBigDecimal = new BigDecimal(targetWidth);
+        float scaleSize = targetBigDecimal.divide(new BigDecimal(bitmapWidth),2, RoundingMode.HALF_DOWN).floatValue();
+        int targetHeight = (int) (bitmapHeight * scaleSize);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetWidth,targetHeight);
+       layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        image.setLayoutParams(layoutParams);
         Glide.with(mContext).load(bitmap).into(image);
+
     }
 
     @Override

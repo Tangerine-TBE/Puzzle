@@ -30,13 +30,13 @@ import com.weilai.jigsawpuzzle.util.L;
     public final void setProcess(int process){
         this.process = process;
         if (parent != null){
-            parent.requestLayout();
+            parent.postInvalidate();
         }
     }
     public final void setBackground(String color){
         this.color = color;
         if (parent != null){
-            parent.requestLayout();
+            parent.postInvalidate();
         }
     }
 

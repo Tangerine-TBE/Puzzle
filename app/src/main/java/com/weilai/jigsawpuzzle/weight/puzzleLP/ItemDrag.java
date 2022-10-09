@@ -3,6 +3,7 @@ package com.weilai.jigsawpuzzle.weight.puzzleLP;
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +42,19 @@ public class ItemDrag extends ItemTouchHelper.Callback {
         return true;
     }
 
+    @Override
+    public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+        super.onSelectedChanged(viewHolder, actionState);
+        if (viewHolder != null){
+            viewHolder.itemView.setBackgroundColor(Color.parseColor("#E9E9E9"));
+        }
+    }
+
+    @Override
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+        viewHolder.itemView.setBackgroundColor(Color.WHITE);
+    }
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {

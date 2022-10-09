@@ -23,4 +23,7 @@
         <attr name="background_line_color" format="color" />
         <attr name="background_line_width" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="PuzzleLpEditView">
+        <attr name="scroll_up" format="boolean"/>
+    </declare-styleable>
 </resources>
