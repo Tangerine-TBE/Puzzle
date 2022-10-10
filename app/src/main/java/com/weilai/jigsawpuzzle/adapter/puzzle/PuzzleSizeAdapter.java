@@ -51,16 +51,27 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.setIsRecyclable(false);
         PuzzleLayout puzzleLayout = mPuzzleLayouts.get(position);
-        holder.puzzleView.setTouchEnable(false);
         holder.puzzleView.setPuzzleLayout(puzzleLayout);
         holder.puzzleView.addPieces(pics);
         holder.puzzleView.setPiecePadding(20);
         holder.puzzleView.setLineSize(6);
-        holder.puzzleView.setNeedDrawLine(true);
         holder.puzzleView.setLineColor(mContext.getResources().getColor(R.color.sel_text_main_color));
-        holder.puzzleView.setNeedDrawOuterLine(true);
+        if (holder.puzzleView.isTouchEnable()){
+            holder.puzzleView.setTouchEnable(false);
+        }else{
+            holder.puzzleView.setTouchEnable(false);
+        }
+        if (holder.puzzleView.isNeedDrawLine()){
+            holder.puzzleView.setNeedDrawLine(true);
+        }else{
+            holder.puzzleView.setNeedDrawLine(true);
+        }
+        if (holder.puzzleView.isNeedDrawOuterLine()){
+            holder.puzzleView.setNeedDrawOuterLine(true);
+        }else{
+            holder.puzzleView.setNeedDrawOuterLine(true);
+        }
         if (puzzleLayout instanceof NumberSlantLayout && mCurrentPuzzleLayout instanceof NumberSlantLayout) {
             NumberSlantLayout puzzleLayoutNumber = (NumberSlantLayout) puzzleLayout;
             NumberSlantLayout currentLayoutNumber = (NumberSlantLayout) mCurrentPuzzleLayout;
