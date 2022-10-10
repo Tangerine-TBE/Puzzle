@@ -1,54 +1,49 @@
 <resources>
-    <string name="app_name">ImageEditLibrary</string>
-    <string name="no_images">no found the image</string>
-    <string name="images">%d images</string>
-    <string name="save">save</string>
-    <string name="apply">apply</string>
 
-    <string name="stickers">stickers</string>
-    <string name="filter">filter</string>
-    <string name="crop">crop</string>
-    <string name="rotate">rotate</string>
-    <string name="text">text</string>
-    <string name="edit">edit</string>
-
-
-
-    <string name="materialcolorpicker__app_name">Android Material Color Picker Dialog</string>
-    <string name="materialcolorpicker__descLib">Material Color Picker Dialog</string>
-    <string name="materialcolorpicker__errHex">Hex Code Format incorrect</string>
-    <string name="materialcolorpicker__inputColor">Color:</string>
-    <string name="materialcolorpicker__btnSelectColor">Select</string>
-    <string name="saving_image">save...</string>
-    <string name="input_hint">input text ...</string>
-
-    <string name="no_choose">please choose a image for edit</string>
-    <string name="auto_newline">AutoNewline</string>
-    <string name="save_error">Save error!</string>
-    <string name="handing">loading...</string>
+    <string name="no_images">没有发现图片</string>
+    <string name="images">%d 张图片</string>
+    <string name="save">保存</string>
+    <string name="apply">应用</string>
+    <string name="stickers">贴图</string>
+    <string name="filter">滤镜</string>
+    <string name="crop">裁剪</string>
+    <string name="rotate">旋转</string>
+    <string name="text">文字</string>
+    <string name="edit">编辑</string>
+    <string name="materialcolorpicker__app_name">颜色选择</string>
+    <string name="materialcolorpicker__descLib">颜色选择</string>
+    <string name="materialcolorpicker__errHex">颜色值不正确</string>
+    <string name="materialcolorpicker__inputColor">颜色:</string>
+    <string name="materialcolorpicker__btnSelectColor">选择</string>
+    <string name="saving_image">图片保存中...</string>
+    <string name="input_hint">输入文本 ...</string>
+    <string name="no_choose">请选择一张需要编辑的图片</string>
+    <string name="auto_newline">自动换行</string>
+    <string name="save_error">图片保存失败</string>
+    <string name="handing">处理中...</string>
 
     <string-array name="filters">
-        <item>origin</item>
-        <item>soft</item>
-        <item>black</item>
-        <item>classic</item>
-        <item>gorgeous</item>
-        <item>retro</item>
-        <item>grace</item>
-        <item>film</item>
-        <item>memory</item>
-        <item>yogurt</item>
-        <item>fleeting</item>
-        <item>shine</item>
-        <item>mosaic</item>
+        <item>原始</item>
+        <item>软化</item>
+        <item>黑白</item>
+        <item>经典</item>
+        <item>华丽</item>
+        <item>复古</item>
+        <item>优雅</item>
+        <item>电影</item>
+        <item>回忆</item>
+        <item>优格</item>
+        <item>流年</item>
+        <item>发光</item>
+        <item>马赛克</item>
     </string-array>
 
-    <string name="more">more</string>
-    <string name="exit_without_save">The edited image is not saved. Do you want to exit? </string>
-    <string name="confirm">confirm</string>
-    <string name="cancel">cancel</string>
+    <string name="more">更多</string>
+    <string name="exit_without_save">编辑的图片还未保存,确认退出吗？</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
 
-    <string name="beauty">beauty</string>
-    <string name="smooth">smooth</string>
-    <string name="white_skin">white skin</string>
+    <string name="beauty">美颜</string>
+    <string name="smooth">磨皮</string>
+    <string name="white_skin">美白</string>
 </resources>
