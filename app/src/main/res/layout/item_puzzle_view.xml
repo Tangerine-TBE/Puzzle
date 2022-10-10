@@ -13,10 +13,7 @@
         android:layout_height="match_parent">
         <com.xiaopo.flying.puzzle.PuzzleView
             android:id="@+id/puzzle_view"
-            app:line_size="6"
-            app:need_draw_line="true"
-            app:line_color="@color/sel_text_main_color"
-            app:need_draw_outer_line="true"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>

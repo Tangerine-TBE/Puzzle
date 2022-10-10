@@ -2,6 +2,7 @@ package com.weilai.jigsawpuzzle.adapter.puzzle;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -50,11 +51,16 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         PuzzleLayout puzzleLayout = mPuzzleLayouts.get(position);
         holder.puzzleView.setTouchEnable(false);
         holder.puzzleView.setPuzzleLayout(puzzleLayout);
         holder.puzzleView.addPieces(pics);
-
+        holder.puzzleView.setPiecePadding(20);
+        holder.puzzleView.setLineSize(6);
+        holder.puzzleView.setNeedDrawLine(true);
+        holder.puzzleView.setLineColor(mContext.getResources().getColor(R.color.sel_text_main_color));
+        holder.puzzleView.setNeedDrawOuterLine(true);
         if (puzzleLayout instanceof NumberSlantLayout && mCurrentPuzzleLayout instanceof NumberSlantLayout) {
             NumberSlantLayout puzzleLayoutNumber = (NumberSlantLayout) puzzleLayout;
             NumberSlantLayout currentLayoutNumber = (NumberSlantLayout) mCurrentPuzzleLayout;
@@ -107,7 +113,6 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         PuzzleView puzzleView;
         FrameLayout frameLayout;
-
         ViewHolder(View itemView) {
             super(itemView);
             frameLayout = itemView.findViewById(R.id.layout_content);

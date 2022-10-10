@@ -417,6 +417,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
         if (v.getId() == R.id.tv_save) {
             mPuzzleView.setNeedDrawLine(false);
             mPuzzleView.setNeedDrawOuterLine(false);
+            puzzleLpPopUp.dismiss();
             doOnBackGround();
         }
     }
@@ -448,6 +449,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
                 mConnerSeekBar.setVisibility(View.GONE);
                 break;
             case 1:
+                puzzleLpPopUp.dismiss();
                 recyclerView.setVisibility(View.GONE);
                 mBorderSeekBar.setVisibility(View.VISIBLE);
                 mConnerSeekBar.setVisibility(View.VISIBLE);
@@ -492,6 +494,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     @Override
     public void dismiss() {
     }
+
     @SuppressLint("ResourceType")
     @Override
     public void clicked(View view, int position) {
