@@ -400,7 +400,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 break;
             case 2:
                 //编辑
-                EditImageActivity.start(_mActivity, bitmaps.get(selectedPosition),IMAGE_PATH+"edit/", 1);
+                EditImageActivity.start(_mActivity, bitmaps.get(selectedPosition),FileUtil.getAnPicPath(System.currentTimeMillis()+"_editor"), 1);
                 break;
             case 3:
                 //替换

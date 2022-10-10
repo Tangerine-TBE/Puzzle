@@ -29,12 +29,13 @@ import java.io.OutputStream;
 import java.util.Objects;
 
 /**
- ** DATE: 2022/9/19
- ** Author:tangerine
- ** Description:
+ * * DATE: 2022/9/19
+ * * Author:tangerine
+ * * Description:
  **/
 public class FileUtil {
-    private static final String BASE_PATH = getApplicationContext().getDatabasePath("template").getAbsolutePath() ;
+    private static final String BASE_PATH = getApplicationContext().getDatabasePath("template").getAbsolutePath();
+
     public static String saveBitmapToCache(String fileName, Bitmap bitmap) {
         File file = new File(BASE_PATH);
         if (!file.exists() || !file.isDirectory()) {
@@ -49,17 +50,18 @@ public class FileUtil {
         }
         return bitmapFile.getAbsolutePath();
     }
-    public static Bitmap getBitmapFromCache(String fileName){
+
+    public static Bitmap getBitmapFromCache(String fileName) {
         Bitmap bitmap = null;
         File file = new File(BASE_PATH);
         if (!file.exists() || !file.isDirectory()) {
             return null;
         }
-        File bitmapFile = new File(BASE_PATH,fileName);
-        if (bitmapFile.exists()){
+        File bitmapFile = new File(BASE_PATH, fileName);
+        if (bitmapFile.exists()) {
             try {
                 bitmap = BitmapFactory.decodeStream(new FileInputStream(bitmapFile));
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -69,13 +71,13 @@ public class FileUtil {
     public static String saveScreenShot(Bitmap bitmap, String fileNameStr) throws Exception {
         FileOutputStream fos;
         File file;
-        File externalFileRootDir = getApplicationContext(). getExternalFilesDir(null);
+        File externalFileRootDir = getApplicationContext().getExternalFilesDir(null);
         do {
             externalFileRootDir = Objects.requireNonNull(externalFileRootDir).getParentFile();
         } while (Objects.requireNonNull(externalFileRootDir).getAbsolutePath().contains("/Android"));
 
         String saveDir = Objects.requireNonNull(externalFileRootDir).getAbsolutePath();
-        String filePath = saveDir + "/" + Environment.DIRECTORY_DCIM ;
+        String filePath = saveDir + "/" + Environment.DIRECTORY_DCIM;
         file = new File(filePath);
         if (!file.exists()) {
             file.mkdir();
@@ -90,9 +92,25 @@ public class FileUtil {
         } finally {
             fos.close();
         }
-        savePhotoAlbum(bitmap,new File(filePath));
+        savePhotoAlbum(bitmap, new File(filePath));
         return filePath;
     }
+
+    public static String getAnPicPath(String fileNameStr) {
+        File externalFileRootDir = getApplicationContext().getExternalFilesDir(null);
+        do {
+            externalFileRootDir = Objects.requireNonNull(externalFileRootDir).getParentFile();
+        } while (Objects.requireNonNull(externalFileRootDir).getAbsolutePath().contains("/Android"));
+        String saveDir = Objects.requireNonNull(externalFileRootDir).getAbsolutePath();
+        String filePath = saveDir + "/" + Environment.DIRECTORY_DCIM;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        filePath = filePath + "/" + fileNameStr + ".jpeg";
+        return filePath;
+    }
+
     private static void savePhotoAlbum(Bitmap src, File file) {
 
         //先保存到文件
@@ -113,7 +131,7 @@ public class FileUtil {
             values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
             values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM);
             ContentResolver contentResolver = getApplicationContext().getContentResolver();
-            Uri uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,  values);
+            Uri uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             if (uri == null) {
                 return;
             }
