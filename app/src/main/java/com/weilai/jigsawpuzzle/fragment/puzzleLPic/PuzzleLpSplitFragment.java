@@ -12,6 +12,11 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.event.LpSortEvent;
+import com.weilai.jigsawpuzzle.event.LpSplitEvent;
+import com.weilai.jigsawpuzzle.util.EvenUtil;
+import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.weilai.jigsawpuzzle.util.L;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PuzzleLpEditView;
 
 import java.io.File;
@@ -27,7 +32,11 @@ import java.util.ArrayList;
 public class PuzzleLpSplitFragment extends BaseFragment {
     private PuzzleLpEditView mEditBottom;
     private PuzzleLpEditView mEditTop;
-    private PuzzleLpSplitFragment() {}
+    private int type;
+
+    private PuzzleLpSplitFragment() {
+    }
+
     public static PuzzleLpSplitFragment getInstance(ArrayList<String> bitmapInfo, int type) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("bitmapInfo", bitmapInfo);
@@ -56,7 +65,7 @@ public class PuzzleLpSplitFragment extends BaseFragment {
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         ArrayList<String> bitmaps = getArguments().getStringArrayList("bitmapInfo");
-        int type = getArguments().getInt("type");
+         type = getArguments().getInt("type");
         if (type == 1) {
             //裁顶部
             Uri srcUri;
@@ -77,7 +86,7 @@ public class PuzzleLpSplitFragment extends BaseFragment {
         } else if (type == 2) {
             //裁底部
             Uri srcUri;
-            if (bitmaps.size() >=2){
+            if (bitmaps.size() >= 2) {
                 if (PictureMimeType.isContent(bitmaps.get(1)) || PictureMimeType.isHasHttp(bitmaps.get(1))) {
                     srcUri = Uri.parse(bitmaps.get(1));
                 } else {
@@ -123,8 +132,20 @@ public class PuzzleLpSplitFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 //save
-               Bitmap bitmap1 =  mEditBottom.saveBitmap();
-                Bitmap bitmap2 =  mEditTop.saveBitmap();
+
+                Bitmap editBottomBitmap = mEditBottom.saveBitmap();
+                Bitmap editTopBitmap = mEditTop.saveBitmap();
+                ArrayList<String> bitmapInfo = new ArrayList<>();
+                if (editBottomBitmap != null) {
+                    bitmapInfo.add(FileUtil.saveBitmapToCache(System.currentTimeMillis() + "Split", editBottomBitmap));
+                }
+                if (editTopBitmap != null) {
+                    bitmapInfo.add(FileUtil.saveBitmapToCache(System.currentTimeMillis() + "Split", editTopBitmap));
+                }
+                if (!bitmapInfo.isEmpty()){
+                    EvenUtil.post(new LpSplitEvent(bitmapInfo,type));
+                }
+
             }
         });
     }

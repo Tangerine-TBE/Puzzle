@@ -26,6 +26,7 @@ import com.weilai.jigsawpuzzle.bean.TabEntity;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpColorPopUp;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
+import com.weilai.jigsawpuzzle.event.LpSplitEvent;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
@@ -119,7 +120,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 mPuzzleLpPopUp.setVisibility();
-                if(longPicItemAdapter != null){
+                if (longPicItemAdapter != null) {
                     longPicItemAdapter.resetItem();
                 }
                 super.onScrolled(recyclerView, dx, dy);
@@ -179,6 +180,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     }
 
     private PuzzleLPSortFragment puzzleLPSortFragment = null;
+    private PuzzleLpSplitFragment puzzleLpSplitFragment = null;
 
     @Override
     public void onTabReselect(int position) {
@@ -191,6 +193,24 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         longPicItemAdapter.notifyDataSetChanged();
         puzzleLPSortFragment.pop();
         puzzleLPSortFragment = null;
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDataSplitChange(LpSplitEvent event) {
+        ArrayList<String> data = (ArrayList<String>) event.data;
+        int type = event.type;
+        if (type == 1){
+            bitmaps.remove(selectedPosition);
+            bitmaps.add(selectedPosition,data.get(0));
+        }else if (type == 2){
+            bitmaps.remove(selectedPosition);
+            bitmaps.add(selectedPosition,data.get(0));
+            if (selectedPosition +1 < bitmaps.size()) {
+                bitmaps.remove(selectedPosition + 1);
+                bitmaps.add(selectedPosition+1,data.get(1));
+            }
+        }
+        longPicItemAdapter.notifyDataSetChanged();
+        puzzleLpSplitFragment.pop();
     }
 
     @Override
@@ -252,15 +272,17 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 //裁顶
                 if (selectedPosition == 0) {
                     bitmapsInfo.add(bitmaps.get(selectedPosition));
-                    start(PuzzleLpSplitFragment.getInstance(bitmaps,1));
+                    puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1);
+                    start(puzzleLpSplitFragment);
                 }
                 break;
             case 1:
                 bitmapsInfo.add(bitmaps.get(selectedPosition));
-                if (selectedPosition + 1 < bitmaps.size()){
+                if (selectedPosition + 1 < bitmaps.size()) {
                     bitmapsInfo.add(bitmaps.get(selectedPosition + 1));
                 }
-                start(PuzzleLpSplitFragment.getInstance(bitmapsInfo,2));
+                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2);
+                start(puzzleLpSplitFragment);
                 //裁底
                 break;
             case 2:

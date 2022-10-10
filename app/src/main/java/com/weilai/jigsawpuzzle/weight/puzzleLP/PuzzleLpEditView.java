@@ -33,6 +33,7 @@ public class PuzzleLpEditView extends View {
     private float mMoveY;
     private float mLastY;
     private float mScaleSize;
+    private int templateBitmapWidth;
 
     public PuzzleLpEditView(Context context) {
         this(context, null);
@@ -54,8 +55,17 @@ public class PuzzleLpEditView extends View {
     }
 
     public final Bitmap saveBitmap() {
+        Matrix matrix = new Matrix();
+        int parentWidth = DimenUtil.getScreenWidth();
+        BigDecimal templateBitmap = new BigDecimal(templateBitmapWidth);
+        mScaleSize = templateBitmap.divide(new BigDecimal(parentWidth), 2, RoundingMode.HALF_DOWN).floatValue();
+        matrix.setScale(mScaleSize,mScaleSize);//还原大小
         if (mBitmap != null) {
-//            return Bitmap.createBitmap(mBitmap, 0,0, mBitmap.getWidth(), );
+            if (!canScrollUp){
+                return Bitmap.createBitmap(mBitmap, 0,0, mBitmap.getWidth(), (int) (mBitmap.getHeight()-mMoveY),matrix,true);
+            }else{
+                return Bitmap.createBitmap(mBitmap,0, (int) Math.abs(mMoveY),mBitmap.getWidth(), (int) (mBitmap.getHeight()+mMoveY),matrix,true);
+            }
         }
         return null;
     }
@@ -65,16 +75,16 @@ public class PuzzleLpEditView extends View {
         mPaint.setAntiAlias(true);
         Matrix mMatrix = new Matrix();
         int parentWidth = DimenUtil.getScreenWidth();
-        int bitmapWidth = bitmap.getWidth();
+        templateBitmapWidth = bitmap.getWidth();
         BigDecimal parent = new BigDecimal(parentWidth);
-        mScaleSize = parent.divide(new BigDecimal(bitmapWidth), 2, RoundingMode.HALF_DOWN).floatValue();
+        mScaleSize = parent.divide(new BigDecimal(templateBitmapWidth), 2, RoundingMode.HALF_DOWN).floatValue();
         mMatrix.setScale(mScaleSize, mScaleSize);
         mBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), mMatrix, true);
         canDraw = true;
         invalidate();
     }
 
-    private float mBitmapSize;
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -89,7 +99,7 @@ public class PuzzleLpEditView extends View {
                     mMoveY = -mBitmap.getHeight();
                 }
                 canvas.drawBitmap(mBitmap, 0, 0 + mMoveY, mPaint);
-
+                L.e(mMoveY+"");
             } else {
                 //只能向下滑动
                 int canvasHeight = getHeight();
@@ -102,9 +112,8 @@ public class PuzzleLpEditView extends View {
                     mMoveY = mBitmap.getHeight();
                 }
                 canvas.drawBitmap(mBitmap, 0, -bitmapHeight + canvasHeight + mMoveY, mPaint);
-                mBitmapSize = bitmapHeight ;
             }
-            L.e(mBitmapSize+"");
+
         }
         super.onDraw(canvas);
     }
