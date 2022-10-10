@@ -1,10 +1,10 @@
 package com.weilai.jigsawpuzzle.configure;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/16
- */
+ ** DATE: 2022/10/10
+ ** Author:tangerine
+ ** Description:
+ **/
 public enum ConfigureType {
     CONFIGURE_READ,
     APPLICATION_CONTEXT

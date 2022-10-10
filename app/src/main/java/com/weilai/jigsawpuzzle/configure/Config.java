@@ -4,10 +4,10 @@ import android.content.Context;
 import android.util.ArrayMap;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/16
- */
+ ** DATE: 2022/10/10
+ ** Author:tangerine
+ ** Description:
+ **/
 public class Config {
     public static Configurator init(Context context){
         getConfigurations().put(ConfigureType.APPLICATION_CONTEXT.name(),context);

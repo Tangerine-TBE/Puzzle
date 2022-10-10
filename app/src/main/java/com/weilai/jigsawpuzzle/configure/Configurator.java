@@ -6,10 +6,10 @@ import android.graphics.Paint;
 import android.util.ArrayMap;
 
 /**
- * @description:
- * @author: luo
- * @date: 2022/9/16
- */
+ ** DATE: 2022/10/10
+ ** Author:tangerine
+ ** Description:
+ **/
 public class Configurator {
     private static final ArrayMap<String ,Object> CONFIGS = new ArrayMap<>();
     private static class Holder{
