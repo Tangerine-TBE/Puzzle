@@ -88,7 +88,7 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(viewWidth, viewHeight);
         AppCompatImageView image = holder.ivImage;
         image.setLayoutParams(layoutParams);
-        Glide.with(mContext).load(bitmap).into(image);
+        image.setImageBitmap(bitmap);
         //加载一个占位图
         AppCompatImageView place = holder.ivPlace;
         place.setLayoutParams(layoutParams);

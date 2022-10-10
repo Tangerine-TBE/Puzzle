@@ -1,9 +1,18 @@
 package com.weilai.jigsawpuzzle.fragment.puzzleLPic;
 
+import static com.weilai.jigsawpuzzle.Constant.IMAGE_PATH;
+
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.LruCache;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -27,16 +37,28 @@ import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpColorPopUp;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.event.LpSplitEvent;
+import com.weilai.jigsawpuzzle.fragment.main.EditImageFragment;
+import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
+import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
 import com.weilai.library.listener.CustomTabEntity;
 import com.weilai.library.listener.OnTabSelectListener;
+import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -148,6 +170,96 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 }
             }
         });
+        view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doOnBackGround();
+            }
+        });
+    }
+
+    private Bitmap shotScrollView(RecyclerView view) {
+        RecyclerView.Adapter adapter = view.getAdapter();
+        Bitmap bigBitmap = null;
+        if (adapter != null) {
+            int size = adapter.getItemCount();
+            int height = 0;
+            Paint paint = new Paint();
+            int iHeight = 0;
+            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+            // Use 1/8th of the available memory for this memory cache.
+            final int cacheSize = maxMemory / 8;
+            LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
+            for (int i = 0; i < size; i++) {
+                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
+                adapter.onBindViewHolder(holder, i);
+                holder.itemView.measure(
+                        View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
+                        holder.itemView.getMeasuredHeight());
+                holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+                holder.itemView.setDrawingCacheEnabled(true);
+                holder.itemView.buildDrawingCache();
+                Bitmap drawingCache = holder.itemView.getDrawingCache();
+                if (drawingCache != null) {
+
+                    bitmaCache.put(String.valueOf(i), drawingCache);
+                }
+                height += holder.itemView.getMeasuredHeight();
+            }
+
+            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
+            Canvas bigCanvas = new Canvas(bigBitmap);
+            Drawable lBackground = view.getBackground();
+            if (lBackground instanceof ColorDrawable) {
+                ColorDrawable lColorDrawable = (ColorDrawable) lBackground;
+                int lColor = lColorDrawable.getColor();
+                bigCanvas.drawColor(lColor);
+            }
+
+            for (int i = 0; i < size; i++) {
+                Bitmap bitmap = bitmaCache.get(String.valueOf(i));
+                bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
+                iHeight += bitmap.getHeight();
+                bitmap.recycle();
+            }
+        }
+        return bigBitmap;
+    }
+
+    private void doOnBackGround() {
+        showProcessDialog();
+        Bitmap bitmap = shotScrollView(mRvLP);
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
+            if (!bitmap.isRecycled()) {
+                bitmap.recycle();
+            }
+            emitter.onNext(filePath);
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                mDisposable.add(d);
+            }
+
+            @Override
+            public void onNext(@NonNull String s) {
+                hideProcessDialog();
+                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(s);
+                start(puzzleLpAdjustFragment);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     @Override
@@ -194,19 +306,20 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         puzzleLPSortFragment.pop();
         puzzleLPSortFragment = null;
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDataSplitChange(LpSplitEvent event) {
         ArrayList<String> data = (ArrayList<String>) event.data;
         int type = event.type;
-        if (type == 1){
+        if (type == 1) {
             bitmaps.remove(selectedPosition);
-            bitmaps.add(selectedPosition,data.get(0));
-        }else if (type == 2){
+            bitmaps.add(selectedPosition, data.get(0));
+        } else if (type == 2) {
             bitmaps.remove(selectedPosition);
-            bitmaps.add(selectedPosition,data.get(0));
-            if (selectedPosition +1 < bitmaps.size()) {
+            bitmaps.add(selectedPosition, data.get(0));
+            if (selectedPosition + 1 < bitmaps.size()) {
                 bitmaps.remove(selectedPosition + 1);
-                bitmaps.add(selectedPosition+1,data.get(1));
+                bitmaps.add(selectedPosition + 1, data.get(1));
             }
         }
         longPicItemAdapter.notifyDataSetChanged();
@@ -223,7 +336,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                     int size = list.size();
                     if (size > 0) {
                         for (LocalMedia localMedia : list) {
-                            String path = localMedia.getAvailablePath();
+                            String path = localMedia.getPath();
                             bitmaps.add(path);
                             longPicItemAdapter.notifyItemInserted(bitmaps.size());
                         }
@@ -287,6 +400,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 break;
             case 2:
                 //编辑
+                EditImageActivity.start(_mActivity, bitmaps.get(selectedPosition),IMAGE_PATH+"edit/", 1);
                 break;
             case 3:
                 //替换

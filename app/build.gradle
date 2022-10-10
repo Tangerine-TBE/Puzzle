@@ -57,6 +57,7 @@ dependencies {
     implementation project(path: ':selector')
     implementation project(path: ':ucrop')
     implementation project(path: ':puzzle')
+    implementation project(path: ':imageeditlibrary')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 //    implementation 'io.github.lucksiege:ucrop:v3.10.6'
     implementation 'me.yokeyword:fragmentationx:1.0.2'

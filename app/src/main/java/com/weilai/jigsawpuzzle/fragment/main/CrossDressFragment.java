@@ -123,7 +123,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                 if (size > 0) {
                     ArrayList<String> arrayList = new ArrayList<>();
                     for (LocalMedia localMedia : list) {
-                        arrayList.add(localMedia.getAvailablePath());
+                        arrayList.add(localMedia.getRealPath());
                     }
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra("data", arrayList);
