@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.adapter.puzzleLP;
+package com.xinlan.imageeditlibrary.editimage.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.weilai.jigsawpuzzle.R;
-
-import java.util.List;
+import com.xinlan.imageeditlibrary.R;
 
 /**
  ** DATE: 2022/9/27
@@ -25,7 +23,7 @@ public class ColorItemAdapter extends RecyclerView.Adapter<ColorItemAdapter.View
     private Context mContext;
     private JSONArray mColors;
     private OnColorPickedListener mListener;
-    public ColorItemAdapter(Context context, JSONArray colors,OnColorPickedListener listener){
+    public ColorItemAdapter(Context context, JSONArray colors, OnColorPickedListener listener){
         this.mContext = context;
         this.mColors = colors;
         this.mListener = listener;

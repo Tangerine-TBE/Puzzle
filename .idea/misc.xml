@@ -20,6 +20,7 @@
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/puzzle_item_select.xml" value="0.2015" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/seek_bar.xml" value="0.2015" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/seek_bar_progress.xml" value="0.2015" />
+        <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/seek_bar_thumb.xml" value="0.132" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/activity_template.xml" value="0.29957264957264956" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/activity_template_edit.xml" value="0.1" />
@@ -55,8 +56,26 @@
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/layout_title_back.xml" value="0.22" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/layout/test_fragment.xml" value="0.288034188034188" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.135" />
-        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/activity_image_edit.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/drawable-hdpi/bg_button_template.xml" value="0.1955" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/drawable-hdpi/seek_bar_progress.xml" value="0.107" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/drawable/redo_selector.xml" value="0.132" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/drawable/text_view_selected.xml" value="0.112" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/drawable/undo_selected.xml" value="0.132" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/activity_image_edit.xml" value="0.25" />
         <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/activity_main.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/bucketitem.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/fragment_edit_image_crop.xml" value="0.22" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/fragment_edit_image_fliter.xml" value="0.17564102564102563" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/fragment_edit_image_main_menu.xml" value="0.33" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/fragment_edit_image_rotate.xml" value="0.33" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/fragment_edit_image_sticker_type.xml" value="0.3004273504273504" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/fragment_edit_paint.xml" value="0.22" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/gallery.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/imageitem.xml" value="0.15982905982905982" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/item_color.xml" value="0.28888888888888886" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/layout_title_back.xml" value="0.21153846153846154" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/view_set_stoke_width.xml" value="0.27735042735042736" />
+        <entry key="..\:/luojl/TestProject/Puzzle/imageeditlibrary/src/main/res/layout/view_sticker_item.xml" value="0.28888888888888886" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab.xml" value="0.16367521367521368" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_bottom.xml" value="0.16367521367521368" />
         <entry key="..\:/luojl/TestProject/Puzzle/library/src/main/res/layout/layout_tab_left.xml" value="0.15213675213675212" />

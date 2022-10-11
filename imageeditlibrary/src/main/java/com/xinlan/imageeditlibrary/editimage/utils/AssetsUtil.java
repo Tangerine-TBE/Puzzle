@@ -1,4 +1,4 @@
-package com.weilai.jigsawpuzzle.util;
+package com.xinlan.imageeditlibrary.editimage.utils;
 
 import android.content.Context;
 

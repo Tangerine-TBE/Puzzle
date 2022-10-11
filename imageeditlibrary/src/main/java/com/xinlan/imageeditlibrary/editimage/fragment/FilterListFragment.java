@@ -80,7 +80,6 @@ public class FilterListFragment extends BaseEditFragment {
         activity.mainImage.setImageBitmap(activity.getMainBit());
         activity.mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         activity.mainImage.setScaleEnabled(false);
-        activity.bannerFlipper.showNext();
     }
 
     /**
@@ -94,7 +93,6 @@ public class FilterListFragment extends BaseEditFragment {
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(0);
         activity.mainImage.setScaleEnabled(true);
-        activity.bannerFlipper.showPrevious();
     }
 
     /**
@@ -104,13 +102,11 @@ public class FilterListFragment extends BaseEditFragment {
         // System.out.println("保存滤镜处理后的图片");
         if (currentBitmap == activity.getMainBit()) {// 原始图片
             // System.out.println("原始图片");
-            backToMain();
-            return;
         } else {// 经滤镜处理后的图片
             // System.out.println("滤镜图片");
             activity.changeMainBitmap(fliterBit,true);
-            backToMain();
         }// end if
+        backToMain();
     }
 
     /**

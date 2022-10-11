@@ -143,15 +143,6 @@ public class EditImageActivity extends BaseActivity {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         imageWidth = metrics.widthPixels / 2;
         imageHeight = metrics.heightPixels / 2;
-
-        bannerFlipper = (ViewFlipper) findViewById(R.id.banner_flipper);
-        bannerFlipper.setInAnimation(this, R.anim.in_bottom_to_top);
-        bannerFlipper.setOutAnimation(this, R.anim.out_bottom_to_top);
-        applyBtn = findViewById(R.id.apply);
-        applyBtn.setOnClickListener(new ApplyBtnClick());
-        saveBtn = findViewById(R.id.save_btn);
-        saveBtn.setOnClickListener(new SaveBtnClick());
-
         mainImage = (ImageViewTouch) findViewById(R.id.main_image);
         backBtn = findViewById(R.id.back_btn);// 退出按钮
         backBtn.setOnClickListener(new OnClickListener() {
@@ -329,7 +320,7 @@ public class EditImageActivity extends BaseActivity {
         public void onClick(View v) {
             switch (mode) {
                 case MODE_STICKERS:
-                    mStickerFragment.applyStickers();// 保存贴图
+//                    mStickerFragment.applyStickers();// 保存贴图
                     break;
                 case MODE_FILTER:// 滤镜编辑状态
                     mFilterListFragment.applyFilterImage();// 保存滤镜贴图
@@ -344,7 +335,7 @@ public class EditImageActivity extends BaseActivity {
                     mAddTextFragment.applyTextImage();
                     break;
                 case MODE_PAINT://保存涂鸦
-                    mPaintFragment.savePaintImage();
+//                    mPaintFragment.savePaintImage();
                     break;
                 case MODE_BEAUTY://保存美颜后的图片
                     mBeautyFragment.applyBeauty();

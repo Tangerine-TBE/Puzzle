@@ -31,10 +31,8 @@ public class RedoUndoController implements View.OnClickListener {
 
         mUndoBtn = mRootView.findViewById(R.id.uodo_btn);
         mRedoBtn = mRootView.findViewById(R.id.redo_btn);
-
         mUndoBtn.setOnClickListener(this);
         mRedoBtn.setOnClickListener(this);
-
         updateBtns();
         mEditCache.addObserver(mObserver);
     }
@@ -86,8 +84,8 @@ public class RedoUndoController implements View.OnClickListener {
     public void updateBtns() {
         //System.out.println("缓存Size = " + mEditCache.getSize() + "  current = " + mEditCache.getCur());
         //System.out.println("content = " + mEditCache.debugLog());
-        mUndoBtn.setVisibility(mEditCache.checkNextBitExist() ? View.VISIBLE : View.INVISIBLE);
-        mRedoBtn.setVisibility(mEditCache.checkPreBitExist() ? View.VISIBLE : View.INVISIBLE);
+        mUndoBtn.setEnabled(mEditCache.checkNextBitExist());
+        mRedoBtn.setEnabled(mEditCache.checkPreBitExist());
     }
 
     public void onDestroy() {

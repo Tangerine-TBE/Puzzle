@@ -2,22 +2,17 @@ package com.weilai.jigsawpuzzle.adapter.puzzle;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.weight.puzzle.slant.NumberSlantLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.NumberStraightLayout;
 import com.xiaopo.flying.puzzle.PuzzleLayout;
 import com.xiaopo.flying.puzzle.PuzzleView;
-
 import java.util.List;
 
 /**
@@ -94,24 +89,21 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
             holder.frameLayout.setSelected(false);
         }
 
-        holder.frameLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.frameLayout != mCurrentView) {
-                    holder.frameLayout.setSelected(true);
-                    if (mCurrentView != null) {
-                        mCurrentView.setSelected(false);
+        holder.frameLayout.setOnClickListener(v -> {
+            if (holder.frameLayout != mCurrentView) {
+                holder.frameLayout.setSelected(true);
+                if (mCurrentView != null) {
+                    mCurrentView.setSelected(false);
 
-                    }
-                    mCurrentView = holder.frameLayout;
-                    mCurrentPuzzleLayout = puzzleLayout;
-                    if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onItemClick(puzzleLayout, pics);
-                    }
-                } else {
-                    holder.frameLayout.setSelected(true);
-                    mCurrentPuzzleLayout = puzzleLayout;
                 }
+                mCurrentView = holder.frameLayout;
+                mCurrentPuzzleLayout = puzzleLayout;
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(puzzleLayout, pics);
+                }
+            } else {
+                holder.frameLayout.setSelected(true);
+                mCurrentPuzzleLayout = puzzleLayout;
             }
         });
     }

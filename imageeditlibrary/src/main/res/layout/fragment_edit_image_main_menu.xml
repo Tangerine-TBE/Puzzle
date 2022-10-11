@@ -2,6 +2,7 @@
     android:id="@+id/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:scrollbars="none"
+    android:overScrollMode="never"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent">
 
@@ -9,83 +10,187 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:orientation="horizontal">
-
-        <TextView
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/btn_paint"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/image_edit_menu_margin"
-            android:gravity="center"
-            android:text="@string/edit"
-            android:textColor="@color/white"
-            android:textSize="@dimen/image_edit_text_size"/>
+            android:orientation="vertical"
+            android:layout_margin="12dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_gravity="center"
+                android:background="@mipmap/icon_item_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/draw"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/image_edit_text_size"/>
 
-        <TextView
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/btn_stickers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/image_edit_menu_margin"
-            android:gravity="center"
-            android:text="@string/stickers"
-            android:textColor="@color/white"
-            android:textSize="@dimen/image_edit_text_size"/>
 
-        <TextView
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="12dp"   android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_gravity="center"
+                android:background="@mipmap/icon_item_sticker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/stickers"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/image_edit_text_size"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/btn_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/image_edit_menu_margin"
-            android:gravity="center"
-            android:text="@string/filter"
-            android:textColor="@color/white"
-            android:textSize="@dimen/image_edit_text_size"/>
 
-        <TextView
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="12dp"   android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_gravity="center"
+                android:background="@mipmap/icon_item_guolv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/filter"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/image_edit_text_size"/>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/btn_crop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/image_edit_menu_margin"
-            android:gravity="center"
-            android:text="@string/crop"
-            android:textColor="@color/white"
-            android:textSize="@dimen/image_edit_text_size"/>
 
-        <TextView
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="12dp"   android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_gravity="center"
+                android:background="@mipmap/icon_item_fillter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/crop"
+                android:textColor="@android:color/black"
+
+                android:textSize="@dimen/image_edit_text_size"/>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/btn_rotate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/image_edit_menu_margin"
-            android:gravity="center"
-            android:text="@string/rotate"
-            android:textColor="@color/white"
-            android:textSize="@dimen/image_edit_text_size"/>
 
-        <TextView
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="12dp"   android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_gravity="center"
+                android:background="@mipmap/icon_item_rorate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/rotate"
+                android:textColor="@android:color/black"
+
+                android:textSize="@dimen/image_edit_text_size"/>
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/btn_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/image_edit_menu_margin"
-            android:gravity="center"
-            android:text="@string/text"
-            android:textColor="@color/white"
-            android:textSize="@dimen/image_edit_text_size"/>
 
-        <TextView
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="12dp"   android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_gravity="center"
+                android:background="@mipmap/icon_item_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/text"
+                android:textColor="@android:color/black"
+
+                android:textSize="@dimen/image_edit_text_size"/>
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/btn_beauty"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/image_edit_menu_margin"
-            android:gravity="center"
-            android:text="@string/beauty"
-            android:textColor="@color/white"
-            android:textSize="@dimen/image_edit_text_size"/>
+            android:orientation="vertical"
+            android:layout_margin="12dp"   android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_gravity="center"
+                android:background="@mipmap/icon_item_beauty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/beauty"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/image_edit_text_size"/>
+
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
     </LinearLayout>
 </HorizontalScrollView>

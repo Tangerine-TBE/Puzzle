@@ -1,66 +1,48 @@
 package com.xinlan.imageeditlibrary.editimage.fragment;
 
-import android.app.Dialog;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ViewFlipper;
-
-import com.xinlan.imageeditlibrary.BaseActivity;
+import android.widget.ImageView;
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 import com.xinlan.imageeditlibrary.editimage.adapter.StickerAdapter;
-import com.xinlan.imageeditlibrary.editimage.adapter.StickerTypeAdapter;
-import com.xinlan.imageeditlibrary.editimage.model.StickerBean;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
 import com.xinlan.imageeditlibrary.editimage.view.StickerItem;
 import com.xinlan.imageeditlibrary.editimage.view.StickerView;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * 贴图分类fragment
  *
  * @author panyi
  */
-public class StickerFragment extends BaseEditFragment {
-    public static final int INDEX = ModuleConfig.INDEX_STICKER;
-
-    public static final String TAG = StickerFragment.class.getName();
-    public static final String STICKER_FOLDER = "stickers";
-
+public class StickerFragment extends BaseEditFragment implements StickerAdapter.OnImageViewClicked {
+    private final int[] iconIds = new int[]{
+            R.mipmap.icon1,R.mipmap.icon2,R.mipmap.icon3,
+            R.mipmap.icon4,R.mipmap.icon5,R.mipmap.icon6,
+            R.mipmap.icon7,R.mipmap.icon8,R.mipmap.icon9,
+            R.mipmap.icon10,R.mipmap.icon11,R.mipmap.icon12,
+            R.mipmap.icon13,R.mipmap.icon14,R.mipmap.icon15,
+            R.mipmap.icon16,R.mipmap.icon17,R.mipmap.icon18,R.mipmap.icon19};
     private View mainView;
-    private ViewFlipper flipper;
-    private View backToMenu;// 返回主菜单
-    private RecyclerView typeList;// 贴图分类列表
-    private RecyclerView stickerList;// 贴图素材列表
-    private View backToType;// 返回类型选择
+    public static final int INDEX = ModuleConfig.INDEX_STICKER;
     private StickerView mStickerView;// 贴图显示控件
-    private StickerAdapter mStickerAdapter;// 贴图列表适配器
-
-    private LoadStickersTask mLoadStickersTask;
-    private List<StickerBean> stickerBeanList = new ArrayList<StickerBean>();
-
     private SaveStickersTask mSaveTask;
 
     public static StickerFragment newInstance() {
-        StickerFragment fragment = new StickerFragment();
-        return fragment;
+        return new StickerFragment();
     }
 
     @Override
@@ -69,7 +51,7 @@ public class StickerFragment extends BaseEditFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
         mainView = inflater.inflate(R.layout.fragment_edit_image_sticker_type,
@@ -83,35 +65,24 @@ public class StickerFragment extends BaseEditFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.mStickerView = activity.mStickerView;
-        flipper = (ViewFlipper) mainView.findViewById(R.id.flipper);
-        flipper.setInAnimation(activity, R.anim.in_bottom_to_top);
-        flipper.setOutAnimation(activity, R.anim.out_bottom_to_top);
-
         //
-        backToMenu = mainView.findViewById(R.id.back_to_main);
-        typeList = (RecyclerView) mainView
-                .findViewById(R.id.stickers_type_list);
-        typeList.setHasFixedSize(true);
+        // 返回主菜单
+        View backToMenu = mainView.findViewById(R.id.back_to_main);
+        // 贴图素材列表
+        RecyclerView stickerList = mainView.findViewById(R.id.sticker_list);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
         mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        typeList.setLayoutManager(mLayoutManager);
-        typeList.setAdapter(new StickerTypeAdapter(this));
-        backToType = mainView.findViewById(R.id.back_to_type);// back按钮
-
-        stickerList = (RecyclerView) mainView.findViewById(R.id.stickers_list);
-        stickerList.setHasFixedSize(true);
-        LinearLayoutManager stickerListLayoutManager = new LinearLayoutManager(
-                activity);
-        stickerListLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        stickerList.setLayoutManager(stickerListLayoutManager);
-        mStickerAdapter = new StickerAdapter(this);
+        ImageView ivSave = mainView.findViewById(R.id.iv_save);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(activity,7);
+        stickerList.setLayoutManager(gridLayoutManager);
+        // 贴图列表适配器
+        StickerAdapter mStickerAdapter = new StickerAdapter(getContext(), iconIds, this);
         stickerList.setAdapter(mStickerAdapter);
-
         backToMenu.setOnClickListener(new BackToMenuClick());// 返回主菜单
-        backToType.setOnClickListener(new OnClickListener() {
+        ivSave.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {// 返回上一级列表
-                flipper.showPrevious();
+            public void onClick(View v) {
+                applyStickers();
             }
         });
     }
@@ -121,120 +92,23 @@ public class StickerFragment extends BaseEditFragment {
         activity.mode = EditImageActivity.MODE_STICKERS;
         activity.mStickerFragment.getmStickerView().setVisibility(
                 View.VISIBLE);
-        activity.bannerFlipper.showNext();
     }
-
-    //导入贴图数据
-    private void loadStickersData() {
-        if (mLoadStickersTask != null) {
-            mLoadStickersTask.cancel(true);
-        }
-        mLoadStickersTask = new LoadStickersTask();
-        mLoadStickersTask.execute(1);
+    @Override
+    public void imageViewClicked(int id) {
+        mStickerView.addBitImage(BitmapFactory.decodeResource(getResources(),id));
     }
 
 
-    /**
-     * 导入贴图数据
-     */
-    private final class LoadStickersTask extends AsyncTask<Integer, Void, Void> {
-        private Dialog loadDialog;
 
-        public LoadStickersTask() {
-            super();
-            loadDialog = BaseActivity.getLoadingDialog(getActivity(), R.string.saving_image, false);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            loadDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Integer... params) {
-            stickerBeanList.clear();
-            AssetManager assetManager = getActivity().getAssets();
-            try {
-                String[] lists = assetManager.list(STICKER_FOLDER);
-                for (String parentPath : lists) {
-
-                }//end for each
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            loadDialog.dismiss();
-
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            loadDialog.dismiss();
-        }
-    }//end inner class
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mLoadStickersTask != null) {
-            mLoadStickersTask.cancel(true);
-        }
-    }
 
-    /**
-     * 跳转至贴图详情列表
-     *
-     * @param path
-     */
-    public void swipToStickerDetails(String path) {
-        mStickerAdapter.addStickerImages(path);
-        flipper.showNext();
     }
-
-    /**
-     * 从Assert文件夹中读取位图数据
-     *
-     * @param fileName
-     * @return
-     */
-    private Bitmap getImageFromAssetsFile(String fileName) {
-        Bitmap image = null;
-        AssetManager am = getResources().getAssets();
-        try {
-            InputStream is = am.open(fileName);
-            image = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return image;
-    }
-
-    /**
-     * 选择贴图加入到页面中
-     *
-     * @param path
-     */
-    public void selectedStickerItem(String path) {
-        mStickerView.addBitImage(getImageFromAssetsFile(path));
-    }
-
     public StickerView getmStickerView() {
         return mStickerView;
     }
-
-    public void setmStickerView(StickerView mStickerView) {
-        this.mStickerView = mStickerView;
-    }
-
     /**
      * 返回主菜单页面
      *
@@ -252,9 +126,7 @@ public class StickerFragment extends BaseEditFragment {
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(0);
         mStickerView.setVisibility(View.GONE);
-        activity.bannerFlipper.showPrevious();
     }
-
     /**
      * 保存贴图任务
      *

@@ -13,9 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.adapter.puzzleLP.ColorItemAdapter;
-import com.weilai.jigsawpuzzle.util.AssetsUtil;
-import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
+import com.xinlan.imageeditlibrary.editimage.adapter.ColorItemAdapter;
+import com.xinlan.imageeditlibrary.editimage.utils.AssetsUtil;
 
 import razerdp.basepopup.BasePopupWindow;
 

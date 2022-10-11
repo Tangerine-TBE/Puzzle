@@ -2,6 +2,7 @@ package com.xinlan.imageeditlibrary.editimage.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
@@ -13,11 +14,15 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 import com.xinlan.imageeditlibrary.editimage.view.RotateImageView;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
+
+import java.util.ArrayList;
 
 
 /**
@@ -29,14 +34,18 @@ public class RotateFragment extends BaseEditFragment {
     public static final int INDEX = ModuleConfig.INDEX_ROTATE;
     public static final String TAG = RotateFragment.class.getName();
     private View mainView;
-    private View backToMenu;// 返回主菜单
     public SeekBar mSeekBar;// 角度设定
     private RotateImageView mRotatePanel;// 旋转效果展示控件
+    private AppCompatTextView tvMode0;
+    private AppCompatTextView tvMode90;
+    private AppCompatTextView tvMode180;
+    private AppCompatTextView tvMode270;
 
     public static RotateFragment newInstance() {
         RotateFragment fragment = new RotateFragment();
         return fragment;
     }
+    private ArrayList<AppCompatTextView> arrayList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +62,54 @@ public class RotateFragment extends BaseEditFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        backToMenu = mainView.findViewById(R.id.back_to_main);
+        arrayList = new ArrayList<>();
+        // 返回主菜单
+        View backToMenu = mainView.findViewById(R.id.back_to_main);
         mSeekBar = (SeekBar) mainView.findViewById(R.id.rotate_bar);
         mSeekBar.setProgress(0);
+        mainView.findViewById(R.id.iv_save).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyRotateImage();
+            }
+        });
 
+        tvMode0 = mainView.findViewById(R.id.tv_mode_0);
+        tvMode0.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRotatePanel.rotateImage(0);
+                mSeekBar.setProgress(0);
+            }
+        });
+        tvMode90 = mainView.findViewById(R.id.tv_mode_90);
+        tvMode90.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRotatePanel.rotateImage(90);
+                mSeekBar.setProgress(90);
+            }
+        });
+        tvMode180 = mainView.findViewById(R.id.tv_mode_180);
+        tvMode180.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRotatePanel.rotateImage(180);
+                mSeekBar.setProgress(180);
+            }
+        });
+        tvMode270 = mainView.findViewById(R.id.tv_mode_270);
+        tvMode270.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRotatePanel.rotateImage(270);
+                mSeekBar.setProgress(270);
+            }
+        });
+        arrayList.add(tvMode0);
+        arrayList.add(tvMode90);
+        arrayList.add(tvMode180);
+        arrayList.add(tvMode270);
         this.mRotatePanel = ensureEditActivity().mRotatePanel;
         backToMenu.setOnClickListener(new BackToMenuClick());// 返回主菜单
         mSeekBar.setOnSeekBarChangeListener(new RotateAngleChange());
@@ -75,7 +127,6 @@ public class RotateFragment extends BaseEditFragment {
         activity.mRotateFragment.mSeekBar.setProgress(0);
         activity.mRotatePanel.reset();
         activity.mRotatePanel.setVisibility(View.VISIBLE);
-        activity.bannerFlipper.showNext();
     }
 
     /**
@@ -89,6 +140,32 @@ public class RotateFragment extends BaseEditFragment {
                                       boolean fromUser) {
             // System.out.println("progress--->" + progress);
             mRotatePanel.rotateImage(angle);
+            if (angle == 0) {
+                tvMode0.setTextColor(Color.BLACK);
+                tvMode90.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode180.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode270.setTextColor(Color.parseColor("#C4C4C4"));
+            }else if (angle == 90){
+                tvMode0.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode90.setTextColor(Color.BLACK);
+                tvMode180.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode270.setTextColor(Color.parseColor("#C4C4C4"));
+            }else if (angle == 180){
+                tvMode180.setTextColor(Color.BLACK);
+                tvMode0.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode90.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode270.setTextColor(Color.parseColor("#C4C4C4"));
+            }else if (angle == 270){
+                tvMode270.setTextColor(Color.BLACK);
+                tvMode90.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode180.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode0.setTextColor(Color.parseColor("#C4C4C4"));
+            }else{
+                tvMode270.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode90.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode180.setTextColor(Color.parseColor("#C4C4C4"));
+                tvMode0.setTextColor(Color.parseColor("#C4C4C4"));
+            }
         }
 
         @Override
@@ -123,7 +200,6 @@ public class RotateFragment extends BaseEditFragment {
         activity.bottomGallery.setCurrentItem(0);
         activity.mainImage.setVisibility(View.VISIBLE);
         this.mRotatePanel.setVisibility(View.GONE);
-        activity.bannerFlipper.showPrevious();
     }
 
     /**
@@ -133,7 +209,6 @@ public class RotateFragment extends BaseEditFragment {
         // System.out.println("保存旋转图片");
         if (mSeekBar.getProgress() == 0 || mSeekBar.getProgress() == 360) {// 没有做旋转
             backToMain();
-            return;
         } else {// 保存图片
             SaveRotateImageTask task = new SaveRotateImageTask();
             task.execute(activity.getMainBit());
@@ -203,7 +278,7 @@ public class RotateFragment extends BaseEditFragment {
                 return;
 
             // 切换新底图
-            activity.changeMainBitmap(result,true);
+            activity.changeMainBitmap(result, true);
             backToMain();
         }
     }// end inner class

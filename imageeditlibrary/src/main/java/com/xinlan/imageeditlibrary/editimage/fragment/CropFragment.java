@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,38 +45,26 @@ public class CropFragment extends BaseEditFragment {
     public static final int INDEX = ModuleConfig.INDEX_CROP;
 	public static final String TAG = CropFragment.class.getName();
 	private View mainView;
-	private View backToMenu;// 返回主菜单
 	public CropImageView mCropPanel;// 剪裁操作面板
 	private LinearLayout ratioList;
-	private static List<RatioItem> dataList = new ArrayList<RatioItem>();
-	static {
-		// init data
-		dataList.add(new RatioItem("none", -1f));
-		dataList.add(new RatioItem("1:1", 1f));
-		dataList.add(new RatioItem("1:2", 1 / 2f));
-		dataList.add(new RatioItem("1:3", 1 / 3f));
-		dataList.add(new RatioItem("2:3", 2 / 3f));
-		dataList.add(new RatioItem("3:4", 3 / 4f));
-		dataList.add(new RatioItem("2:1", 2f));
-		dataList.add(new RatioItem("3:1", 3f));
-		dataList.add(new RatioItem("3:2", 3 / 2f));
-		dataList.add(new RatioItem("4:3", 4 / 3f));
-	}
-	private List<TextView> textViewList = new ArrayList<TextView>();
+	private static final List<RatioItem> dataList = new ArrayList<>();
 
-	public static int SELECTED_COLOR = Color.YELLOW;
-	public static int UNSELECTED_COLOR = Color.WHITE;
-	private CropRationClick mCropRationClick = new CropRationClick();
-	public TextView selctedTextView;
+	private View mSelectedView;
+	private final CropRationClick mCropRationClick = new CropRationClick();
 
 	public static CropFragment newInstance() {
-		CropFragment fragment = new CropFragment();
-		return fragment;
+		return new CropFragment();
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		dataList.add(new RatioItem("自由", -1f,R.mipmap.icon_free_unselected,R.mipmap.icon_free_selected));
+		dataList.add(new RatioItem("1:1", 1f,R.mipmap.icon_11_unselected,R.mipmap.icon_11_selected));
+		dataList.add(new RatioItem("3:2", 3 / 2f,R.mipmap.icon_32_unselected,R.mipmap.icon_32_selected));
+		dataList.add(new RatioItem("4:3", 4 / 3f,R.mipmap.icon_43_unselected,R.mipmap.icon_43_selected));
+		dataList.add(new RatioItem("2:3", 2 / 3f,R.mipmap.icon_23_unselected,R.mipmap.icon_23_selected));
+		dataList.add(new RatioItem("16:9",16/9f,R.mipmap.icon_169_unselected,R.mipmap.icon_169_selected));
 	}
 
 	@Override
@@ -88,28 +77,38 @@ public class CropFragment extends BaseEditFragment {
 	private void setUpRatioList() {
 		// init UI
 		ratioList.removeAllViews();
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.WRAP_CONTENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
-		params.gravity = Gravity.CENTER_VERTICAL;
-		params.leftMargin = 20;
-		params.rightMargin = 20;
+		LinearLayout.LayoutParams imageViewParams = new LinearLayout.LayoutParams(150,150);
+		LinearLayout.LayoutParams parentViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,1);
+		LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		textViewParams.gravity = Gravity.CENTER;
+		imageViewParams.gravity = Gravity.CENTER;
+		parentViewParams.leftMargin = 10;
+		parentViewParams.rightMargin = 10;
+		parentViewParams.gravity =Gravity.CENTER;
 		for (int i = 0, len = dataList.size(); i < len; i++) {
 			TextView text = new TextView(activity);
-			text.setTextColor(UNSELECTED_COLOR);
+			text.setTextColor(Color.BLACK);
 			text.setTextSize(20);
 			text.setText(dataList.get(i).getText());
-			textViewList.add(text);
-			ratioList.addView(text, params);
-			text.setTag(i);
-			if (i == 0) {
-				selctedTextView = text;
-			}
+			ImageView imageView = new ImageView(activity);
+			imageView.setImageResource(dataList.get(i).getIconUnSelected());
+			imageView.setLayoutParams(imageViewParams);
+			imageView.setId(0);
+			LinearLayout linearLayout = new LinearLayout(activity);
+			linearLayout.setOrientation(LinearLayout.VERTICAL);
+			linearLayout.addView(imageView);
+			linearLayout.addView(text,textViewParams);
+			linearLayout.setLayoutParams(parentViewParams);
+			ratioList.addView(linearLayout);
 			dataList.get(i).setIndex(i);
-			text.setTag(dataList.get(i));
-			text.setOnClickListener(mCropRationClick);
+			linearLayout.setTag(dataList.get(i));
+			linearLayout.setOnClickListener(mCropRationClick);
+			if (i == 0) {
+				mSelectedView = linearLayout;
+				imageView.setImageResource(dataList.get(i).getIconSelected());
+			}
+
 		}// end for i
-		selctedTextView.setTextColor(SELECTED_COLOR);
 	}
 
 	/**
@@ -121,14 +120,15 @@ public class CropFragment extends BaseEditFragment {
 	private final class CropRationClick implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			TextView curTextView = (TextView) v;
-			selctedTextView.setTextColor(UNSELECTED_COLOR);
 			RatioItem dataItem = (RatioItem) v.getTag();
-			selctedTextView = curTextView;
-			selctedTextView.setTextColor(SELECTED_COLOR);
-
+			ImageView imageView = v.findViewById(0);
+			imageView.setImageResource(dataItem.getIconSelected());
+			ImageView imageView1 = mSelectedView.findViewById(0);
+			RatioItem dataItem1 = (RatioItem) mSelectedView.getTag();
+			imageView1.setImageResource(dataItem1.getIconUnSelected());
 			mCropPanel.setRatioCropRect(activity.mainImage.getBitmapRect(),
 					dataItem.getRatio());
+			mSelectedView = v;
 			// System.out.println("dataItem   " + dataItem.getText());
 		}
 	}// end inner class
@@ -137,11 +137,18 @@ public class CropFragment extends BaseEditFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        backToMenu = mainView.findViewById(R.id.back_to_main);
-        ratioList = (LinearLayout) mainView.findViewById(R.id.ratio_list_group);
+		// 返回主菜单
+		View backToMenu = mainView.findViewById(R.id.back_to_main);
+        ratioList = mainView.findViewById(R.id.ratio_list_group);
         setUpRatioList();
         this.mCropPanel = ensureEditActivity().mCropPanel;
 		backToMenu.setOnClickListener(new BackToMenuClick());// 返回主菜单
+		mainView.findViewById(R.id.iv_save).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				applyCropImage();
+			}
+		});
 	}
 
     @Override
@@ -153,8 +160,6 @@ public class CropFragment extends BaseEditFragment {
         activity.mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         activity.mainImage.setScaleEnabled(false);// 禁用缩放
         // System.out.println(r.left + "    " + r.top);
-        activity.bannerFlipper.showNext();
-
 		//  bug  fixed  https://github.com/siwangqishiq/ImageEditor-Android/issues/59
 		// 设置完与屏幕匹配的尺寸  确保变换矩阵设置生效后才设置裁剪区域
 		activity.mainImage.post(new Runnable() {
@@ -188,11 +193,7 @@ public class CropFragment extends BaseEditFragment {
 		mCropPanel.setVisibility(View.GONE);
 		activity.mainImage.setScaleEnabled(true);// 恢复缩放功能
 		activity.bottomGallery.setCurrentItem(0);
-		if (selctedTextView != null) {
-			selctedTextView.setTextColor(UNSELECTED_COLOR);
-		}
 		mCropPanel.setRatioCropRect(activity.mainImage.getBitmapRect(), -1);
-		activity.bannerFlipper.showPrevious();
 	}
 
 	/**
@@ -210,7 +211,7 @@ public class CropFragment extends BaseEditFragment {
 	 * @author panyi
 	 * 
 	 */
-	private final class CropImageTask extends AsyncTask<Bitmap, Void, Bitmap> {
+	private  final class CropImageTask extends AsyncTask<Bitmap, Void, Bitmap> {
 		private Dialog dialog;
 
 		@Override

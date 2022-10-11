@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,84 +27,47 @@ import com.xinlan.imageeditlibrary.editimage.fragment.StickerFragment;
  *
  * @author panyi
  */
-public class StickerAdapter extends RecyclerView.Adapter<ViewHolder> {
-    public DisplayImageOptions imageOption = new DisplayImageOptions.Builder()
-            .cacheInMemory(true).showImageOnLoading(R.drawable.yd_image_tx)
-            .build();// 下载图片显示
+public class StickerAdapter extends RecyclerView.Adapter<StickerAdapter.ViewHolder> {
+    private final Context mContext;
+    private final int [] mBitmapInfo;
+    public StickerAdapter(Context context,int[] bitmapInfo,OnImageViewClicked onImageViewClicked){
+        this.mContext = context;
+        this.mBitmapInfo = bitmapInfo;
+        this.onImageViewClicked = onImageViewClicked;
+    }
+    public interface OnImageViewClicked{
+        void imageViewClicked(int id);
+    }
+    private final OnImageViewClicked onImageViewClicked;
 
-    private StickerFragment mStickerFragment;
-    private ImageClick mImageClick = new ImageClick();
-    private List<String> pathList = new ArrayList<String>();// 图片路径列表
-
-    public StickerAdapter(StickerFragment fragment) {
-        super();
-        this.mStickerFragment = fragment;
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        final  View view = LayoutInflater.from(mContext).inflate(R.layout.view_sticker_item,parent,false) ;
+        return new ViewHolder(view);
     }
 
-    public class ImageHolder extends ViewHolder {
-        public ImageView image;
-
-        public ImageHolder(View itemView) {
-            super(itemView);
-            this.image = (ImageView) itemView.findViewById(R.id.img);
-        }
-    }// end inner class
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.imageView.setImageResource(mBitmapInfo[holder.getAdapterPosition()]);
+        holder.imageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onImageViewClicked.imageViewClicked(mBitmapInfo[holder.getAdapterPosition()]);
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {
-        return pathList.size();
+        return mBitmapInfo.length;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return 1;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewtype) {
-        View v = null;
-        v = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.view_sticker_item, parent, false);
-        ImageHolder holer = new ImageHolder(v);
-        return holer;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        ImageHolder imageHoler = (ImageHolder) holder;
-        String path = pathList.get(position);
-        ImageLoader.getInstance().displayImage("assets://" + path,
-                imageHoler.image, imageOption);
-        imageHoler.image.setTag(path);
-        imageHoler.image.setOnClickListener(mImageClick);
-    }
-
-    public void addStickerImages(String folderPath) {
-        pathList.clear();
-        try {
-            String[] files = mStickerFragment.getActivity().getAssets()
-                    .list(folderPath);
-            for (String name : files) {
-                pathList.add(folderPath + File.separator + name);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView ;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.img);
         }
-        this.notifyDataSetChanged();
     }
-
-    /**
-     * 选择贴图
-     *
-     * @author panyi
-     */
-    private final class ImageClick implements OnClickListener {
-        @Override
-        public void onClick(View v) {
-            String data = (String) v.getTag();
-            //System.out.println("data---->" + data);
-            mStickerFragment.selectedStickerItem(data);
-        }
-    }// end inner class
-
-}// end class
+}

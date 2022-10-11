@@ -92,6 +92,7 @@ public class CustomPaintView extends View {
 
     public void setWidth(float width) {
         this.mPaint.setStrokeWidth(width);
+        this.mEraserPaint.setStrokeWidth(width);
     }
 
     @Override

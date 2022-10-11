@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="55dp"
         android:layout_alignParentTop="true"
-        android:background="#333333">
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/back_btn"
@@ -19,7 +19,7 @@
             android:layout_gravity="left|center_vertical"
             android:layout_margin="10dp"
             android:layout_marginLeft="0dp"
-            android:src="@drawable/back_arrow" />
+            android:src="@mipmap/title_back" />
 
         <TextView
             android:id="@+id/title"
@@ -27,45 +27,38 @@
             android:layout_height="fill_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/app_name"
             android:textColor="#ffffff"
             android:textSize="20sp" />
-
-        <ViewFlipper
-            android:id="@+id/banner_flipper"
+        <LinearLayout
+            android:id="@+id/redo_uodo_panel"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_gravity="right"
             android:layout_marginRight="10dp"
             android:flipInterval="1000"
             android:gravity="center">
-
-            <TextView
-                android:id="@+id/save_btn"
+            <ImageView
+                android:id="@+id/uodo_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:text="@string/save"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/apply"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/undo_selected" />
+            <ImageView
+                android:id="@+id/redo_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:gravity="center"
-                android:text="@string/apply"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-        </ViewFlipper>
+                android:layout_height="wrap_content"
+                android:src="@drawable/redo_selector" />
+        </LinearLayout>
+
+
     </FrameLayout>
 
     <com.xinlan.imageeditlibrary.editimage.view.CustomViewPager
         android:id="@+id/bottom_gallery"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/bottom_banner_height"
+        android:layout_height="120dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/main_backgroud"
+        android:background="@color/white"
         android:overScrollMode="never" />
 
     <FrameLayout
@@ -74,7 +67,7 @@
         android:layout_height="fill_parent"
         android:layout_above="@id/bottom_gallery"
         android:layout_below="@id/banner"
-        android:background="#000000">
+        android:background="@android:color/transparent">
 
         <com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch
             android:id="@+id/main_image"
@@ -118,27 +111,5 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/redo_uodo_panel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_gallery"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="10dp">
-        <ImageView
-            android:id="@+id/uodo_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/uodo" />
-        <ImageView
-            android:id="@+id/redo_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/redo" />
-    </LinearLayout>
 
 </RelativeLayout>
