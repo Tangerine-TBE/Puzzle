@@ -83,9 +83,6 @@ public class EditImageActivity extends BaseActivity {
     private ImageView mIvSrc;
     private ImageView mIv_Src;
     private View backBtn;
-
-    public ViewFlipper bannerFlipper;
-
     public StickerView mStickerView;// 贴图层View
     public CropImageView mCropPanel;// 剪切操作控件
     public RotateImageView mRotatePanel;// 旋转操作控件
@@ -103,9 +100,7 @@ public class EditImageActivity extends BaseActivity {
     public PaintFragment mPaintFragment;//绘制模式Fragment
     public BeautyFragment mBeautyFragment;//美颜模式Fragment
     private SaveImageTask mSaveImageTask;
-
     private RedoUndoController mRedoUndoController;//撤销操作
-
     /**
      * @param context
      * @param editImagePath
@@ -173,7 +168,7 @@ public class EditImageActivity extends BaseActivity {
         mAddTextFragment = AddTextFragment.newInstance();
         mPaintFragment = PaintFragment.newInstance();
         mBeautyFragment = BeautyFragment.newInstance();
-
+        findViewById(R.id.tv_save).setOnClickListener(new SaveBtnClick());
         bottomGallery.setAdapter(mBottomGalleryAdapter);
         mRedoUndoController = new RedoUndoController(this, findViewById(R.id.redo_uodo_panel));
     }
@@ -314,8 +309,10 @@ public class EditImageActivity extends BaseActivity {
     }// end inner class
 
     protected void doSaveImage() {
-        if (mOpTimes <= 0)
+        if (mOpTimes <= 0){
+            Toast.makeText(this, "没有可保存的图片哦!", Toast.LENGTH_SHORT).show();
             return;
+        }
 
         if (mSaveImageTask != null) {
             mSaveImageTask.cancel(true);

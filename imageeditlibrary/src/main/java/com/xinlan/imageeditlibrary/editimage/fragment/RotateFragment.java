@@ -45,6 +45,7 @@ public class RotateFragment extends BaseEditFragment {
         RotateFragment fragment = new RotateFragment();
         return fragment;
     }
+
     private ArrayList<AppCompatTextView> arrayList;
 
     @Override
@@ -127,6 +128,9 @@ public class RotateFragment extends BaseEditFragment {
         activity.mRotateFragment.mSeekBar.setProgress(0);
         activity.mRotatePanel.reset();
         activity.mRotatePanel.setVisibility(View.VISIBLE);
+        activity.findViewById(R.id.tv_save).setVisibility(View.INVISIBLE);
+
+
     }
 
     /**
@@ -145,22 +149,22 @@ public class RotateFragment extends BaseEditFragment {
                 tvMode90.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode180.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode270.setTextColor(Color.parseColor("#C4C4C4"));
-            }else if (angle == 90){
+            } else if (angle == 90) {
                 tvMode0.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode90.setTextColor(Color.BLACK);
                 tvMode180.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode270.setTextColor(Color.parseColor("#C4C4C4"));
-            }else if (angle == 180){
+            } else if (angle == 180) {
                 tvMode180.setTextColor(Color.BLACK);
                 tvMode0.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode90.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode270.setTextColor(Color.parseColor("#C4C4C4"));
-            }else if (angle == 270){
+            } else if (angle == 270) {
                 tvMode270.setTextColor(Color.BLACK);
                 tvMode90.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode180.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode0.setTextColor(Color.parseColor("#C4C4C4"));
-            }else{
+            } else {
                 tvMode270.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode90.setTextColor(Color.parseColor("#C4C4C4"));
                 tvMode180.setTextColor(Color.parseColor("#C4C4C4"));
@@ -200,6 +204,7 @@ public class RotateFragment extends BaseEditFragment {
         activity.bottomGallery.setCurrentItem(0);
         activity.mainImage.setVisibility(View.VISIBLE);
         this.mRotatePanel.setVisibility(View.GONE);
+        activity.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
     }
 
     /**

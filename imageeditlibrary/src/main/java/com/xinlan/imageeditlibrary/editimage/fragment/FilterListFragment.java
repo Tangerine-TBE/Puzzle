@@ -64,7 +64,13 @@ public class FilterListFragment extends BaseEditFragment {
 
         backBtn = mainView.findViewById(R.id.back_to_main);
         mFilterGroup = (LinearLayout) mainView.findViewById(R.id.filter_group);
+        mainView.findViewById(R.id.iv_save).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyFilterImage();
 
+            }
+        });
         backBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +87,8 @@ public class FilterListFragment extends BaseEditFragment {
         activity.mainImage.setImageBitmap(activity.getMainBit());
         activity.mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         activity.mainImage.setScaleEnabled(false);
+        activity.findViewById(R.id.tv_save).setVisibility(View.INVISIBLE);
+
     }
 
     /**
@@ -94,6 +102,8 @@ public class FilterListFragment extends BaseEditFragment {
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(0);
         activity.mainImage.setScaleEnabled(true);
+        activity.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
+
     }
 
     /**

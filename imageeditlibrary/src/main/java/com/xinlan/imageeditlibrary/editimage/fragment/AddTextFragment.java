@@ -43,6 +43,7 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.EditTextDialog;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 import com.xinlan.imageeditlibrary.editimage.adapter.ColorItemAdapter;
+import com.xinlan.imageeditlibrary.editimage.adapter.TextStyleItemAdapter;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
 import com.xinlan.imageeditlibrary.editimage.ui.ColorPicker;
 import com.xinlan.imageeditlibrary.editimage.utils.AssetsUtil;
@@ -56,7 +57,7 @@ import java.util.Arrays;
  *
  * @author 潘易
  */
-public class AddTextFragment extends BaseEditFragment implements ColorItemAdapter.OnColorPickedListener, StickerView.OnStickerOperationListener, EditTextDialog.EditTextCallback {
+public class AddTextFragment extends BaseEditFragment implements ColorItemAdapter.OnColorPickedListener, StickerView.OnStickerOperationListener, EditTextDialog.EditTextCallback, TextStyleItemAdapter.OnClickTextStyle {
     public static final int INDEX = ModuleConfig.INDEX_ADDTEXT;
     public static final String TAG = AddTextFragment.class.getName();
 
@@ -68,6 +69,11 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
     private Sticker mSelectSticker;
     private EditTextDialog editTextDialog;
     private AppCompatTextView tvAlpha;
+    private AppCompatTextView mTvModeView;
+    private AppCompatTextView mTvModeStyle;
+    private AppCompatTextView mTvModeTypeFace;
+    private RecyclerView mRvTextStyle;
+    private int drawables[] ;
     public static AddTextFragment newInstance() {
         return new AddTextFragment();
     }
@@ -88,6 +94,8 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        drawables = new int[]{R.drawable.text1,R.drawable.text2,R.drawable.text3,R.drawable.text4,
+        R.drawable.text5,R.drawable.text6};
         editTextDialog = new EditTextDialog(getActivity(),this);
         mTextStickerView = getActivity().findViewById(R.id.text_sticker_panel);
         tvAlpha = mainView.findViewById(R.id.tv_alpha);
@@ -103,6 +111,19 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
         RecyclerView mColorListView = mainView.findViewById(R.id.paint_color_list);
         mTvPaintColor = mainView.findViewById(R.id.tv_selected_color);
         mSeekBar = mainView.findViewById(R.id.seekbar);
+        mTvModeView = mainView.findViewById(R.id.tv_mode_view);
+        mTvModeStyle = mainView.findViewById(R.id.tv_mode_style);
+        mTvModeTypeFace = mainView.findViewById(R.id.tv_mode_text);
+        mRvTextStyle = mainView.findViewById(R.id.rv_text_style);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        initRvTextStyle(linearLayoutManager);
+        mainView.findViewById(R.id.tv_default).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTextSticker();
+            }
+        });
         BitmapStickerIcon bitmapStickerIconDelete = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(),R.drawable.icon_sticket_delete),BitmapStickerIcon.LEFT_TOP);
         BitmapStickerIcon bitmapStickerIconRotate = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(),R.drawable.icon_sticket_move),BitmapStickerIcon.RIGHT_BOTOM);
         BitmapStickerIcon bitmapStickerIconZoom = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(),R.drawable.icon_sticket_zoom),BitmapStickerIcon.LEFT_BOTTOM);
@@ -126,11 +147,13 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (mSelectSticker != null){
-                    mSelectSticker.setAlpha(seekBar.getMax() - progress);
-                    tvAlpha.setText(String.valueOf(progress));
-                    mTextStickerView.invalidate();
+                if (fromUser){
+                    if (mSelectSticker != null){
+                        mSelectSticker.setAlpha(progress);
+                        mTextStickerView.invalidate();
+                    }
                 }
+                tvAlpha.setText(String.valueOf(progress));
 
             }
 
@@ -144,13 +167,68 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
 
             }
         });
+        mTvModeView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTvModeView.setTextColor(Color.BLACK);
+                mTvModeTypeFace.setTextColor(Color.parseColor("#C4C4C4"));
+                mTvModeStyle.setTextColor(Color.parseColor("#C4C4C4"));
+                mainView.findViewById(R.id.layout_text_style).setVisibility(View.VISIBLE);
+                mainView.findViewById(R.id.layout_style).setVisibility(View.GONE);
+                mainView.findViewById(R.id.layout_type_face).setVisibility(View.GONE);
+            }
+        });
+        mTvModeTypeFace.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTvModeView.setTextColor(Color.parseColor("#C4C4C4"));
+                mTvModeTypeFace.setTextColor(Color.BLACK);
+                mTvModeStyle.setTextColor(Color.parseColor("#C4C4C4"));
+                mainView.findViewById(R.id.layout_text_style).setVisibility(View.GONE);
+                mainView.findViewById(R.id.layout_style).setVisibility(View.GONE);
+                mainView.findViewById(R.id.layout_type_face).setVisibility(View.VISIBLE);
+
+            }
+        });
+        mTvModeStyle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTvModeView.setTextColor(Color.parseColor("#C4C4C4"));
+                mTvModeTypeFace.setTextColor(Color.parseColor("#C4C4C4"));
+                mTvModeStyle.setTextColor(Color.BLACK);
+                mainView.findViewById(R.id.layout_style).setVisibility(View.VISIBLE);
+                mainView.findViewById(R.id.layout_text_style).setVisibility(View.GONE);
+                mainView.findViewById(R.id.layout_type_face).setVisibility(View.GONE);
+
+            }
+        });
+
+    }
+    private void initRvTextStyle(LinearLayoutManager linearLayoutManager){
+        TextStyleItemAdapter textStyleItemAdapter = new TextStyleItemAdapter(drawables,this);
+        mRvTextStyle.setAdapter(textStyleItemAdapter);
+        mRvTextStyle.setLayoutManager(linearLayoutManager);
+    }
+    private void addTextSticker(){
         TextSticker textSticker = new TextSticker(getContext());
         textSticker.setText("双击输入文字")  ;
-        textSticker.setTextColor(Color.BLACK);
+        textSticker.setTextColor(mTextColor ==0?Color.BLACK:mTextColor);
         textSticker.setTextAlign(Layout.Alignment.ALIGN_CENTER);
         textSticker.resizeText();
+        textSticker.setAlpha(255);
+        mSeekBar.setProgress(255);
         mTextStickerView.addSticker(textSticker);
-        mSeekBar.setProgress(0);
+    }
+    private void addDrawableSticker(int position){
+        TextSticker textSticker = new TextSticker(getContext());
+        textSticker.setText("双击输入文字")  ;
+        textSticker.setTextColor(mTextColor ==0?Color.BLACK:mTextColor);
+        textSticker.setTextAlign(Layout.Alignment.ALIGN_CENTER);
+        textSticker.resizeText();
+        textSticker.setAlpha(255);
+        textSticker.setDrawable(ContextCompat.getDrawable(getActivity(),drawables[position]));
+        mSeekBar.setProgress(255);
+        mTextStickerView.addSticker(textSticker);
     }
 
 
@@ -158,7 +236,10 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
     public void onColorPicked(String color) {
         this.mTextColor = Color.parseColor(color);
         mTvPaintColor.setBackgroundColor(Color.parseColor(color));
-        ((TextSticker) mSelectSticker).setTextColor(Color.parseColor(color));
+        if (mSelectSticker != null){
+            ((TextSticker) mSelectSticker).setTextColor(Color.parseColor(color));
+            mTextStickerView.invalidate();
+        }
     }
 
     @Override
@@ -218,6 +299,11 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
         }
     }
 
+    @Override
+    public void textStyleClicked(int position) {
+        addDrawableSticker(position);
+    }
+
 
     /**
      * 返回按钮逻辑
@@ -240,14 +326,21 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
         mTextStickerView.setVisibility(View.GONE);
+        mTextColor = Color.WHITE;
         mTextStickerView.removeAllStickers();
+        activity.mainImage.setScaleEnabled(true);
+        activity.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onShow() {
         activity.mode = EditImageActivity.MODE_TEXT;
         activity.mainImage.setImageBitmap(activity.getMainBit());
+        activity.findViewById(R.id.tv_save).setVisibility(View.INVISIBLE);
         mTextStickerView.setVisibility(View.VISIBLE);
+        activity.findViewById(R.id.tv_save).setVisibility(View.INVISIBLE);
+        activity.mainImage.setScaleEnabled(false);
+
     }
 
     /**

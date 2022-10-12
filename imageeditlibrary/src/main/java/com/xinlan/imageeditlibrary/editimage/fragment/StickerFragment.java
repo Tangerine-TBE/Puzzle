@@ -5,10 +5,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,15 +36,16 @@ import java.util.LinkedHashMap;
  */
 public class StickerFragment extends BaseEditFragment implements StickerAdapter.OnImageViewClicked {
     private final int[] iconIds = new int[]{
-            R.mipmap.icon1,R.mipmap.icon2,R.mipmap.icon3,
-            R.mipmap.icon4,R.mipmap.icon5,R.mipmap.icon6,
-            R.mipmap.icon7,R.mipmap.icon8,R.mipmap.icon9,
-            R.mipmap.icon10,R.mipmap.icon11,R.mipmap.icon12,
-            R.mipmap.icon13,R.mipmap.icon14,R.mipmap.icon15,
-            R.mipmap.icon16,R.mipmap.icon17,R.mipmap.icon18,R.mipmap.icon19};
+            R.mipmap.icon1, R.mipmap.icon2, R.mipmap.icon3,
+            R.mipmap.icon4, R.mipmap.icon5, R.mipmap.icon6,
+            R.mipmap.icon7, R.mipmap.icon8, R.mipmap.icon9,
+            R.mipmap.icon10, R.mipmap.icon11, R.mipmap.icon12,
+            R.mipmap.icon13, R.mipmap.icon14, R.mipmap.icon15,
+            R.mipmap.icon16, R.mipmap.icon17, R.mipmap.icon18, R.mipmap.icon19};
     private View mainView;
     public static final int INDEX = ModuleConfig.INDEX_STICKER;
     private com.xiaopo.flying.sticker.StickerView mStickerView;// 贴图显示控件
+
     public static StickerFragment newInstance() {
         return new StickerFragment();
     }
@@ -55,7 +58,7 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         mainView = inflater.inflate(R.layout.fragment_edit_image_sticker_type,
                 null);
         //loadStickersData();
@@ -75,7 +78,7 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
         mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         ImageView ivSave = mainView.findViewById(R.id.iv_save);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(activity,7);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(activity, 7);
         stickerList.setLayoutManager(gridLayoutManager);
         // 贴图列表适配器
         StickerAdapter mStickerAdapter = new StickerAdapter(getContext(), iconIds, this);
@@ -94,7 +97,10 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
         activity.mode = EditImageActivity.MODE_STICKERS;
         activity.mStickerFragment.getmStickerView().setVisibility(
                 View.VISIBLE);
+        activity.findViewById(R.id.tv_save).setVisibility(View.INVISIBLE);
+        activity.mainImage.setScaleEnabled(false);
     }
+
     @Override
     public void imageViewClicked(int id) {
         DrawableSticker drawableSticker = new DrawableSticker(getResources().getDrawable(id));
@@ -102,16 +108,16 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
     }
 
 
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
 
     }
+
     public StickerView getmStickerView() {
         return mStickerView;
     }
+
     /**
      * 返回主菜单页面
      *
@@ -129,13 +135,17 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(0);
         mStickerView.setVisibility(View.GONE);
+        activity.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
+        activity.mainImage.setScaleEnabled(true);
+
     }
+
     /**
      * 保存贴图层 合成一张图片
      */
     public void applyStickers() {
         // System.out.println("保存 合成图片");
-        activity.changeMainBitmap(mStickerView.createBitmap(),true);
+        activity.changeMainBitmap(mStickerView.createBitmap(), true);
         backToMain();
     }
 }// end class

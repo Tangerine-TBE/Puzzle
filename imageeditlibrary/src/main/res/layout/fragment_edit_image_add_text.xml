@@ -7,6 +7,7 @@
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp">
 
@@ -16,6 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:src="@mipmap/icon_item_back" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_mode_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="文本样式"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:visibility="visible" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_mode_style"
@@ -25,7 +37,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="样式"
-            android:textColor="@android:color/black"
+            android:textColor="#C4C4C4"
             android:textSize="16sp"
             android:visibility="visible" />
 
@@ -38,7 +50,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="字体"
-            android:textColor="@android:color/black"
+            android:textColor="#C4C4C4"
             android:textSize="16sp"
             android:visibility="visible" />
 
@@ -50,66 +62,106 @@
             android:src="@mipmap/icon_item_save" />
     </LinearLayout>
     <LinearLayout
-        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:id="@+id/layout_style"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:layout_marginBottom="12dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_selected_color"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/paint_color_list"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:overScrollMode="never"
+                android:scrollbars="none" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="透明度"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:max="255"
+                android:maxHeight="4dp"
+                android:progress="0"
+                android:progressDrawable="@drawable/seek_bar_progress"
+                android:splitTrack="false"
+                android:thumb="@drawable/seek_bar_thumb"
+                android:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:id="@+id/tv_alpha"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="0"
+                android:textColor="@color/sel_text_main_color"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/layout_text_style"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_selected_color"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="10dp" />
+            android:layout_width="50dp"
+            android:text="默认"
+            android:gravity="center"
+            android:id="@+id/tv_default"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_height="50dp"/>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/paint_color_list"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:id="@+id/rv_text_style"
+            android:scrollbars="none"
             android:overScrollMode="never"
-            android:scrollbars="none" />
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_alignParentBottom="true"
+        android:id="@+id/layout_type_face"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp">
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="透明度"
-            android:textSize="16sp" />
-
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/seekbar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:max="255"
-            android:maxHeight="4dp"
-            android:progress="0"
-            android:progressDrawable="@drawable/seek_bar_progress"
-            android:splitTrack="false"
-            android:thumb="@drawable/seek_bar_thumb"
-            android:visibility="visible" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:id="@+id/tv_alpha"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="0"
-            android:textColor="@color/sel_text_main_color"
-            android:textSize="16sp" />
     </LinearLayout>
-
 
 </RelativeLayout>

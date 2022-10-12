@@ -159,7 +159,8 @@ public class CropFragment extends BaseEditFragment {
         activity.mainImage.setImageBitmap(activity.getMainBit());
         activity.mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         activity.mainImage.setScaleEnabled(false);// 禁用缩放
-        // System.out.println(r.left + "    " + r.top);
+		activity.findViewById(R.id.tv_save).setVisibility(View.INVISIBLE);
+		// System.out.println(r.left + "    " + r.top);
 		//  bug  fixed  https://github.com/siwangqishiq/ImageEditor-Android/issues/59
 		// 设置完与屏幕匹配的尺寸  确保变换矩阵设置生效后才设置裁剪区域
 		activity.mainImage.post(new Runnable() {
@@ -193,6 +194,7 @@ public class CropFragment extends BaseEditFragment {
 		mCropPanel.setVisibility(View.GONE);
 		activity.mainImage.setScaleEnabled(true);// 恢复缩放功能
 		activity.bottomGallery.setCurrentItem(0);
+		activity.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
 		mCropPanel.setRatioCropRect(activity.mainImage.getBitmapRect(), -1);
 	}
 

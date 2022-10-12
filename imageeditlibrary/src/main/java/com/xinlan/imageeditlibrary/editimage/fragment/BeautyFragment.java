@@ -159,7 +159,7 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
         this.mWhiteSkin = 0;
         mSmoothValueBar.setProgress(0);
         mWhiteValueBar.setProgress(0);
-
+        activity.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setImageBitmap(activity.getMainBit());// 返回原图
@@ -174,6 +174,8 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
         activity.mainImage.setImageBitmap(activity.getMainBit());
         activity.mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         activity.mainImage.setScaleEnabled(false);
+        activity.findViewById(R.id.tv_save).setVisibility(View.INVISIBLE);
+
     }
 
     public void applyBeauty() {
