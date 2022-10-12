@@ -3,6 +3,7 @@ package com.xinlan.imageeditlibrary.editimage.fragment;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.xinlan.imageeditlibrary.BaseActivity;
 import com.xinlan.imageeditlibrary.R;
@@ -33,17 +36,16 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
 
     private View mainView;
     private View backToMenu;// 返回主菜单
-
     private SeekBar mSmoothValueBar;
     private SeekBar mWhiteValueBar;
-
     private BeautyTask mHandleTask;
-
     private int mSmooth = 0;//磨皮值
     private int mWhiteSkin = 0;//美白值
-
     private WeakReference<Bitmap> mResultBitmapRef;
-
+    private AppCompatTextView mTvMoPi;
+    private AppCompatTextView mTvWhite;
+    private AppCompatTextView mMopi;
+    private AppCompatTextView mWhite;
     public static BeautyFragment newInstance() {
         BeautyFragment fragment = new BeautyFragment();
         return fragment;
@@ -58,9 +60,8 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainView = inflater.inflate(R.layout.fragment_edit_image_beauty, null);
-
-        mSmoothValueBar = (SeekBar) mainView.findViewById(R.id.smooth_value_bar);
-        mWhiteValueBar = (SeekBar) mainView.findViewById(R.id.white_skin_value_bar);
+        mSmoothValueBar = mainView.findViewById(R.id.mopi_seek_bar);
+        mWhiteValueBar = mainView.findViewById(R.id.white_seek_bar);
         return mainView;
     }
 
@@ -69,9 +70,37 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
         super.onActivityCreated(savedInstanceState);
         backToMenu = mainView.findViewById(R.id.back_to_main);
         backToMenu.setOnClickListener(new BackToMenuClick());// 返回主菜单
-
+        mTvMoPi = mainView.findViewById(R.id.tv_mode_smooth);
+        mTvWhite = mainView.findViewById(R.id.tv_mode_white);
+        mMopi = mainView.findViewById(R.id.tv_mopi);
+        mWhite = mainView.findViewById(R.id.tv_white);
         mSmoothValueBar.setOnSeekBarChangeListener(this);
         mWhiteValueBar.setOnSeekBarChangeListener(this);
+        mTvWhite.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTvWhite.setTextColor(Color.BLACK);
+                mTvMoPi.setTextColor(Color.parseColor("#C4C4C4"));
+                mainView.findViewById(R.id.layout_white).setVisibility(View.VISIBLE);
+                mainView.findViewById(R.id.layout_mopi).setVisibility(View.GONE);
+            }
+        });
+        mTvMoPi.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTvMoPi.setTextColor(Color.BLACK);
+                mTvWhite.setTextColor(Color.parseColor("#C4C4C4"));
+                mainView.findViewById(R.id.layout_mopi).setVisibility(View.VISIBLE);
+                mainView.findViewById(R.id.layout_white).setVisibility(View.GONE);
+
+            }
+        });
+        mainView.findViewById(R.id.iv_save).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyBeauty();
+            }
+        });
     }
 
 
@@ -82,6 +111,11 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (seekBar == mSmoothValueBar){
+            mMopi.setText(String.valueOf(progress));
+        }else if (seekBar == mWhiteValueBar){
+            mWhite.setText(String.valueOf(progress));
+        }
     }
 
     @Override
@@ -132,7 +166,6 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
 
         activity.mainImage.setVisibility(View.VISIBLE);
         activity.mainImage.setScaleEnabled(true);
-        activity.bannerFlipper.showPrevious();
     }
 
     @Override
@@ -141,7 +174,6 @@ public class BeautyFragment extends BaseEditFragment implements SeekBar.OnSeekBa
         activity.mainImage.setImageBitmap(activity.getMainBit());
         activity.mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         activity.mainImage.setScaleEnabled(false);
-        activity.bannerFlipper.showNext();
     }
 
     public void applyBeauty() {

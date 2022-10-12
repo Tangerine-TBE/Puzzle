@@ -14,13 +14,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.xiaopo.flying.sticker.DrawableSticker;
+import com.xiaopo.flying.sticker.Sticker;
+import com.xiaopo.flying.sticker.StickerView;
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 import com.xinlan.imageeditlibrary.editimage.adapter.StickerAdapter;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
 import com.xinlan.imageeditlibrary.editimage.view.StickerItem;
-import com.xinlan.imageeditlibrary.editimage.view.StickerView;
+
 import java.util.LinkedHashMap;
 
 /**
@@ -38,9 +42,7 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
             R.mipmap.icon16,R.mipmap.icon17,R.mipmap.icon18,R.mipmap.icon19};
     private View mainView;
     public static final int INDEX = ModuleConfig.INDEX_STICKER;
-    private StickerView mStickerView;// 贴图显示控件
-    private SaveStickersTask mSaveTask;
-
+    private com.xiaopo.flying.sticker.StickerView mStickerView;// 贴图显示控件
     public static StickerFragment newInstance() {
         return new StickerFragment();
     }
@@ -95,7 +97,8 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
     }
     @Override
     public void imageViewClicked(int id) {
-        mStickerView.addBitImage(BitmapFactory.decodeResource(getResources(),id));
+        DrawableSticker drawableSticker = new DrawableSticker(getResources().getDrawable(id));
+        mStickerView.addSticker(drawableSticker);
     }
 
 
@@ -128,42 +131,11 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
         mStickerView.setVisibility(View.GONE);
     }
     /**
-     * 保存贴图任务
-     *
-     * @author panyi
-     */
-    private final class SaveStickersTask extends StickerTask {
-        public SaveStickersTask(EditImageActivity activity) {
-            super(activity);
-        }
-
-        @Override
-        public void handleImage(Canvas canvas, Matrix m) {
-            LinkedHashMap<Integer, StickerItem> addItems = mStickerView.getBank();
-            for (Integer id : addItems.keySet()) {
-                StickerItem item = addItems.get(id);
-                item.matrix.postConcat(m);// 乘以底部图片变化矩阵
-                canvas.drawBitmap(item.bitmap, item.matrix, null);
-            }// end for
-        }
-
-        @Override
-        public void onPostResult(Bitmap result) {
-            mStickerView.clear();
-            activity.changeMainBitmap(result,true);
-            backToMain();
-        }
-    }// end inner class
-
-    /**
      * 保存贴图层 合成一张图片
      */
     public void applyStickers() {
         // System.out.println("保存 合成图片");
-        if (mSaveTask != null) {
-            mSaveTask.cancel(true);
-        }
-        mSaveTask = new SaveStickersTask((EditImageActivity) getActivity());
-        mSaveTask.execute(activity.getMainBit());
+        activity.changeMainBitmap(mStickerView.createBitmap(),true);
+        backToMain();
     }
 }// end class

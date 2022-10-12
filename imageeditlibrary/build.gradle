@@ -31,4 +31,5 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.0.0'
     /*fastJson*/
     api 'com.alibaba:fastjson:1.2.76'
+    api project(path: ':sticker')
 }

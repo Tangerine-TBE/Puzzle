@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,11 +39,11 @@ public class FilterListFragment extends BaseEditFragment {
 
     private LinearLayout mFilterGroup;// 滤镜列表
     private String[] fliters;
+    private int icons[];
     private Bitmap currentBitmap;// 标记变量
 
     public static FilterListFragment newInstance() {
-        FilterListFragment fragment = new FilterListFragment();
-        return fragment;
+        return new FilterListFragment();
     }
 
     @Override
@@ -113,25 +114,37 @@ public class FilterListFragment extends BaseEditFragment {
      * 装载滤镜
      */
     private void setUpFliters() {
-        fliters = getResources().getStringArray(R.array.filters);
-        if (fliters == null)
-            return;
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.CENTER_VERTICAL;
-        params.leftMargin = 20;
-        params.rightMargin = 20;
         mFilterGroup.removeAllViews();
+        fliters = getResources().getStringArray(R.array.filters);
+        icons=new int[]{R.mipmap.yuantu,R.mipmap.ruanhua,R.mipmap.heibai
+                ,R.mipmap.jindian,R.mipmap.huali,R.mipmap.fugu
+                ,R.mipmap.youya,R.mipmap.dianying,R.mipmap.huiyi,R.mipmap.youge,R.mipmap.liunian,R.mipmap.faguang,R.mipmap.masaike,R.mipmap.manhua,R.mipmap.rgb};
+        LinearLayout.LayoutParams imageViewParams = new LinearLayout.LayoutParams(150,150);
+        LinearLayout.LayoutParams parentViewParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,1);
+        LinearLayout.LayoutParams textViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textViewParams.gravity = Gravity.CENTER;
+        imageViewParams.gravity = Gravity.CENTER;
+        parentViewParams.leftMargin = 10;
+        parentViewParams.rightMargin = 10;
+        parentViewParams.gravity =Gravity.CENTER;
+
         for (int i = 0, len = fliters.length; i < len; i++) {
             TextView text = new TextView(activity);
-            text.setTextColor(Color.WHITE);
-            text.setTextSize(20);
+            text.setTextColor(Color.BLACK);
+            text.setTextSize(15);
             text.setText(fliters[i]);
-            mFilterGroup.addView(text, params);
-            text.setTag(i);
-            text.setOnClickListener(new FliterClick());
+            ImageView imageView = new ImageView(activity);
+            imageView.setImageResource(icons[i]);
+            imageView.setLayoutParams(imageViewParams);
+            imageView.setId(0);
+            LinearLayout linearLayout = new LinearLayout(activity);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            linearLayout.addView(imageView);
+            linearLayout.addView(text,textViewParams);
+            linearLayout.setLayoutParams(parentViewParams);
+            linearLayout.setTag(i);
+            mFilterGroup.addView(linearLayout);
+            linearLayout.setOnClickListener(new FliterClick());
         }// end for i
     }
 

@@ -46,7 +46,6 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
     private View backToMenu;// 返回主菜单
     private AppCompatTextView mTvPaintColor;
     private RecyclerView mColorListView;//颜色列表View
-    private ColorItemAdapter mColorAdapter;
     private CustomPaintView mPaintView;
     private SaveCustomPaintTask mSavePaintImageTask;
     private AppCompatTextView mTvModeWipe;
@@ -99,7 +98,7 @@ public class PaintFragment extends BaseEditFragment implements View.OnClickListe
         mColorListView.setLayoutManager(stickerListLayoutManager);
         String colorStr = AssetsUtil.getAssertString(getContext(), "color.json");
         JSONArray jsonArray = JSONArray.parseArray(colorStr);
-        mColorAdapter = new ColorItemAdapter(getContext(), jsonArray, this);
+        ColorItemAdapter mColorAdapter = new ColorItemAdapter(getContext(), jsonArray, this);
         mColorListView.setAdapter(mColorAdapter);
 
     }

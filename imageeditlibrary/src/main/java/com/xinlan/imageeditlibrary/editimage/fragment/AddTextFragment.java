@@ -1,5 +1,6 @@
 package com.xinlan.imageeditlibrary.editimage.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +20,35 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.alibaba.fastjson.JSONArray;
+import com.xiaopo.flying.sticker.BitmapStickerIcon;
+import com.xiaopo.flying.sticker.DeleteIconEvent;
+import com.xiaopo.flying.sticker.RotateIconEvent;
+import com.xiaopo.flying.sticker.SpecialZoomIconEvent;
+import com.xiaopo.flying.sticker.Sticker;
+import com.xiaopo.flying.sticker.StickerView;
+import com.xiaopo.flying.sticker.TextSticker;
+import com.xiaopo.flying.sticker.ZoomIconEvent;
 import com.xinlan.imageeditlibrary.R;
 import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
+import com.xinlan.imageeditlibrary.editimage.EditTextDialog;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
+import com.xinlan.imageeditlibrary.editimage.adapter.ColorItemAdapter;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
 import com.xinlan.imageeditlibrary.editimage.ui.ColorPicker;
+import com.xinlan.imageeditlibrary.editimage.utils.AssetsUtil;
 import com.xinlan.imageeditlibrary.editimage.view.TextStickerView;
+
+import java.util.Arrays;
 
 
 /**
@@ -31,29 +56,22 @@ import com.xinlan.imageeditlibrary.editimage.view.TextStickerView;
  *
  * @author 潘易
  */
-public class AddTextFragment extends BaseEditFragment implements TextWatcher {
+public class AddTextFragment extends BaseEditFragment implements ColorItemAdapter.OnColorPickedListener, StickerView.OnStickerOperationListener, EditTextDialog.EditTextCallback {
     public static final int INDEX = ModuleConfig.INDEX_ADDTEXT;
     public static final String TAG = AddTextFragment.class.getName();
 
+    private AppCompatTextView mTvPaintColor;
+    private AppCompatSeekBar mSeekBar;
     private View mainView;
-    private View backToMenu;// 返回主菜单
-
-    private EditText mInputText;//输入框
-    private ImageView mTextColorSelector;//颜色选择器
-    private TextStickerView mTextStickerView;// 文字贴图显示控件
-    private CheckBox mAutoNewLineCheck;
-
-    private ColorPicker mColorPicker;
-
+    private StickerView mTextStickerView;// 文字贴图显示控件
     private int mTextColor = Color.WHITE;
-    private InputMethodManager imm;
-
-    private SaveTextStickerTask mSaveTask;
-
+    private Sticker mSelectSticker;
+    private EditTextDialog editTextDialog;
+    private AppCompatTextView tvAlpha;
     public static AddTextFragment newInstance() {
-        AddTextFragment fragment = new AddTextFragment();
-        return fragment;
+        return new AddTextFragment();
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +81,6 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         mainView = inflater.inflate(R.layout.fragment_edit_image_add_text, null);
         return mainView;
     }
@@ -71,81 +88,136 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        mTextStickerView = (TextStickerView)getActivity().findViewById(R.id.text_sticker_panel);
-
-        backToMenu = mainView.findViewById(R.id.back_to_main);
-        mInputText = (EditText) mainView.findViewById(R.id.text_input);
-        mTextColorSelector = (ImageView) mainView.findViewById(R.id.text_color);
-        mAutoNewLineCheck = (CheckBox) mainView.findViewById(R.id.check_auto_newline);
-
+        editTextDialog = new EditTextDialog(getActivity(),this);
+        mTextStickerView = getActivity().findViewById(R.id.text_sticker_panel);
+        tvAlpha = mainView.findViewById(R.id.tv_alpha);
+        mainView.findViewById(R.id.iv_save).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                applyTextImage();
+            }
+        });
+        // 返回主菜单
+        View backToMenu = mainView.findViewById(R.id.back_to_main);
+        //颜色列表View
+        RecyclerView mColorListView = mainView.findViewById(R.id.paint_color_list);
+        mTvPaintColor = mainView.findViewById(R.id.tv_selected_color);
+        mSeekBar = mainView.findViewById(R.id.seekbar);
+        BitmapStickerIcon bitmapStickerIconDelete = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(),R.drawable.icon_sticket_delete),BitmapStickerIcon.LEFT_TOP);
+        BitmapStickerIcon bitmapStickerIconRotate = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(),R.drawable.icon_sticket_move),BitmapStickerIcon.RIGHT_BOTOM);
+        BitmapStickerIcon bitmapStickerIconZoom = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(),R.drawable.icon_sticket_zoom),BitmapStickerIcon.LEFT_BOTTOM);
+        bitmapStickerIconRotate.setIconEvent(new RotateIconEvent());
+        bitmapStickerIconDelete.setIconEvent(new DeleteIconEvent());
+        bitmapStickerIconZoom.setIconEvent(new SpecialZoomIconEvent());
+        mTextStickerView.setIcons(Arrays.asList(bitmapStickerIconDelete, bitmapStickerIconZoom,bitmapStickerIconRotate));
+        mTextStickerView.setLocked(false);
+        mTextStickerView.setConstrained(true);
+        mTextStickerView.setOnStickerOperationListener(this);
         backToMenu.setOnClickListener(new BackToMenuClick());// 返回主菜单
-        mColorPicker = new ColorPicker(getActivity(), 255, 0, 0);
-        mTextColorSelector.setOnClickListener(new SelectColorBtnClick());
-        mInputText.addTextChangedListener(this);
-        mTextStickerView.setEditText(mInputText);
 
         //统一颜色设置
-        mTextColorSelector.setBackgroundColor(mColorPicker.getColor());
-        mTextStickerView.setTextColor(mColorPicker.getColor());
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        //mTextStickerView change
-        String text = s.toString().trim();
-        mTextStickerView.setText(text);
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    /**
-     * 颜色选择 按钮点击
-     */
-    private final class SelectColorBtnClick implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            mColorPicker.show();
-            Button okColor = (Button) mColorPicker.findViewById(R.id.okColorButton);
-            okColor.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeTextColor(mColorPicker.getColor());
-                    mColorPicker.dismiss();
+        LinearLayoutManager stickerListLayoutManager = new LinearLayoutManager(activity);
+        stickerListLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mColorListView.setLayoutManager(stickerListLayoutManager);
+        String colorStr = AssetsUtil.getAssertString(getContext(), "color.json");
+        JSONArray jsonArray = JSONArray.parseArray(colorStr);
+        ColorItemAdapter mColorAdapter = new ColorItemAdapter(getContext(), jsonArray, this);
+        mColorListView.setAdapter(mColorAdapter);
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (mSelectSticker != null){
+                    mSelectSticker.setAlpha(seekBar.getMax() - progress);
+                    tvAlpha.setText(String.valueOf(progress));
+                    mTextStickerView.invalidate();
                 }
-            });
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        TextSticker textSticker = new TextSticker(getContext());
+        textSticker.setText("双击输入文字")  ;
+        textSticker.setTextColor(Color.BLACK);
+        textSticker.setTextAlign(Layout.Alignment.ALIGN_CENTER);
+        textSticker.resizeText();
+        mTextStickerView.addSticker(textSticker);
+        mSeekBar.setProgress(0);
+    }
+
+
+    @Override
+    public void onColorPicked(String color) {
+        this.mTextColor = Color.parseColor(color);
+        mTvPaintColor.setBackgroundColor(Color.parseColor(color));
+        ((TextSticker) mSelectSticker).setTextColor(Color.parseColor(color));
+    }
+
+    @Override
+    public void onStickerAdded(@NonNull Sticker sticker) {
+        mSelectSticker = sticker;
+    }
+
+    @Override
+    public void onStickerClicked(@NonNull Sticker sticker) {
+        mSelectSticker = sticker;
+        mSeekBar.setProgress(((TextSticker)sticker).getAlpha());
+    }
+
+    @Override
+    public void onStickerDeleted(@NonNull Sticker sticker) {
+
+    }
+
+    @Override
+    public void onStickerDragFinished(@NonNull Sticker sticker) {
+
+    }
+
+    @Override
+    public void onStickerTouchedDown(@NonNull Sticker sticker) {
+
+    }
+
+    @Override
+    public void onStickerZoomFinished(@NonNull Sticker sticker) {
+
+    }
+
+    @Override
+    public void onStickerFlipped(@NonNull Sticker sticker) {
+
+    }
+
+    @Override
+    public void onStickerDoubleTapped(@NonNull Sticker sticker) {
+        editTextDialog.setSticker(sticker).show();
+    }
+
+    @Override
+    public void editText(String str, Sticker sticker) {
+        if (sticker != null){
+            if (sticker instanceof  TextSticker){
+                if (!TextUtils.isEmpty(str)){
+                    ((TextSticker) sticker).setText(str);
+                }else{
+                    ((TextSticker) sticker).setText("");
+                }
+                ((TextSticker) sticker).resizeText();
+                mTextStickerView.invalidate();
+
+            }
         }
-    }//end inner class
-
-    /**
-     * 修改字体颜色
-     *
-     * @param newColor
-     */
-    private void changeTextColor(int newColor) {
-        this.mTextColor = newColor;
-        mTextColorSelector.setBackgroundColor(mTextColor);
-        mTextStickerView.setTextColor(mTextColor);
     }
 
-    public void hideInput() {
-        if (getActivity() != null && getActivity().getCurrentFocus() != null && isInputMethodShow()) {
-            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    public boolean isInputMethodShow() {
-        return imm.isActive();
-    }
 
     /**
      * 返回按钮逻辑
@@ -164,78 +236,36 @@ public class AddTextFragment extends BaseEditFragment implements TextWatcher {
      */
     @Override
     public void backToMain() {
-        hideInput();
         activity.mode = EditImageActivity.MODE_NONE;
         activity.bottomGallery.setCurrentItem(MainMenuFragment.INDEX);
         activity.mainImage.setVisibility(View.VISIBLE);
-        activity.bannerFlipper.showPrevious();
         mTextStickerView.setVisibility(View.GONE);
+        mTextStickerView.removeAllStickers();
     }
 
     @Override
     public void onShow() {
         activity.mode = EditImageActivity.MODE_TEXT;
         activity.mainImage.setImageBitmap(activity.getMainBit());
-        activity.bannerFlipper.showNext();
         mTextStickerView.setVisibility(View.VISIBLE);
-        mInputText.clearFocus();
     }
 
     /**
      * 保存贴图图片
      */
     public void applyTextImage() {
-        if (mSaveTask != null) {
-            mSaveTask.cancel(true);
-        }
-
-        //启动任务
-        mSaveTask = new SaveTextStickerTask(activity);
-        mSaveTask.execute(activity.getMainBit());
+        activity.changeMainBitmap(mTextStickerView.createBitmap(),true) ;
+        backToMain();
     }
 
     /**
      * 文字合成任务
      * 合成最终图片
      */
-    private final class SaveTextStickerTask extends StickerTask {
-
-        public SaveTextStickerTask(EditImageActivity activity) {
-            super(activity);
-        }
-
-        @Override
-        public void handleImage(Canvas canvas, Matrix m) {
-            float[] f = new float[9];
-            m.getValues(f);
-            int dx = (int) f[Matrix.MTRANS_X];
-            int dy = (int) f[Matrix.MTRANS_Y];
-            float scale_x = f[Matrix.MSCALE_X];
-            float scale_y = f[Matrix.MSCALE_Y];
-            canvas.save();
-            canvas.translate(dx, dy);
-            canvas.scale(scale_x, scale_y);
-            //System.out.println("scale = " + scale_x + "       " + scale_y + "     " + dx + "    " + dy);
-            mTextStickerView.drawText(canvas, mTextStickerView.layout_x,
-                    mTextStickerView.layout_y, mTextStickerView.mScale, mTextStickerView.mRotateAngle);
-            canvas.restore();
-        }
-
-        @Override
-        public void onPostResult(Bitmap result) {
-            mTextStickerView.clearTextContent();
-            mTextStickerView.resetView();
-
-            activity.changeMainBitmap(result , true);
-            backToMain();
-        }
-    }//end inner class
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mSaveTask != null && !mSaveTask.isCancelled()) {
-            mSaveTask.cancel(true);
-        }
+
     }
 }// end class
