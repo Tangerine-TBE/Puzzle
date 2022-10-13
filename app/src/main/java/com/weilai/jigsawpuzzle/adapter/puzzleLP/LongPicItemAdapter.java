@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -85,13 +86,15 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         BigDecimal valueBig = new BigDecimal(value);
         int bigMapHeight = bitmap.getHeight();
         int viewHeight = valueBig.multiply(new BigDecimal(bigMapHeight)).intValue();
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(viewWidth, viewHeight);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(viewWidth,viewHeight);
+        holder.layoutContent.setLayoutParams(layoutParams);
+        FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth,viewHeight);
         AppCompatImageView image = holder.ivImage;
-        image.setLayoutParams(layoutParams);
+        image.setLayoutParams(relayout);
         image.setImageBitmap(bitmap);
         //加载一个占位图
         AppCompatImageView place = holder.ivPlace;
-        place.setLayoutParams(layoutParams);
+        place.setLayoutParams(relayout);
         if (mLastSelectedPosition == -1) {
             place.setSelected(false);
         } else {
@@ -127,6 +130,7 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
             //弹出多功能模块
 
         });
+
     }
 
     private boolean canSelected = true;

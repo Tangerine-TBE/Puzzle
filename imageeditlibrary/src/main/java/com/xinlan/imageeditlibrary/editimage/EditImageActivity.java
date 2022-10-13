@@ -101,24 +101,6 @@ public class EditImageActivity extends BaseActivity {
     public BeautyFragment mBeautyFragment;//美颜模式Fragment
     private SaveImageTask mSaveImageTask;
     private RedoUndoController mRedoUndoController;//撤销操作
-    /**
-     * @param context
-     * @param editImagePath
-     * @param outputPath
-     * @param requestCode
-     */
-    public static void start(Activity context, final String editImagePath, final String outputPath, final int requestCode) {
-        if (TextUtils.isEmpty(editImagePath)) {
-            Toast.makeText(context, R.string.no_choose, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Intent it = new Intent(context, EditImageActivity.class);
-        it.putExtra(EditImageActivity.FILE_PATH, editImagePath);
-        it.putExtra(EditImageActivity.EXTRA_OUTPUT, outputPath);
-        context.startActivityForResult(it, requestCode);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

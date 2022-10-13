@@ -39,6 +39,7 @@ import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.event.LpSplitEvent;
 import com.weilai.jigsawpuzzle.fragment.main.EditImageFragment;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
+import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
@@ -74,6 +75,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     private ArrayList<String> bitmaps;
     private static final int FILTER_PUZZLE_LP_CODE = 1;
     private static final int FILTER_PUZZLE_LP_SINGLE = 2;
+    private static final int FILTER_PUZZLE_LP_EDIT = 3;
     private LongPicItemAdapter longPicItemAdapter;
     private PuzzleLpPopUp mPuzzleLpPopUp;
     private float mActionBarHeight;
@@ -194,22 +196,27 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
                 adapter.onBindViewHolder(holder, i);
                 holder.itemView.measure(
-                        View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenWidth() * 3/4, View.MeasureSpec.EXACTLY),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
+                holder.itemView.layout(0, 0, DimenUtil.getScreenWidth() * 3/4,
                         holder.itemView.getMeasuredHeight());
-                holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFFFF"));
+              int padding =   paddingItemDecoration.getProcess();
+                if (i == 0){
+                    holder.itemView.setPadding(padding,padding,padding,padding);
+                }else{
+                    holder.itemView.setPadding(padding,0,padding,padding);
+                }
+                holder.itemView.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
                 holder.itemView.setDrawingCacheEnabled(true);
                 holder.itemView.buildDrawingCache();
                 Bitmap drawingCache = holder.itemView.getDrawingCache();
                 if (drawingCache != null) {
-
                     bitmaCache.put(String.valueOf(i), drawingCache);
                 }
                 height += holder.itemView.getMeasuredHeight();
             }
 
-            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
+            bigBitmap = Bitmap.createBitmap(DimenUtil.getScreenWidth() * 3/4, height, Bitmap.Config.ARGB_8888);
             Canvas bigCanvas = new Canvas(bigBitmap);
             Drawable lBackground = view.getBackground();
             if (lBackground instanceof ColorDrawable) {
@@ -230,8 +237,8 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     private void doOnBackGround() {
         showProcessDialog();
-        Bitmap bitmap = shotScrollView(mRvLP);
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            Bitmap bitmap = shotScrollView(mRvLP);
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
             if (!bitmap.isRecycled()) {
                 bitmap.recycle();
@@ -356,6 +363,15 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                     }
                 }
             }
+        } else if (requestCode == FILTER_PUZZLE_LP_EDIT) {
+            if (data != null) {
+                String filePath = data.getStringExtra("extra_output");
+                if (selectedPosition != -1){
+                    bitmaps.remove(selectedPosition);
+                    bitmaps.add(selectedPosition,filePath);
+                    longPicItemAdapter.notifyItemChanged(selectedPosition);
+                }
+            }
         }
     }
 
@@ -400,7 +416,10 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 break;
             case 2:
                 //编辑
-                EditImageActivity.start(_mActivity, bitmaps.get(selectedPosition),FileUtil.getAnPicPath(System.currentTimeMillis()+"_editor"), 1);
+                Intent it = new Intent(getContext(), EditImageActivity.class);
+                it.putExtra(EditImageActivity.FILE_PATH,  bitmaps.get(selectedPosition));
+                it.putExtra(EditImageActivity.EXTRA_OUTPUT, FileUtil.getAnPicPath(System.currentTimeMillis() + "_editor"));
+                startActivityForResult(it,FILTER_PUZZLE_LP_EDIT);
                 break;
             case 3:
                 //替换
@@ -439,4 +458,5 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         mPuzzleLpPopUp.onDestroy();
         mPuzzleLpColor.onDestroy();
     }
+
 }
