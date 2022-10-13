@@ -28,8 +28,8 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class MainBaseActivity extends BaseSimpleActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
-    private int[] tableSelectedIcon = {R.mipmap.icon_sel_home, R.mipmap.icon_sel_special, R.mipmap.icon_sel_mine};
-    private int[] tableUnSelectedIcon = {R.mipmap.icon_unl_home, R.mipmap.icon_unl_special, R.mipmap.icon_unl_mine};
+    private final int[] tableSelectedIcon = {R.mipmap.icon_sel_home, R.mipmap.icon_sel_special, R.mipmap.icon_sel_mine};
+    private final int[] tableUnSelectedIcon = {R.mipmap.icon_unl_home, R.mipmap.icon_unl_special, R.mipmap.icon_unl_mine};
     private int mCurrentPosition;
 
     @Override
@@ -67,8 +67,6 @@ public class MainBaseActivity extends BaseSimpleActivity {
         }else {
             EasyPermissions.requestPermissions(this,"申请读写权限",0,permissions);
         }
-
-
     }
 
     @Override

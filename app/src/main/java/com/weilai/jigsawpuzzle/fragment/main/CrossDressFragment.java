@@ -18,6 +18,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.activity.puzzle.PuzzleBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzle9P.Puzzle9PBaseActivity;
+import com.weilai.jigsawpuzzle.activity.puzzleHLp.PuzzleHLPBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleLP.PuzzleLPBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
 import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
@@ -40,6 +41,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
     private static final int FILTER_PUZZLE_QR_CODE = 1;
     private static final int FILTER_PUZZLE_LP_CODE = 2;
     private static final int FILTER_PUZZLE_9P_CODE = 3;
+    private static final int FILTER_PUZZLE_HLP_CODE = 4;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,7 +90,15 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                     .setSelectionMode(SelectModeConfig.MULTIPLE)
                     .forResult(FILTER_PUZZLE_QR_CODE);
         } else if (view.getId() == R.id.tv_splic_hori) {
-
+            PictureSelector.create(this)
+                    .openGallery(SelectMimeType.ofImage())
+                    .isDisplayCamera(true)
+                    .setMinSelectNum(1)
+                    .setMaxSelectNum(10)
+                    .setImageEngine(GlideEngine.createGlideEngine())
+                    .isPreviewImage(true)
+                    .setSelectionMode(SelectModeConfig.MULTIPLE)
+                    .forResult(FILTER_PUZZLE_HLP_CODE);
         } else if (view.getId() == R.id.tv_l_pic) {
             PictureSelector.create(this)
                     .openGallery(SelectMimeType.ofImage())
@@ -133,9 +143,10 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                         intent.setClass(getContext(), PuzzleLPBaseActivity.class);
                     }else if (requestCode == FILTER_PUZZLE_9P_CODE){
                         intent.setClass(getContext(), Puzzle9PBaseActivity.class);
+                    }else if (requestCode == FILTER_PUZZLE_HLP_CODE){
+                        intent.setClass(getContext(), PuzzleHLPBaseActivity.class);
                     }
                     startActivity(intent);
-
                 }
 
             }
