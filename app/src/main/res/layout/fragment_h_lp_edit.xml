@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent">
+    <include layout="@layout/layout_title_back"/>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
+
+        <com.weilai.jigsawpuzzle.weight.puzzleLP.PuzzleLpEditView
+            android:id="@+id/edit_bottom"
+            app:scroll_direction="right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <View
+            android:layout_width="2dp"
+            android:background="@color/sel_text_main_color"
+            android:layout_height="match_parent"/>
+        <com.weilai.jigsawpuzzle.weight.puzzleLP.PuzzleLpEditView
+            android:id="@+id/edit_top"
+            app:scroll_direction="left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

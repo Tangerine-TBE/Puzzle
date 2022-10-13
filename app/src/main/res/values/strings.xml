@@ -37,5 +37,7 @@
     <string name="save">保存</string>
     <string name="split_top">裁顶</string>
     <string name="split_bottom">裁底</string>
+    <string name="split_left">裁左</string>
+    <string name="split_right">裁右</string>
     <string name="delete">删除</string>
 </resources>

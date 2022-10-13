@@ -367,9 +367,12 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             if (data != null) {
                 String filePath = data.getStringExtra("extra_output");
                 if (selectedPosition != -1){
-                    bitmaps.remove(selectedPosition);
-                    bitmaps.add(selectedPosition,filePath);
-                    longPicItemAdapter.notifyItemChanged(selectedPosition);
+                    int isEdit = data.getIntExtra("image_is_edit",0);
+                    if (isEdit != 0){
+                        bitmaps.remove(selectedPosition);
+                        bitmaps.add(selectedPosition,filePath);
+                        longPicItemAdapter.notifyItemChanged(selectedPosition);
+                    }
                 }
             }
         }
@@ -401,7 +404,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 //裁顶
                 if (selectedPosition == 0) {
                     bitmapsInfo.add(bitmaps.get(selectedPosition));
-                    puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1);
+                    puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1,1);
                     start(puzzleLpSplitFragment);
                 }
                 break;
@@ -410,7 +413,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 if (selectedPosition + 1 < bitmaps.size()) {
                     bitmapsInfo.add(bitmaps.get(selectedPosition + 1));
                 }
-                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2);
+                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2,1);
                 start(puzzleLpSplitFragment);
                 //裁底
                 break;

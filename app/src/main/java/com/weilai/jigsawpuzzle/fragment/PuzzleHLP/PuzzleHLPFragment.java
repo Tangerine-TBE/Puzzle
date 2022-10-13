@@ -101,7 +101,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
 
     @Override
     protected void initView(View view) {
-        String[] tipsTitle = new String[]{getString(R.string.split_top), getString(R.string.split_bottom), getString(R.string.edit), getString(R.string.replace), getString(R.string.delete)};
+        String[] tipsTitle = new String[]{getString(R.string.split_left), getString(R.string.split_right), getString(R.string.edit), getString(R.string.replace), getString(R.string.delete)};
         mPuzzleLpPopUp = new PuzzleLpPopUp(_mActivity, this, tipsTitle, integers);
         mPuzzleLpColor = new PuzzleLpColorPopUp(_mActivity, this);
         mPuzzleLpPopUp.setOutSideDismiss(true);
@@ -157,17 +157,10 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         hLongPicItemAdapter.setOnItemClickedListener(new LongPicItemAdapter.OnItemClickedListener() {
             @Override
             public void onItemClicked(View itemView, int position) {
-                int rvLp = mRvLP.getHeight();
                 if (mPuzzleLpPopUp.isShowing()) {
                     mPuzzleLpPopUp.dismiss();
                 }
-                if (itemView.getTop() >= mActionBarHeight) {
-                    mPuzzleLpPopUp.show(itemView, true, position);
-                } else if (itemView.getBottom() <= rvLp - mActionBarHeight) {
-                    mPuzzleLpPopUp.show(itemView, false, position);
-                } else {
-                    mPuzzleLpPopUp.show(mRvLP, false, position);
-                }
+                mPuzzleLpPopUp.show(mRvLP, false, position);
             }
         });
         view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
@@ -370,9 +363,12 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
             if (data != null) {
                 String filePath = data.getStringExtra("extra_output");
                 if (selectedPosition != -1){
-                    bitmaps.remove(selectedPosition);
-                    bitmaps.add(selectedPosition,filePath);
-                    hLongPicItemAdapter.notifyItemChanged(selectedPosition);
+                    boolean isEdit = data.getBooleanExtra("image_is_edit",false);
+                    if (isEdit  ){
+                        bitmaps.remove(selectedPosition);
+                        bitmaps.add(selectedPosition,filePath);
+                        hLongPicItemAdapter.notifyItemChanged(selectedPosition);
+                    }
                 }
             }
         }
@@ -404,7 +400,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                 //裁顶
                 if (selectedPosition == 0) {
                     bitmapsInfo.add(bitmaps.get(selectedPosition));
-                    puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1);
+                    puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1,2);
                     start(puzzleLpSplitFragment);
                 }
                 break;
@@ -413,7 +409,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                 if (selectedPosition + 1 < bitmaps.size()) {
                     bitmapsInfo.add(bitmaps.get(selectedPosition + 1));
                 }
-                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2);
+                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2,2);
                 start(puzzleLpSplitFragment);
                 //裁底
                 break;
