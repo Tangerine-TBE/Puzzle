@@ -80,7 +80,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         mRvTemplate.setLayoutManager(gridLayoutManager);
         mRvTemplate.setAdapter(templateAdapter);
         mRvTemplate.addItemDecoration(new SplitItemDecoration(20));
-        mRefreshLayout.setPrimaryColors(new int[]{getResources().getColor(R.color.sel_text_main_color)});
+        mRefreshLayout.setPrimaryColors(new int[]{getResources().getColor(R.color.white)});
     }
 
     @Override

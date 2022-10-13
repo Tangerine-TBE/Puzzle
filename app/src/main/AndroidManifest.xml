@@ -36,6 +36,7 @@
         <activity android:name=".activity.puzzleLP.PuzzleLPBaseActivity" android:exported="true"/>
         <activity android:name=".activity.puzzle9P.Puzzle9PBaseActivity" android:exported="true"/>
         <activity android:name=".activity.puzzleHLp.PuzzleHLPBaseActivity" android:exported="true"/>
+        <activity android:name=".activity.puzzleLine.PuzzleLineBaseActivity" android:exported="true"/>
     </application>
 
 </manifest>

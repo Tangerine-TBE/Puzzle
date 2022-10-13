@@ -20,6 +20,7 @@ import com.weilai.jigsawpuzzle.activity.puzzle.PuzzleBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzle9P.Puzzle9PBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleHLp.PuzzleHLPBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleLP.PuzzleLPBaseActivity;
+import com.weilai.jigsawpuzzle.activity.puzzleLine.PuzzleLineBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
 import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.main.ImageBannerAdapter;
@@ -42,6 +43,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
     private static final int FILTER_PUZZLE_LP_CODE = 2;
     private static final int FILTER_PUZZLE_9P_CODE = 3;
     private static final int FILTER_PUZZLE_HLP_CODE = 4;
+    private static final int FILTER_PUZZLE_LINE_CODE = 5;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -110,7 +112,15 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                     .setSelectionMode(SelectModeConfig.MULTIPLE)
                     .forResult(FILTER_PUZZLE_LP_CODE);
         } else if (view.getId() == R.id.tv_lines) {
-
+            PictureSelector.create(this)
+                    .openGallery(SelectMimeType.ofImage())
+                    .isDisplayCamera(true)
+                    .setMinSelectNum(1)
+                    .setMaxSelectNum(1)
+                    .setImageEngine(GlideEngine.createGlideEngine())
+                    .isPreviewImage(true)
+                    .setSelectionMode(SelectModeConfig.SINGLE)
+                    .forResult(FILTER_PUZZLE_LINE_CODE);
         } else if (view.getId() == R.id.tv_lattice) {
             PictureSelector.create(this).openGallery(SelectMimeType.ofImage())
                     .isDisplayCamera(true)
@@ -145,6 +155,8 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                         intent.setClass(getContext(), Puzzle9PBaseActivity.class);
                     }else if (requestCode == FILTER_PUZZLE_HLP_CODE){
                         intent.setClass(getContext(), PuzzleHLPBaseActivity.class);
+                    }else if (requestCode == FILTER_PUZZLE_LINE_CODE){
+                        intent.setClass(getContext(), PuzzleLineBaseActivity.class);
                     }
                     startActivity(intent);
                 }

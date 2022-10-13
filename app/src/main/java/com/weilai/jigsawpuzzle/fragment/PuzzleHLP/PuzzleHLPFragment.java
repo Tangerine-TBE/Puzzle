@@ -75,7 +75,6 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
     private static final int FILTER_PUZZLE_LP_EDIT = 3;
     private HLongPicItemAdapter hLongPicItemAdapter;
     private PuzzleLpPopUp mPuzzleLpPopUp;
-    private float mActionBarHeight;
     private FlyTabLayout mFlyTabLayout;
     private PuzzleLpColorPopUp mPuzzleLpColor;
     private final int[] integers = new int[]{R.mipmap.icon_split_top, R.mipmap.icon_split_bottom, R.mipmap.icon_edit, R.mipmap.icon_replace, R.mipmap.icon_delete};
@@ -132,7 +131,6 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         TypedArray actionbarSizeTypedArray = _mActivity.obtainStyledAttributes(new int[]{
                 android.R.attr.actionBarSize
         });
-        mActionBarHeight = actionbarSizeTypedArray.getDimension(0, 0);
         actionbarSizeTypedArray.recycle();
     }
 
@@ -154,14 +152,11 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                 _mActivity.finish();
             }
         });
-        hLongPicItemAdapter.setOnItemClickedListener(new LongPicItemAdapter.OnItemClickedListener() {
-            @Override
-            public void onItemClicked(View itemView, int position) {
-                if (mPuzzleLpPopUp.isShowing()) {
-                    mPuzzleLpPopUp.dismiss();
-                }
-                mPuzzleLpPopUp.show(mRvLP, false, position);
+        hLongPicItemAdapter.setOnItemClickedListener((itemView, position) -> {
+            if (mPuzzleLpPopUp.isShowing()) {
+                mPuzzleLpPopUp.dismiss();
             }
+            mPuzzleLpPopUp.show(mRvLP, false, position);
         });
         view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
             @Override

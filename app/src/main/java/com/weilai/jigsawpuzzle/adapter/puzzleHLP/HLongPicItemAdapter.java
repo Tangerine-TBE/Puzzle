@@ -126,14 +126,14 @@ public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapte
         });
     }
     private boolean canSelected = true;
-    private LongPicItemAdapter.OnItemClickedListener mOnItemClickedListener;
+    private OnItemClickedListener mOnItemClickedListener;
     public final void setCanSelected() {
         canSelected = false;
     }
     public interface OnItemClickedListener{
         void onItemClicked(View itemView,int position);
     }
-    public final void setOnItemClickedListener(LongPicItemAdapter.OnItemClickedListener onItemClickedListener){
+    public final void setOnItemClickedListener(OnItemClickedListener onItemClickedListener){
         this.mOnItemClickedListener = onItemClickedListener;
     }
     public final void resetItem(){
