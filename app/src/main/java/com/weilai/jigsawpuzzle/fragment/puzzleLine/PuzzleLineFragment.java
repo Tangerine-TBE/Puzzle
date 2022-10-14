@@ -27,7 +27,6 @@ public class PuzzleLineFragment extends BaseFragment {
     private PuzzleLineFragment(){
 
     }
-    private PuzzleLineView mPuzzleLineView;
     public static PuzzleLineFragment getInstance(ArrayList<String> path){
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("data", path);
@@ -37,13 +36,12 @@ public class PuzzleLineFragment extends BaseFragment {
     }
     @Override
     protected Object setLayout() {
-        return R.layout.fragment_line;
+        return R.layout.fragment_puzzle_lp;
     }
 
     @Override
     protected void initView(View view) {
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
-        mPuzzleLineView = view.findViewById(R.id.puzzle_line_view);
         tvTitle.setText("字幕区间");
         initData();
     }
@@ -66,12 +64,8 @@ public class PuzzleLineFragment extends BaseFragment {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                mPuzzleLineView.setBitmap(bitmap);
+
             }
-
-
-
         }
     }
 

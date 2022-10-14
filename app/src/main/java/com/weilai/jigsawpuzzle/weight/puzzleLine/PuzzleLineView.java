@@ -49,7 +49,7 @@ public class PuzzleLineView extends View {
         Matrix matrix = new Matrix();
         if (bitmapHeight > deviceHeight) {
             /*如果屏幕的高放不下图片就以屏幕的高来缩放图片，直到放下为止*/
-            BigDecimal deviceHeightBig = new BigDecimal(deviceHeight*3/4 * 9/10);
+            BigDecimal deviceHeightBig = new BigDecimal(deviceHeight*2/3 * 9/10);
             float scaleSize =  deviceHeightBig.divide(new BigDecimal(bitmapHeight),2,RoundingMode.HALF_DOWN).floatValue();
             matrix.setScale(scaleSize,scaleSize);
         } else {

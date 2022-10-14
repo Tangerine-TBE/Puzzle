@@ -80,7 +80,6 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         mRvTemplate.setLayoutManager(gridLayoutManager);
         mRvTemplate.setAdapter(templateAdapter);
         mRvTemplate.addItemDecoration(new SplitItemDecoration(20));
-        mRefreshLayout.setPrimaryColors(new int[]{getResources().getColor(R.color.white)});
     }
 
     @Override
@@ -138,7 +137,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
                 if (bitMapInfos != null) {
                     list.addAll(bitMapInfos);
                     templateAdapter.notifyDataSetChanged();
-                    refreshLayout.finishRefresh();
+                    refreshLayout.finishRefresh(true);
                 }
             }
 
@@ -149,7 +148,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
 
             @Override
             public void onError(Throwable e) {
-                refreshLayout.finishRefresh();
+                refreshLayout.finishRefresh(2000,false,false);
             }
 
             @Override

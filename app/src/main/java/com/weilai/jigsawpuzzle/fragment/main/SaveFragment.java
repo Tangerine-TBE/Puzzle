@@ -14,10 +14,14 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.photoview.PhotoView;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,7 +71,7 @@ public class SaveFragment extends BaseFragment {
         });
         view.findViewById(R.id.visible);//是否显示详细信息
         String path = getArguments().getString("filePath");
-        ImageView imageView = view.findViewById(R.id.iv_img);
+        SubsamplingScaleImageView imageView = view.findViewById(R.id.iv_img);
         TextView textView = view.findViewById(R.id.tv_mapInfo);//本地路径
         if (!TextUtils.isEmpty(path)) {
             Uri srcUri;
@@ -86,7 +90,7 @@ public class SaveFragment extends BaseFragment {
                 Bitmap bitmap = BitmapFactory.decodeStream(stream);
                 if (bitmap != null) {
                     textView.setText(String.format("图片尺寸:%d*%d", bitmap.getWidth(), bitmap.getHeight()));
-                    Glide.with(this).load(bitmap).into(imageView);
+                    imageView.setImage(ImageSource.bitmap(bitmap));
                 }
             }
         }

@@ -10,8 +10,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.LruCache;
 import android.view.View;
 import android.widget.Toast;
@@ -24,11 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.utils.ToastUtils;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
@@ -37,7 +35,6 @@ import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpColorPopUp;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.event.LpSplitEvent;
-import com.weilai.jigsawpuzzle.fragment.main.EditImageFragment;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
@@ -50,8 +47,6 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.File;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
@@ -190,8 +185,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             int iHeight = 0;
             final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
             // Use 1/8th of the available memory for this memory cache.
-            final int cacheSize = maxMemory / 8;
-            LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
+            LruCache<String, Bitmap> bitmaCache = new LruCache<>(maxMemory);
             for (int i = 0; i < size; i++) {
                 RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
                 adapter.onBindViewHolder(holder, i);
@@ -227,9 +221,12 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
             for (int i = 0; i < size; i++) {
                 Bitmap bitmap = bitmaCache.get(String.valueOf(i));
-                bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
-                iHeight += bitmap.getHeight();
-                bitmap.recycle();
+                if (bitmap != null){
+                    bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
+                    iHeight += bitmap.getHeight();
+                        bitmap.recycle();
+                }
+
             }
         }
         return bigBitmap;
@@ -237,8 +234,8 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     private void doOnBackGround() {
         showProcessDialog();
+        Bitmap bitmap = shotScrollView(mRvLP);
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            Bitmap bitmap = shotScrollView(mRvLP);
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
             if (!bitmap.isRecycled()) {
                 bitmap.recycle();
@@ -259,6 +256,8 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
             @Override
             public void onError(@NonNull Throwable e) {
+                e.printStackTrace();
+                hideProcessDialog();
 
             }
 
@@ -343,7 +342,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                     int size = list.size();
                     if (size > 0) {
                         for (LocalMedia localMedia : list) {
-                            String path = localMedia.getPath();
+                            String path = localMedia.getRealPath();
                             bitmaps.add(path);
                             longPicItemAdapter.notifyItemInserted(bitmaps.size());
                         }
@@ -356,7 +355,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 if (list != null) {
                     int size = list.size();
                     if (size > 0) {
-                        String path = list.get(0).getAvailablePath();
+                        String path = list.get(0).getRealPath();
                         bitmaps.remove(selectedPosition);
                         bitmaps.add(selectedPosition, path);
                         longPicItemAdapter.notifyItemChanged(selectedPosition);
@@ -367,8 +366,8 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             if (data != null) {
                 String filePath = data.getStringExtra("extra_output");
                 if (selectedPosition != -1){
-                    int isEdit = data.getIntExtra("image_is_edit",0);
-                    if (isEdit != 0){
+                    boolean isEdit = data.getBooleanExtra("image_is_edit",false);
+                    if (isEdit){
                         bitmaps.remove(selectedPosition);
                         bitmaps.add(selectedPosition,filePath);
                         longPicItemAdapter.notifyItemChanged(selectedPosition);

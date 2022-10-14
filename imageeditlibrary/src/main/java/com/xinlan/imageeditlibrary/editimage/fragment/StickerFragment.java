@@ -25,6 +25,7 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import com.xinlan.imageeditlibrary.editimage.ModuleConfig;
 import com.xinlan.imageeditlibrary.editimage.adapter.StickerAdapter;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
+import com.xinlan.imageeditlibrary.editimage.utils.Matrix3;
 import com.xinlan.imageeditlibrary.editimage.view.StickerItem;
 
 import java.util.LinkedHashMap;
@@ -44,7 +45,7 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
             R.mipmap.icon16, R.mipmap.icon17, R.mipmap.icon18, R.mipmap.icon19};
     private View mainView;
     public static final int INDEX = ModuleConfig.INDEX_STICKER;
-    private com.xiaopo.flying.sticker.StickerView mStickerView;// 贴图显示控件
+    private StickerView mStickerView;// 贴图显示控件
 
     public static StickerFragment newInstance() {
         return new StickerFragment();
@@ -145,7 +146,30 @@ public class StickerFragment extends BaseEditFragment implements StickerAdapter.
      */
     public void applyStickers() {
         // System.out.println("保存 合成图片");
-        activity.changeMainBitmap(mStickerView.createBitmap(), true);
+        Matrix touchMatrix = activity.mainImage.getImageViewMatrix();
+
+        Bitmap resultBit = Bitmap.createBitmap(activity.getMainBit()).copy(
+                Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(resultBit);
+
+        float[] data = new float[9];
+        touchMatrix.getValues(data);// 底部图片变化记录矩阵原始数据
+        Matrix3 cal = new Matrix3(data);// 辅助矩阵计算类
+        Matrix3 inverseMatrix = cal.inverseMatrix();// 计算逆矩阵
+        Matrix m = new Matrix();
+        m.setValues(inverseMatrix.getValues());
+        float[] f = new float[9];
+        m.getValues(f);
+        int dx = (int) f[Matrix.MTRANS_X];
+        int dy = (int) f[Matrix.MTRANS_Y];
+        float scale_x = f[Matrix.MSCALE_X];
+        float scale_y = f[Matrix.MSCALE_Y];
+        canvas.save();
+        canvas.translate(dx, dy);
+        canvas.scale(scale_x, scale_y);
+        canvas.drawBitmap(mStickerView.createBitmap(), 0, 0, null);
+        canvas.restore();
+        activity.changeMainBitmap(resultBit, true);
         backToMain();
     }
 }// end class

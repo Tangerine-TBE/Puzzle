@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
@@ -83,9 +85,9 @@ public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapte
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(viewWidth,viewHeight);
         holder.layoutContent.setLayoutParams(layoutParams);
         FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth,viewHeight);
-        AppCompatImageView image = holder.ivImage;
+        SubsamplingScaleImageView image = holder.ivImage;
         image.setLayoutParams(relayout);
-        image.setImageBitmap(bitmap);
+        image.setImage(ImageSource.bitmap(bitmap));
         //加载一个占位图
         AppCompatImageView place = holder.ivPlace;
         place.setLayoutParams(relayout);
@@ -148,7 +150,7 @@ public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        AppCompatImageView ivImage;
+        SubsamplingScaleImageView ivImage;
         AppCompatImageView ivPlace;
         FrameLayout layoutContent;
 

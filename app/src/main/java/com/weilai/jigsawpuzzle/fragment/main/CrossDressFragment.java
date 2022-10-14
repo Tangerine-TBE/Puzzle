@@ -22,6 +22,7 @@ import com.weilai.jigsawpuzzle.activity.puzzleHLp.PuzzleHLPBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleLP.PuzzleLPBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleLine.PuzzleLineBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
+import com.weilai.jigsawpuzzle.activity.puzzleSS.PuzzleSShotBaseActivity;
 import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.main.ImageBannerAdapter;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
@@ -116,20 +117,21 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                     .openGallery(SelectMimeType.ofImage())
                     .isDisplayCamera(true)
                     .setMinSelectNum(1)
-                    .setMaxSelectNum(1)
+                    .setMaxSelectNum(10)
                     .setImageEngine(GlideEngine.createGlideEngine())
                     .isPreviewImage(true)
-                    .setSelectionMode(SelectModeConfig.SINGLE)
-                    .forResult(FILTER_PUZZLE_LINE_CODE);
+                    .setSelectionMode(SelectModeConfig.MULTIPLE)
+                    .forResult(FILTER_PUZZLE_LP_CODE);
         } else if (view.getId() == R.id.tv_lattice) {
-            PictureSelector.create(this).openGallery(SelectMimeType.ofImage())
+            PictureSelector.create(this)
+                    .openGallery(SelectMimeType.ofImage())
                     .isDisplayCamera(true)
                     .setSelectionMode(SelectModeConfig.SINGLE)
                     .setImageEngine(GlideEngine.createGlideEngine())
                     .setCropEngine(new ImageCropEngine(1,1))
                     .forResult(FILTER_PUZZLE_9P_CODE);
         } else if (view.getId() == R.id.tv_screen_shot) {
-
+            startActivity(new Intent(getActivity(), PuzzleSShotBaseActivity.class));
         }
     }
 
@@ -143,7 +145,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                 if (size > 0) {
                     ArrayList<String> arrayList = new ArrayList<>();
                     for (LocalMedia localMedia : list) {
-                        arrayList.add(localMedia.getRealPath());
+                        arrayList.add(localMedia.getAvailablePath());
                     }
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra("data", arrayList);

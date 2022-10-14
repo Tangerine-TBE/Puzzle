@@ -97,9 +97,8 @@
             android:layout_height="fill_parent"
             android:layout_gravity="center"
             android:visibility="gone" >
-            <ImageView
+            <com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch
                 android:id="@+id/srcImg"
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"/>
@@ -127,9 +126,8 @@
             app:showBorder="true"
             app:showIcons="true"
             android:visibility="gone" >
-            <ImageView
+            <com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch
                 android:id="@+id/src_img"
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"/>

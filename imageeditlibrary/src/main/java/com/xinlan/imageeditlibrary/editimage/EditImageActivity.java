@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -32,6 +34,7 @@ import com.xinlan.imageeditlibrary.editimage.fragment.PaintFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.RotateFragment;
 import com.xinlan.imageeditlibrary.editimage.fragment.StickerFragment;
 import com.xinlan.imageeditlibrary.editimage.utils.FileUtil;
+import com.xinlan.imageeditlibrary.editimage.utils.PictureMimeType;
 import com.xinlan.imageeditlibrary.editimage.view.CropImageView;
 import com.xinlan.imageeditlibrary.editimage.view.CustomPaintView;
 import com.xinlan.imageeditlibrary.editimage.view.CustomViewPager;
@@ -41,6 +44,10 @@ import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 import com.xinlan.imageeditlibrary.editimage.utils.BitmapUtils;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouchBase;
 import com.xinlan.imageeditlibrary.editimage.widget.RedoUndoController;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  * <p>
@@ -80,8 +87,8 @@ public class EditImageActivity extends BaseActivity {
     private EditImageActivity mContext;
     private Bitmap mainBitmap;// 底层显示Bitmap
     public ImageViewTouch mainImage;
-    private ImageView mIvSrc;
-    private ImageView mIv_Src;
+    private ImageViewTouch mIvSrc;
+    private ImageViewTouch mIv_Src;
     private View backBtn;
     public StickerView mStickerView;// 贴图层View
     public CropImageView mCropPanel;// 剪切操作控件
@@ -217,8 +224,27 @@ public class EditImageActivity extends BaseActivity {
     private final class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
-            return BitmapUtils.getSampledBitmap(params[0], imageWidth,
-                    imageHeight);
+            Bitmap bitmap = null;
+            if (!TextUtils.isEmpty(params[0])) {
+                Uri srcUri;
+                if (PictureMimeType.isContent(params[0]) || PictureMimeType.isHasHttp(params[0])) {
+                    srcUri = Uri.parse(params[0]);
+                } else {
+                    srcUri = Uri.fromFile(new File(params[0]));
+                }
+                if (srcUri != null) {
+                    InputStream stream = null;
+                    try {
+                        stream = mContext.getContentResolver().openInputStream(srcUri);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    bitmap = BitmapFactory.decodeStream(stream);
+                }
+            }
+
+
+            return bitmap;
         }
 
         @Override
@@ -321,6 +347,8 @@ public class EditImageActivity extends BaseActivity {
             mIv_Src.setImageBitmap(mainBitmap);
             mIvSrc.setImageBitmap(mainBitmap);
             mainImage.setImageBitmap(mainBitmap);
+            mIv_Src.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+            mIvSrc.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
             mainImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
         }
     }

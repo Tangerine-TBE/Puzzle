@@ -156,7 +156,14 @@ public class PuzzleLpSplitFragment extends BaseFragment {
                     public void subscribe(ObservableEmitter<List<Bitmap>> emitter) throws Exception {
                         Bitmap editBottomBitmap = mEditBottom.saveBitmap();
                         Bitmap editTopBitmap = mEditTop.saveBitmap();
-                        emitter.onNext(Arrays.asList(editTopBitmap, editBottomBitmap));
+                        ArrayList<Bitmap> bitmaps = new ArrayList<>();
+                        if (editTopBitmap != null){
+                            bitmaps.add(editTopBitmap);
+                        }
+                        if (editBottomBitmap != null){
+                            bitmaps.add(editBottomBitmap);
+                        }
+                        emitter.onNext(bitmaps);
                     }
                 }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
                     @Override
@@ -167,8 +174,9 @@ public class PuzzleLpSplitFragment extends BaseFragment {
                     @Override
                     public void onNext(List<Bitmap> o) {
                         ArrayList<String> bitmapInfo = new ArrayList<>();
-                        bitmapInfo.add(FileUtil.saveBitmapToCache(System.currentTimeMillis() + "Split", o.get(1)));
-                        bitmapInfo.add(FileUtil.saveBitmapToCache(System.currentTimeMillis() + "Split", o.get(0)));
+                        for (Bitmap bitmap : o){
+                            bitmapInfo.add(FileUtil.saveBitmapToCache(System.currentTimeMillis() + "Split", bitmap));
+                        }
                         hideProcessDialog();
                         EvenUtil.post(new LpSplitEvent(bitmapInfo, type));
                     }

@@ -228,8 +228,8 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
 
     private void doOnBackGround() {
         showProcessDialog();
+        Bitmap bitmap = shotScrollView(mRvLP);
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            Bitmap bitmap = shotScrollView(mRvLP);
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
             if (!bitmap.isRecycled()) {
                 bitmap.recycle();
@@ -250,7 +250,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
 
             @Override
             public void onError(@NonNull Throwable e) {
-
+                e.printStackTrace();
             }
 
             @Override

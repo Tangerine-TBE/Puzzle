@@ -9,7 +9,7 @@
     <include layout="@layout/layout_title_back" />
 
 
-        <com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch
+        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
             android:id="@+id/iv_img"
             android:layout_width="match_parent"
             android:layout_height="0dp"

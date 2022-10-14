@@ -9,17 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.activity.puzzle.PuzzleBaseActivity;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
 
 import java.io.File;
@@ -89,11 +89,11 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(viewWidth,viewHeight);
         holder.layoutContent.setLayoutParams(layoutParams);
         FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth,viewHeight);
-        AppCompatImageView image = holder.ivImage;
+        SubsamplingScaleImageView image = holder.ivImage;
         image.setLayoutParams(relayout);
-        image.setImageBitmap(bitmap);
+        image.setImage(ImageSource.bitmap(bitmap));
         //加载一个占位图
-        AppCompatImageView place = holder.ivPlace;
+        ImageView place = holder.ivPlace;
         place.setLayoutParams(relayout);
         if (mLastSelectedPosition == -1) {
             place.setSelected(false);
@@ -156,8 +156,8 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        AppCompatImageView ivImage;
-        AppCompatImageView ivPlace;
+        SubsamplingScaleImageView ivImage;
+        ImageView ivPlace;
         FrameLayout layoutContent;
 
         public ViewHolder(@NonNull View itemView) {

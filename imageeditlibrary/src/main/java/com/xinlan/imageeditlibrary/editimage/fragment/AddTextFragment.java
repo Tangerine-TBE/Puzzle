@@ -47,6 +47,7 @@ import com.xinlan.imageeditlibrary.editimage.adapter.TextStyleItemAdapter;
 import com.xinlan.imageeditlibrary.editimage.task.StickerTask;
 import com.xinlan.imageeditlibrary.editimage.ui.ColorPicker;
 import com.xinlan.imageeditlibrary.editimage.utils.AssetsUtil;
+import com.xinlan.imageeditlibrary.editimage.utils.Matrix3;
 import com.xinlan.imageeditlibrary.editimage.view.TextStickerView;
 
 import java.util.Arrays;
@@ -347,7 +348,31 @@ public class AddTextFragment extends BaseEditFragment implements ColorItemAdapte
      * 保存贴图图片
      */
     public void applyTextImage() {
-        activity.changeMainBitmap(mTextStickerView.createBitmap(),true) ;
+
+        Matrix touchMatrix = activity.mainImage.getImageViewMatrix();
+
+        Bitmap resultBit = Bitmap.createBitmap(activity.getMainBit()).copy(
+                Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(resultBit);
+
+        float[] data = new float[9];
+        touchMatrix.getValues(data);// 底部图片变化记录矩阵原始数据
+        Matrix3 cal = new Matrix3(data);// 辅助矩阵计算类
+        Matrix3 inverseMatrix = cal.inverseMatrix();// 计算逆矩阵
+        Matrix m = new Matrix();
+        m.setValues(inverseMatrix.getValues());
+        float[] f = new float[9];
+        m.getValues(f);
+        int dx = (int) f[Matrix.MTRANS_X];
+        int dy = (int) f[Matrix.MTRANS_Y];
+        float scale_x = f[Matrix.MSCALE_X];
+        float scale_y = f[Matrix.MSCALE_Y];
+        canvas.save();
+        canvas.translate(dx, dy);
+        canvas.scale(scale_x, scale_y);
+        canvas.drawBitmap(mTextStickerView.createBitmap(), 0, 0, null);
+        canvas.restore();
+        activity.changeMainBitmap(resultBit, true);
         backToMain();
     }
 

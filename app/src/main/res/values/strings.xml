@@ -40,4 +40,6 @@
     <string name="split_left">裁左</string>
     <string name="split_right">裁右</string>
     <string name="delete">删除</string>
+    <string name="please">请输入网址...</string>
+    <string name="screen_shot">一键截图</string>
 </resources>

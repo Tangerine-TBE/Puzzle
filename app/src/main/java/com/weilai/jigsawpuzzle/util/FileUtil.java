@@ -37,6 +37,7 @@ public class FileUtil {
     private static final String BASE_PATH = getApplicationContext().getDatabasePath("template").getAbsolutePath();
 
     public static String saveBitmapToCache(String fileName, Bitmap bitmap) {
+
         File file = new File(BASE_PATH);
         if (!file.exists() || !file.isDirectory()) {
             file.mkdir();
@@ -82,9 +83,36 @@ public class FileUtil {
         if (!file.exists()) {
             file.mkdir();
         }
-        filePath = filePath + "/" + fileNameStr + ".jpg";
+        filePath = filePath + "/" + fileNameStr + ".jpeg";
         fos = new FileOutputStream(filePath);
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        try {
+            fos.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fos.close();
+        }
+        savePhotoAlbum(bitmap, new File(filePath));
+        return filePath;
+    }
+    public static String saveScreenShot(Bitmap bitmap, String fileNameStr,int quality) throws Exception {
+        FileOutputStream fos;
+        File file;
+        File externalFileRootDir = getApplicationContext().getExternalFilesDir(null);
+        do {
+            externalFileRootDir = Objects.requireNonNull(externalFileRootDir).getParentFile();
+        } while (Objects.requireNonNull(externalFileRootDir).getAbsolutePath().contains("/Android"));
+
+        String saveDir = Objects.requireNonNull(externalFileRootDir).getAbsolutePath();
+        String filePath = saveDir + "/" + Environment.DIRECTORY_DCIM;
+        file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        filePath = filePath + "/" + fileNameStr + ".jpeg";
+        fos = new FileOutputStream(filePath);
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, fos);
         try {
             fos.flush();
         } catch (Exception e) {
