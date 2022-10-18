@@ -1,5 +1,6 @@
 package com.weilai.jigsawpuzzle.fragment.main;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import com.luck.picture.lib.photoview.PhotoView;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.weilai.jigsawpuzzle.util.UriUtil;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 
 import java.io.File;
@@ -29,9 +31,9 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
- ** DATE: 2022/9/20
- ** Author:tangerine
- ** Description:
+ * * DATE: 2022/9/20
+ * * Author:tangerine
+ * * Description:
  **/
 public class SaveFragment extends BaseFragment {
     private SaveFragment() {
@@ -95,15 +97,21 @@ public class SaveFragment extends BaseFragment {
         tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, UriUtil.path2Uri(path));
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent,"分享到..."));
             }
         });
         view.findViewById(R.id.visible);//是否显示详细信息
-         path = getArguments().getString("filePath");
-         imageView = view.findViewById(R.id.iv_img);
-         textView = view.findViewById(R.id.tv_mapInfo);//本地路径
+        path = getArguments().getString("filePath");
+        imageView = view.findViewById(R.id.iv_img);
+        textView = view.findViewById(R.id.tv_mapInfo);//本地路径
 
     }
+
+
     private String path;
     private SubsamplingScaleImageView imageView;
     private TextView textView;

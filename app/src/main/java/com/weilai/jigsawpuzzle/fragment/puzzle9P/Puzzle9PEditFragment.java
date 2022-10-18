@@ -91,6 +91,7 @@ public class Puzzle9PEditFragment extends BaseFragment {
                         x = (i - 6) * simpleSizeWidth;
                     }
                     bitmap = Bitmap.createBitmap(bitmapParent, x, y, simpleSizeWidth, simpleSizeHeight);
+                    FileUtil.saveScreenShot(bitmap,System.currentTimeMillis()+"");
                     arrayList.add(bitmap);
                 }
                 emitter.onNext(arrayList);
@@ -111,6 +112,11 @@ public class Puzzle9PEditFragment extends BaseFragment {
                 arrayMap.put(SpacesItemDecoration.RIGHT_SPACE, 10);
                 mRv9Pic.addItemDecoration(new SpacesItemDecoration(3, arrayMap, false));
                 mRv9Pic.setAdapter(puzzle9PAdapter);
+                for (Bitmap bitmap :bitmaps){
+                    if (!bitmap.isRecycled()){
+                        bitmap.recycle();
+                    }
+                }
                 hideProcessDialog();
             }
 

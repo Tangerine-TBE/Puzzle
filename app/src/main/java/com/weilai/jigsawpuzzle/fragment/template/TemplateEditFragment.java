@@ -60,7 +60,7 @@ import okhttp3.ResponseBody;
  * * Author:tangerine
  * * Description:1.After Show the template
  **/
-public class TemplateEditFragment extends BaseFragment implements TemplateView.OutRectClickListener, TemplateEditDialog.TemplateDialogItemListener, TemplateConfirmDialog.OnConfirmClickedListener, TemplateView.DrawFinish {
+public class TemplateEditFragment extends BaseFragment implements TemplateView.OutRectClickListener, TemplateEditDialog.TemplateDialogItemListener, TemplateView.DrawFinish {
     private TemplateView templateEditView;
     private BitMapInfo bitMapInfo;
     private static final int FILTER_CODE = 1;
@@ -288,13 +288,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
     }
 
 
-    @Override
-    public void onConfirmClicked(String path) {
-        /*生成图片*/
-        SaveFragment saveFragment = SaveFragment.getInstance(path);
-        start(saveFragment);
 
-    }
 
     private void doOnBackGround(Bitmap bitmap) {
         showProcessDialog();
@@ -321,7 +315,8 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             @Override
             public void onNext(String s) {
                 hideProcessDialog();
-                new TemplateConfirmDialog(getContext(), TemplateEditFragment.this, s).show();
+                SaveFragment saveFragment = SaveFragment.getInstance(s);
+                start(saveFragment);
             }
 
             @Override
