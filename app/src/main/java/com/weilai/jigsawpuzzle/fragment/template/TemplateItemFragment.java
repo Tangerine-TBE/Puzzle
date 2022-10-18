@@ -135,7 +135,12 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
             @Override
             public void onNext(List<BitMapInfo> bitMapInfos) {
                 if (bitMapInfos != null) {
-                    list.addAll(bitMapInfos);
+                    if (list != null){
+                        if (!list.isEmpty()){
+                            list.clear();
+                        }
+                        list.addAll(bitMapInfos);
+                    }
                     templateAdapter.notifyDataSetChanged();
                     refreshLayout.finishRefresh(true);
                 }
