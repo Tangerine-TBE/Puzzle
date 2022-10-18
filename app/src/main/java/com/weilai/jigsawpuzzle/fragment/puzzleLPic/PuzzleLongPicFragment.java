@@ -176,44 +176,40 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                doOnBackGround();
                 shotScrollView(mRvLP);
             }
         });
     }
 
 
-    private Bitmap shotScrollView(RecyclerView view) {
-        Observable.create(new ObservableOnSubscribe<ArrayList<RecyclerView.ViewHolder>>() {
-            @Override
-            public void subscribe(ObservableEmitter<ArrayList<RecyclerView.ViewHolder>> emitter) throws Exception {
-                showProcessDialog();
-                RecyclerView.Adapter adapter = view.getAdapter();
-                ArrayList<RecyclerView.ViewHolder> arrayList = new ArrayList<>();
-                if (adapter != null) {
-                    int size = adapter.getItemCount();
-                    // Use 1/8th of the available memory for this memory cache.
-                    for (int i = 0; i < size; i++) {
-                        RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
-                        adapter.onBindViewHolder(holder, i);
-                        holder.itemView.measure(
-                                View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenWidth() * 3 / 4, View.MeasureSpec.EXACTLY),
-                                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                        holder.itemView.layout(0, 0, DimenUtil.getScreenWidth() * 3 / 4,
-                                holder.itemView.getMeasuredHeight());
-                        int padding = paddingItemDecoration.getProcess();
-                        if (i == 0) {
-                            holder.itemView.setPadding(padding, padding, padding, padding);
-                        } else {
-                            holder.itemView.setPadding(padding, 0, padding, padding);
-                        }
-                        holder.itemView.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
-                        arrayList.add(holder);
+    private void shotScrollView(RecyclerView view) {
+        Observable.create((ObservableOnSubscribe<ArrayList<RecyclerView.ViewHolder>>) emitter -> {
+            showProcessDialog();
+            RecyclerView.Adapter adapter = view.getAdapter();
+            ArrayList<RecyclerView.ViewHolder> arrayList = new ArrayList<>();
+            if (adapter != null) {
+                int size = adapter.getItemCount();
+                // Use 1/8th of the available memory for this memory cache.
+                for (int i = 0; i < size; i++) {
+                    RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
+                    adapter.onBindViewHolder(holder, i);
+                    holder.itemView.measure(
+                            View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenWidth() * 3 / 4, View.MeasureSpec.EXACTLY),
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                    holder.itemView.layout(0, 0, DimenUtil.getScreenWidth() * 3 / 4,
+                            holder.itemView.getMeasuredHeight());
+                    int padding = paddingItemDecoration.getProcess();
+                    if (i == 0) {
+                        holder.itemView.setPadding(padding, padding, padding, padding);
+                    } else {
+                        holder.itemView.setPadding(padding, 0, padding, padding);
                     }
-
+                    holder.itemView.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
+                    arrayList.add(holder);
                 }
-                emitter.onNext(arrayList);
+
             }
+            emitter.onNext(arrayList);
         }).observeOn(Schedulers.newThread()).flatMap(new Function<ArrayList<RecyclerView.ViewHolder>, ObservableSource<String>>() {
             @Override
             public ObservableSource<String> apply(ArrayList<RecyclerView.ViewHolder> viewHolders) throws Exception {
@@ -281,8 +277,6 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             public void onComplete() {
             }
         });
-
-        return null;
     }
 
     @Override

@@ -66,7 +66,7 @@ public class Puzzle9PEditFragment extends BaseFragment {
         mRv9Pic.setLayoutManager(gridLayoutManager);
         String path = getArguments().getString("data");
         showProcessDialog();
-        Observable.create((ObservableOnSubscribe<List<Bitmap>>) emitter -> {
+        Observable.create((ObservableOnSubscribe<List<String>>) emitter -> {
             Uri srcUri;
             if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
                 srcUri = Uri.parse(path);
@@ -78,7 +78,7 @@ public class Puzzle9PEditFragment extends BaseFragment {
                 Bitmap bitmapParent = BitmapFactory.decodeStream(stream);
                 int simpleSizeWidth = bitmapParent.getWidth() / 3;
                 int simpleSizeHeight = bitmapParent.getHeight() / 3;
-                ArrayList<Bitmap> arrayList = new ArrayList<>();
+                ArrayList<String> arrayList = new ArrayList<>();
                 Bitmap bitmap;
                 for (int i = 0; i < 9; i++) {
                     int x = 0;
@@ -91,19 +91,19 @@ public class Puzzle9PEditFragment extends BaseFragment {
                         x = (i - 6) * simpleSizeWidth;
                     }
                     bitmap = Bitmap.createBitmap(bitmapParent, x, y, simpleSizeWidth, simpleSizeHeight);
-                    FileUtil.saveScreenShot(bitmap,System.currentTimeMillis()+"");
-                    arrayList.add(bitmap);
+                   String filePath =  FileUtil.saveScreenShot(bitmap,System.currentTimeMillis()+"");
+                    arrayList.add(filePath);
                 }
                 emitter.onNext(arrayList);
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<String>>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
                 mDisposable.add(d);
             }
 
             @Override
-            public void onNext(@NonNull List<Bitmap> bitmaps) {
+            public void onNext(@NonNull List<String> bitmaps) {
                 Puzzle9PAdapter puzzle9PAdapter = new Puzzle9PAdapter(_mActivity, bitmaps);
                 ArrayMap<String, Integer> arrayMap = new ArrayMap<>();
                 arrayMap.put(SpacesItemDecoration.TOP_SPACE, 10);
@@ -112,11 +112,6 @@ public class Puzzle9PEditFragment extends BaseFragment {
                 arrayMap.put(SpacesItemDecoration.RIGHT_SPACE, 10);
                 mRv9Pic.addItemDecoration(new SpacesItemDecoration(3, arrayMap, false));
                 mRv9Pic.setAdapter(puzzle9PAdapter);
-                for (Bitmap bitmap :bitmaps){
-                    if (!bitmap.isRecycled()){
-                        bitmap.recycle();
-                    }
-                }
                 hideProcessDialog();
             }
 

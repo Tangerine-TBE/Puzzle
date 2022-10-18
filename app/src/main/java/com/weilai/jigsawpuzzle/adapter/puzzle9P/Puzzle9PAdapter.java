@@ -19,9 +19,9 @@ import java.util.List;
  **/
 public class Puzzle9PAdapter extends RecyclerView.Adapter<Puzzle9PAdapter.ViewHolder> {
     private final Context mContext;
-    private final List<Bitmap> list;
+    private final List<String> list;
 
-    public Puzzle9PAdapter(Context context, List<Bitmap> bitmaps) {
+    public Puzzle9PAdapter(Context context, List<String> bitmaps) {
         this.mContext = context;
         this.list = bitmaps;
     }
@@ -35,7 +35,7 @@ public class Puzzle9PAdapter extends RecyclerView.Adapter<Puzzle9PAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Bitmap bitmap = list.get(position);
+        String bitmap = list.get(position);
         Glide.with(mContext).load(bitmap).into(holder.appCompatImageView);
     }
 
