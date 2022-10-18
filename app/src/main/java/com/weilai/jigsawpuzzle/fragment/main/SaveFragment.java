@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.bumptech.glide.Glide;
@@ -46,6 +47,34 @@ public class SaveFragment extends BaseFragment {
     }
 
     @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        if (!TextUtils.isEmpty(path)) {
+            Uri srcUri;
+            if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
+                srcUri = Uri.parse(path);
+            } else {
+                srcUri = Uri.fromFile(new File(path));
+            }
+            if (srcUri != null) {
+                InputStream stream = null;
+                try {
+                    stream = _mActivity.getContentResolver().openInputStream(srcUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                if (bitmap != null) {
+                    textView.setText(String.format("图片尺寸:%d*%d", bitmap.getWidth(), bitmap.getHeight()));
+                    imageView.setImage(ImageSource.bitmap(bitmap));
+                }
+            }
+        }
+
+
+    }
+
+    @Override
     protected Object setLayout() {
         return R.layout.fragment_template_save;
     }
@@ -70,32 +99,14 @@ public class SaveFragment extends BaseFragment {
             }
         });
         view.findViewById(R.id.visible);//是否显示详细信息
-        String path = getArguments().getString("filePath");
-        SubsamplingScaleImageView imageView = view.findViewById(R.id.iv_img);
-        TextView textView = view.findViewById(R.id.tv_mapInfo);//本地路径
-        if (!TextUtils.isEmpty(path)) {
-            Uri srcUri;
-            if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
-                srcUri = Uri.parse(path);
-            } else {
-                srcUri = Uri.fromFile(new File(path));
-            }
-            if (srcUri != null) {
-                InputStream stream = null;
-                try {
-                    stream = _mActivity.getContentResolver().openInputStream(srcUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                if (bitmap != null) {
-                    textView.setText(String.format("图片尺寸:%d*%d", bitmap.getWidth(), bitmap.getHeight()));
-                    imageView.setImage(ImageSource.bitmap(bitmap));
-                }
-            }
-        }
+         path = getArguments().getString("filePath");
+         imageView = view.findViewById(R.id.iv_img);
+         textView = view.findViewById(R.id.tv_mapInfo);//本地路径
 
     }
+    private String path;
+    private SubsamplingScaleImageView imageView;
+    private TextView textView;
 
 
     @Override
