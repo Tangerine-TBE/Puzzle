@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#FFF7E8"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="长按图片排序"
+        android:textColor="#FF7D00"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="10dp"
+        android:textSize="14sp"
+        android:layout_height="wrap_content"/>
+    <ImageView
+        android:id="@+id/iv_cancel"
+        android:src="@mipmap/icon_tip_cancel"
+        android:layout_gravity="center|end"
+        android:layout_marginEnd="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</FrameLayout>

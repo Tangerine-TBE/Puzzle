@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -67,6 +68,7 @@ public class SaveFragment extends BaseFragment {
                 }
                 Bitmap bitmap = BitmapFactory.decodeStream(stream);
                 if (bitmap != null) {
+                    Toast.makeText(_mActivity, "图片已经保存到相册", Toast.LENGTH_SHORT).show();
                     textView.setText(String.format("图片尺寸:%d*%d", bitmap.getWidth(), bitmap.getHeight()));
                     imageView.setImage(ImageSource.bitmap(bitmap));
                 }

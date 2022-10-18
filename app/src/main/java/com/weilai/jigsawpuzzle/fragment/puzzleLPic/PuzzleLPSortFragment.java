@@ -1,25 +1,18 @@
 package com.weilai.jigsawpuzzle.fragment.puzzleLPic;
 
 import android.os.Bundle;
-import android.util.EventLog;
 import android.view.View;
-
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemSortAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.util.EvenUtil;
-import com.weilai.jigsawpuzzle.util.L;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.ItemDrag;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * * DATE: 2022/9/29
@@ -60,6 +53,12 @@ public class PuzzleLPSortFragment extends BaseFragment {
         mRvSort.setAdapter(longPicItemAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemDrag(bitmaps, longPicItemAdapter));
         touchHelper.attachToRecyclerView(mRvSort);
+        view.findViewById(R.id.iv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.findViewById(R.id.tips).setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
