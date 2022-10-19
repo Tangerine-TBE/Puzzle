@@ -93,6 +93,9 @@ public class WebViewFragment extends WebBaseFragment {
             mWebView.draw(canvas);
             //保存bitmap 为本地图片或做其他处理
             String filePath = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
+            if (!bitmap.isRecycled()){
+                bitmap.recycle();
+            }
             mWebView.buildDrawingCache(false);
             emitter.onNext(filePath);
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<String>() {
@@ -103,7 +106,6 @@ public class WebViewFragment extends WebBaseFragment {
 
             @Override
             public void onNext(String o) {
-                L.e(o);
                 hideProcessDialog();
                 startWithPop(SaveFragment.getInstance(o));
             }

@@ -3,45 +3,60 @@ package com.weilai.jigsawpuzzle.weight.puzzleLP;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
+import android.graphics.Rect;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.util.DimenUtil;
-import com.weilai.jigsawpuzzle.util.L;
+import com.weilai.jigsawpuzzle.util.FileUtil;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
- * * DATE: 2022/10/8
+ * * DATE: 2022/10/18
  * * Author:tangerine
  * * Description:
  **/
 public class PuzzleLpEditView extends View {
-    private Paint mPaint;
-    private Bitmap mBitmap;
+    private final Rect mRect = new Rect();
     private int scrollDirection;
+    private BitmapFactory.Options options;
     private boolean canDraw;
     private float mCurrentY;
     private float mMoveY;
     private float mLastY;
-    private float mCurrentX;
     private float mMoveX;
+    private float mCurrentX;
     private float mLastX;
-    private float mScaleSize;
-    private int templateBitmapWidth;
     private static final int LEFT = 0;
     private static final int RIGHT = 1;
     private static final int TOP = 2;
     private static final int BOTTOM = 3;
+    private int parentWidth;
+    private int parentHeight;
+    private int templateBitmapWidth;
     private int templateBitmapHeight;
+    private BitmapRegionDecoder mDecoder;
+    private String mPath;
 
 
     public PuzzleLpEditView(Context context) {
@@ -63,174 +78,236 @@ public class PuzzleLpEditView extends View {
         typedArray.recycle();
     }
 
-    public final Bitmap saveBitmap() {
-
-        if (mBitmap != null) {
-            Matrix matrix = new Matrix();
-            if (BOTTOM == scrollDirection || TOP == scrollDirection) {
-                int parentWidth = DimenUtil.getScreenWidth();
-                BigDecimal templateBitmap = new BigDecimal(templateBitmapWidth);
-                mScaleSize = templateBitmap.divide(new BigDecimal(parentWidth), 2, RoundingMode.HALF_DOWN).floatValue();
-                matrix.setScale(mScaleSize, mScaleSize);//还原大小
-            }else if (RIGHT == scrollDirection || LEFT == scrollDirection){
-                int parentHeight = DimenUtil.getScreenHeight() /2;
-                BigDecimal templateBitmap = new BigDecimal(templateBitmapHeight);
-                mScaleSize = templateBitmap.divide(new BigDecimal(parentHeight),2,RoundingMode.HALF_DOWN).floatValue();
-                matrix.setScale(mScaleSize,mScaleSize);
-            }
-            if (BOTTOM == scrollDirection) {
-                return Bitmap.createBitmap(mBitmap, 0, 0, mBitmap.getWidth(), (int) (mBitmap.getHeight() - mMoveY), matrix, true);
-            } else if (TOP == scrollDirection) {
-                return Bitmap.createBitmap(mBitmap, 0, (int) Math.abs(mMoveY), mBitmap.getWidth(), (int) (mBitmap.getHeight() + mMoveY), matrix, true);
-            } else if (RIGHT == scrollDirection) {
-                return Bitmap.createBitmap(mBitmap, 0, 0, (int) (mBitmap.getWidth() - mMoveX), mBitmap.getHeight(), matrix, true);
-            } else if (LEFT == scrollDirection) {
-                return Bitmap.createBitmap(mBitmap, (int) Math.abs(mMoveX), 0, (int) (mBitmap.getWidth() + mMoveX), mBitmap.getHeight(), matrix, true);
-            }
-        }
-
-        return null;
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        parentWidth = getMeasuredWidth();
+        parentHeight = getMeasuredHeight();
     }
 
-    public final void setBitmap(Bitmap bitmap) {
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        Matrix mMatrix = new Matrix();
-        if (scrollDirection == TOP || scrollDirection == BOTTOM) {
-            int parentWidth = DimenUtil.getScreenWidth();
-            templateBitmapWidth = bitmap.getWidth();
-            BigDecimal parent = new BigDecimal(parentWidth);
-            mScaleSize = parent.divide(new BigDecimal(templateBitmapWidth), 2, RoundingMode.HALF_DOWN).floatValue();
-            mMatrix.setScale(mScaleSize, mScaleSize);
-            mBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), mMatrix, true);
-            canDraw = true;
-            invalidate();
-        } else if (scrollDirection == LEFT || scrollDirection == RIGHT) {
-            int parentHeight = DimenUtil.getScreenHeight() / 2;
-            templateBitmapHeight = bitmap.getHeight();
-            BigDecimal parent = new BigDecimal(parentHeight);
-            mScaleSize = parent.divide(new BigDecimal(templateBitmapHeight), 2, RoundingMode.HALF_DOWN).floatValue();
-            mMatrix.setScale(mScaleSize, mScaleSize);
-            mBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), mMatrix, true);
-            canDraw = true;
-            invalidate();
-        }
+    public final void setImage(String path) {
+        mPath = path;
+        Observable.create(new ObservableOnSubscribe<BitmapRegionDecoder>() {
+            @Override
+            public void subscribe(ObservableEmitter<BitmapRegionDecoder> emitter) throws Exception {
+                Uri srcUri;
+                if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
+                    srcUri = Uri.parse(path);
+                } else {
+                    srcUri = Uri.fromFile(new File(path));
+                }
+                if (srcUri != null) {
+                    InputStream stream = null;
+                    InputStream stream1 = null;
+                    try {
+                        stream = getContext().getContentResolver().openInputStream(srcUri);
+                        //1.获取图片大小
+                        options = new BitmapFactory.Options();
+                        BitmapFactory.decodeStream(stream, null, options);
+                        options.inJustDecodeBounds = true;
+                        templateBitmapHeight = options.outHeight;
+                        templateBitmapWidth = options.outWidth;
+                        stream1 = getContext().getContentResolver().openInputStream(srcUri);
+                        mDecoder = BitmapRegionDecoder.newInstance(stream1, false);
+                        emitter.onNext(mDecoder);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<BitmapRegionDecoder>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(BitmapRegionDecoder o) {
+                canDraw = true;
+                invalidate();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
+    public final Observable<String> saveImage() {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                if (TextUtils.isEmpty(mPath)) {
+                    emitter.onNext("");
+                    return;
+                }
+                Uri srcUri;
+                if (PictureMimeType.isContent(mPath) || PictureMimeType.isHasHttp(mPath)) {
+                    srcUri = Uri.parse(mPath);
+                } else {
+                    srcUri = Uri.fromFile(new File(mPath));
+                }
+                try {
+                    InputStream stream = getContext().getContentResolver().openInputStream(srcUri);
+                    mDecoder = BitmapRegionDecoder.newInstance(stream, false);
+                    Bitmap bitmap = null;
+                    if (BOTTOM == scrollDirection) {
+                        if (mDecoder != null) {
+                            Rect rect = new Rect(0, 0, templateBitmapWidth, (int) (templateBitmapHeight - mMoveY));
+                            bitmap = mDecoder.decodeRegion(rect, null);
+                        }
+                    } else if (TOP == scrollDirection) {
+                        if (mDecoder != null) {
+                            Rect rect = new Rect(0, (int) Math.abs(mMoveY), templateBitmapWidth, (int) (templateBitmapHeight + mMoveY));
+                            bitmap = mDecoder.decodeRegion(rect, null);
+                        }
+                    } else if (RIGHT == scrollDirection) {
+                        if (mDecoder != null) {
+                            Rect rect = new Rect(0, 0, (int) (templateBitmapWidth - mMoveX), templateBitmapHeight);
+                            bitmap = mDecoder.decodeRegion(rect, null);
+                        }
+                    } else if (LEFT == scrollDirection) {
+                        if (mDecoder != null) {
+                            Rect rect = new Rect((int) Math.abs(mMoveX), 0, (int) (templateBitmapWidth + mMoveX), templateBitmapHeight);
+                            bitmap = mDecoder.decodeRegion(rect, null);
+                        }
+                    }
+                    emitter.onNext(FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + ""));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         if (canDraw) {
-            if (TOP == scrollDirection) {
-                //只能向上滑动
+            if (BOTTOM == scrollDirection) {
+                if (mMoveY < 0) {
+                    //这里限制了移动，bottom只能向下移动
+                    mMoveY = 0;
+                    mLastY = 0;
+                }
+
+                if (mMoveY >= templateBitmapHeight) {
+                    mMoveY = templateBitmapHeight;
+                }
+                int top = (int) (templateBitmapHeight - parentHeight - mMoveY);
+                int bottom = (int) (templateBitmapHeight - mMoveY);
+                if (bottom <= 0) {
+                    return;
+                }
+                mRect.set(0, top, templateBitmapWidth, bottom);
+            } else if (TOP == scrollDirection) {
                 if (mMoveY > 0) {
                     mMoveY = 0;
                     mLastY = 0;
                 }
-                if (mMoveY < -mBitmap.getHeight()) {
-                    mMoveY = -mBitmap.getHeight();
+                if (mMoveY < -templateBitmapHeight) {
+                    mMoveY = -templateBitmapHeight;
                 }
-                canvas.drawBitmap(mBitmap, 0, 0 + mMoveY, mPaint);
-            } else if (BOTTOM == scrollDirection) {
-                //只能向下滑动
-                int canvasHeight = getHeight();
-                int bitmapHeight = mBitmap.getHeight();
-                if (mMoveY < 0) {
-                    mMoveY = 0;
-                    mLastY = 0;
+                int top = (int) (0 - mMoveY);
+                int bottom = (int) (parentHeight - mMoveY);
+                if (bottom >= templateBitmapHeight + parentHeight) {
+                    return;
                 }
-                if (mMoveY > mBitmap.getHeight()) {
-                    mMoveY = mBitmap.getHeight();
-                }
-                canvas.drawBitmap(mBitmap, 0, -bitmapHeight + canvasHeight + mMoveY, mPaint);
+                mRect.set(0, top, parentWidth, bottom);
             } else if (LEFT == scrollDirection) {
-                //只能向左滑动
                 if (mMoveX > 0) {
                     mMoveX = 0;
                     mLastX = 0;
                 }
-                if (mMoveX < -mBitmap.getWidth()) {
-                    mMoveX = -mBitmap.getWidth();
+                if (mMoveX < -templateBitmapWidth) {
+                    mMoveX = -templateBitmapWidth;
                 }
-                float top = (getHeight() - mBitmap.getHeight()) / 2;//只为居中显示
-                canvas.drawBitmap(mBitmap, 0 + mMoveX, top, mPaint);
+                int left = (int) (0 - mMoveX);
+                int right = (int) (parentWidth - mMoveX);
+                if (right >= templateBitmapWidth + parentWidth) {
+                    return;
+                }
+                mRect.set(left, 0, right, templateBitmapHeight);
             } else if (RIGHT == scrollDirection) {
-                //只能向右滑动
-                float top = (getHeight() - mBitmap.getHeight()) / 2;
-                int canvasWidth = getWidth();
-                int bitmapWidth = mBitmap.getWidth();
                 if (mMoveX < 0) {
                     mMoveX = 0;
                     mLastX = 0;
                 }
-                if (mMoveX > mBitmap.getWidth()) {
-                    mMoveX = mBitmap.getWidth();
+                if (mMoveX > templateBitmapWidth) {
+                    mMoveX = templateBitmapWidth;
                 }
-                canvas.drawBitmap(mBitmap, -bitmapWidth + canvasWidth + mMoveX, top, mPaint);
+                int left = (int)(templateBitmapWidth-parentWidth-mMoveX);
+                int right = (int) (templateBitmapWidth - mMoveX);
+                if (right<=0){
+                    return;
+                }
+                mRect.set(left,0,right,templateBitmapHeight);
             }
-
+            Bitmap bm = mDecoder.decodeRegion(mRect, options);
+            //横坐标居中
+            if (TOP == scrollDirection || BOTTOM == scrollDirection) {
+                canvas.drawBitmap(bm, (parentWidth - templateBitmapWidth) / 2, 0, null);
+            } else if (RIGHT == scrollDirection || LEFT == scrollDirection) {
+                canvas.drawBitmap(bm, 0, (parentHeight - templateBitmapHeight) / 2, null);
+            }
+            if (!bm.isRecycled()) {
+                bm.recycle();
+            }
         }
-        super.onDraw(canvas);
-    }
 
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
-            case MotionEvent.ACTION_UP:
-                if (mBitmap != null) {
-                    if (TOP == scrollDirection) {
-                        if (mMoveY < -mBitmap.getHeight()) {
-                            mMoveY = -mBitmap.getHeight();
-                        }
-                        mLastY = mMoveY;
-                    } else if (BOTTOM == scrollDirection) {
-                        if (mMoveY > mBitmap.getHeight()) {
-                            mMoveY = mBitmap.getHeight();
-                        }
-                        mLastY = mMoveY;
-                    } else if (LEFT == scrollDirection) {
-                        if (mMoveX < -mBitmap.getWidth()) {
-                            mMoveX = -mBitmap.getWidth();
-                        }
-                        mLastX = mMoveX;
-                    } else if (RIGHT == scrollDirection) {
-                        if (mMoveX > mBitmap.getWidth()) {
-                            mMoveX = mBitmap.getWidth();
-                        }
-                        mLastX = mMoveX;
-                    }
-                }
-
-                break;
             case MotionEvent.ACTION_MOVE:
-                if (TOP == scrollDirection || BOTTOM == scrollDirection) {
-                    float moveOffset = mCurrentY - event.getY();
-                    if (moveOffset > 0) {
-                        mMoveY = mLastY - moveOffset;
-                    } else if (moveOffset < 0) {
-                        mMoveY = mLastY - moveOffset;
-                    }
-                } else if (LEFT == scrollDirection || RIGHT == scrollDirection) {
-                    float moveOffset = mCurrentX - event.getX();
-                    if (moveOffset > 0) {
-                        mMoveX = mLastX - moveOffset;
-                    } else if (moveOffset < 0) {
-                        mMoveX = mLastX - moveOffset;
-                    }
+                if (TOP == scrollDirection || BOTTOM == scrollDirection){
+                    float offsetY = mCurrentY - event.getY();
+                    mMoveY = mLastY - offsetY;
+                }else if (LEFT == scrollDirection || RIGHT == scrollDirection){
+                    float offsetX = mCurrentX - event.getX();
+                    mMoveX = mLastX - offsetX;
                 }
 
-                invalidate();
+                postInvalidate();
                 break;
             case MotionEvent.ACTION_DOWN:
                 mCurrentY = event.getY();
                 mCurrentX = event.getX();
                 break;
-
-            default:
+            case MotionEvent.ACTION_UP:
+                if (TOP == scrollDirection) {
+                    if (mMoveY < -templateBitmapHeight) {
+                        mMoveY = -templateBitmapHeight;
+                    }
+                    mLastY = mMoveY;
+                } else if (BOTTOM == scrollDirection) {
+                    if (mMoveY > templateBitmapHeight) {
+                        mMoveY = templateBitmapHeight;
+                    }
+                    mLastY = mMoveY;
+                } else if (LEFT == scrollDirection) {
+                    if (mMoveX < -templateBitmapWidth) {
+                        mMoveX = -templateBitmapWidth;
+                    }
+                    mLastX = mMoveX;
+                } else if (RIGHT == scrollDirection) {
+                    if (mMoveX > templateBitmapWidth) {
+                        mMoveX = templateBitmapWidth;
+                    }
+                    mLastX = mMoveX;
+                }
                 break;
-
         }
         return true;
     }
+
 }

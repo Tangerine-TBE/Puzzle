@@ -201,7 +201,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
                     .setImageEngine(GlideEngine.createGlideEngine())
                     .setCropEngine(new ImageCropEngine(sizeInfo.getRatioWidth(), sizeInfo.getRatioHeight()))
                     .isPreviewImage(true)
-                    .isDisplayCamera(false)
+                    .isDisplayCamera(true)
                     .setSelectionMode(SelectModeConfig.SINGLE)
                     .forResult(FILTER_CODE);
         }

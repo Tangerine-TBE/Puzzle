@@ -64,11 +64,11 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- ** DATE: 2022/10/13
- ** Author:tangerine
- ** Description:
+ * * DATE: 2022/10/13
+ * * Author:tangerine
+ * * Description:
  **/
-public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListener, PuzzleLpPopUp.OnPopUpDismiss, PuzzleLpColorPopUp.OnColorChangedListener{
+public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListener, PuzzleLpPopUp.OnPopUpDismiss, PuzzleLpColorPopUp.OnColorChangedListener {
     private final String[] titles = {"边框", "添加", "排序"};
     private final int[] titlesIcon = new int[]{R.mipmap.icon_lp_frame, R.mipmap.icon_add, R.mipmap.icon_sort};
     private RecyclerView mRvLP;
@@ -169,6 +169,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
             }
         });
     }
+
     private void shotScrollView(RecyclerView view) {
         Observable.create(new ObservableOnSubscribe<ArrayList<RecyclerView.ViewHolder>>() {
             @Override
@@ -184,19 +185,19 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                         adapter.onBindViewHolder(holder, i);
                         holder.itemView.measure(
                                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                                View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenHeight()/2, View.MeasureSpec.EXACTLY)
+                                View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenHeight() / 2, View.MeasureSpec.EXACTLY)
                         );
                         holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
-                                DimenUtil.getScreenHeight()/2);
-                        int padding =  paddingItemDecoration.getProcess();
-                        if (size > 1){
-                            if (i == 0){
-                                holder.itemView.setPadding(padding,padding,0,padding);
-                            }else{
-                                holder.itemView.setPadding(0,padding,padding,padding);
+                                DimenUtil.getScreenHeight() / 2);
+                        int padding = paddingItemDecoration.getProcess();
+                        if (size > 1) {
+                            if (i == 0) {
+                                holder.itemView.setPadding(padding, padding, 0, padding);
+                            } else {
+                                holder.itemView.setPadding(0, padding, padding, padding);
                             }
-                        }else{
-                            holder.itemView.setPadding(padding,padding,padding,padding);
+                        } else {
+                            holder.itemView.setPadding(padding, padding, padding, padding);
                         }
                         holder.itemView.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
                         arrayList.add(holder);
@@ -231,7 +232,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                     }
                     width += holder.itemView.getMeasuredWidth();
                 }
-                bigBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight()/2, Bitmap.Config.ARGB_8888);
+                bigBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight() / 2, Bitmap.Config.ARGB_8888);
                 Canvas bigCanvas = new Canvas(bigBitmap);
                 Drawable lBackground = view.getBackground();
                 if (lBackground instanceof ColorDrawable) {
@@ -239,7 +240,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                     int lColor = lColorDrawable.getColor();
                     bigCanvas.drawColor(lColor);
                 }
-                for (int i = 0 ; i < viewHolders.size();i ++){
+                for (int i = 0; i < viewHolders.size(); i++) {
                     Bitmap bitmap = bitmaCache.get(String.valueOf(i));
                     bigCanvas.drawBitmap(bitmap, iWidth, 0, paint);
                     iWidth += bitmap.getWidth();
@@ -271,8 +272,9 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
             }
         });
     }
+
     private void doOnBackGround() {
-         shotScrollView(mRvLP);
+        shotScrollView(mRvLP);
     }
 
     @Override
@@ -283,16 +285,12 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                 mPuzzleLpColor.show(mFlyTabLayout, false);
                 break;
             case 1:
-                if (bitmaps.size() < 10) {
-                    PictureSelector.create(this).openGallery(SelectMimeType.ofImage())
-                            .isDisplayCamera(true)
-                            .setMaxSelectNum(10 - bitmaps.size())
-                            .setSelectionMode(SelectModeConfig.MULTIPLE)
-                            .setImageEngine(GlideEngine.createGlideEngine())
-                            .forResult(FILTER_PUZZLE_LP_CODE);
-                } else {
-                    Toast.makeText(_mActivity, "不能在添加照片了", Toast.LENGTH_SHORT).show();
-                }
+                PictureSelector.create(this).openGallery(SelectMimeType.ofImage())
+                        .isDisplayCamera(true)
+                        .setMaxSelectNum(9)
+                        .setSelectionMode(SelectModeConfig.MULTIPLE)
+                        .setImageEngine(GlideEngine.createGlideEngine())
+                        .forResult(FILTER_PUZZLE_LP_CODE);
 
                 break;
             case 2:
@@ -372,11 +370,11 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         } else if (requestCode == FILTER_PUZZLE_LP_EDIT) {
             if (data != null) {
                 String filePath = data.getStringExtra("extra_output");
-                if (selectedPosition != -1){
-                    boolean isEdit = data.getBooleanExtra("image_is_edit",false);
-                    if (isEdit  ){
+                if (selectedPosition != -1) {
+                    boolean isEdit = data.getBooleanExtra("image_is_edit", false);
+                    if (isEdit) {
                         bitmaps.remove(selectedPosition);
-                        bitmaps.add(selectedPosition,filePath);
+                        bitmaps.add(selectedPosition, filePath);
                         hLongPicItemAdapter.notifyItemChanged(selectedPosition);
                     }
                 }
@@ -410,7 +408,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                 //裁顶
                 if (selectedPosition == 0) {
                     bitmapsInfo.add(bitmaps.get(selectedPosition));
-                    puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1,2);
+                    puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1, 2);
                     start(puzzleLpSplitFragment);
                 }
                 break;
@@ -419,16 +417,16 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                 if (selectedPosition + 1 < bitmaps.size()) {
                     bitmapsInfo.add(bitmaps.get(selectedPosition + 1));
                 }
-                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2,2);
+                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2, 2);
                 start(puzzleLpSplitFragment);
                 //裁底
                 break;
             case 2:
                 //编辑
                 Intent it = new Intent(getContext(), EditImageActivity.class);
-                it.putExtra(EditImageActivity.FILE_PATH,  bitmaps.get(selectedPosition));
+                it.putExtra(EditImageActivity.FILE_PATH, bitmaps.get(selectedPosition));
                 it.putExtra(EditImageActivity.EXTRA_OUTPUT, FileUtil.getAnPicPath(System.currentTimeMillis() + "_editor"));
-                startActivityForResult(it,FILTER_PUZZLE_LP_EDIT);
+                startActivityForResult(it, FILTER_PUZZLE_LP_EDIT);
                 break;
             case 3:
                 //替换

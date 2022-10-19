@@ -23,12 +23,12 @@
         <attr name="background_line_color" format="color" />
         <attr name="background_line_width" format="dimension" />
     </declare-styleable>
-    <declare-styleable name="PuzzleLpEditView">
-        <attr name="scroll_direction" format="enum">
-            <enum name="left" value="0"/>
-            <enum name="right" value="1"/>
-            <enum name="top" value="2"/>
-            <enum name="bottom" value="3"/>
-        </attr>
-    </declare-styleable>
+        <declare-styleable name="PuzzleLpEditView">
+            <attr name="scroll_direction" format="enum">
+                <enum name="left" value="0"/>
+                <enum name="right" value="1"/>
+                <enum name="top" value="2"/>
+                <enum name="bottom" value="3"/>
+            </attr>
+        </declare-styleable>
 </resources>

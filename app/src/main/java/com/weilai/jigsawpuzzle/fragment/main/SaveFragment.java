@@ -31,6 +31,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * * DATE: 2022/9/20
  * * Author:tangerine
@@ -51,29 +59,54 @@ public class SaveFragment extends BaseFragment {
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        super.onLazyInitView(savedInstanceState);
-        if (!TextUtils.isEmpty(path)) {
-            Uri srcUri;
-            if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
-                srcUri = Uri.parse(path);
-            } else {
-                srcUri = Uri.fromFile(new File(path));
-            }
-            if (srcUri != null) {
-                InputStream stream = null;
-                try {
-                    stream = _mActivity.getContentResolver().openInputStream(srcUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+        Observable.create(new ObservableOnSubscribe<Bitmap>() {
+            @Override
+            public void subscribe(ObservableEmitter<Bitmap> emitter) throws Exception {
+                if (!TextUtils.isEmpty(path)) {
+                    Uri srcUri;
+                    if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
+                        srcUri = Uri.parse(path);
+                    } else {
+                        srcUri = Uri.fromFile(new File(path));
+                    }
+                    if (srcUri != null) {
+                        InputStream stream = null;
+                        try {
+                            stream = _mActivity.getContentResolver().openInputStream(srcUri);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        emitter.onNext(bitmap);
+                    }
                 }
-                Bitmap bitmap = BitmapFactory.decodeStream(stream);
+
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<Bitmap>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                mDisposable.add(d);
+            }
+
+            @Override
+            public void onNext(Bitmap bitmap) {
                 if (bitmap != null) {
                     Toast.makeText(_mActivity, "图片已经保存到相册", Toast.LENGTH_SHORT).show();
                     textView.setText(String.format("图片尺寸:%d*%d", bitmap.getWidth(), bitmap.getHeight()));
                     imageView.setImage(ImageSource.bitmap(bitmap));
                 }
             }
-        }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
 
 
     }
@@ -103,7 +136,7 @@ public class SaveFragment extends BaseFragment {
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, UriUtil.path2Uri(path));
                 shareIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(shareIntent,"分享到..."));
+                startActivity(Intent.createChooser(shareIntent, "分享到..."));
             }
         });
         view.findViewById(R.id.visible);//是否显示详细信息

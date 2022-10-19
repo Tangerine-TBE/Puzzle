@@ -2,16 +2,19 @@ package com.weilai.jigsawpuzzle.fragment.puzzleLPic;
 
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemSortAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.util.EvenUtil;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.ItemDrag;
+
 import java.util.ArrayList;
 
 /**
@@ -39,7 +42,9 @@ public class PuzzleLPSortFragment extends BaseFragment {
     protected Object setLayout() {
         return R.layout.fragment_lp_sort;
     }
-    private ArrayList<String> bitmaps ;
+
+    private ArrayList<String> bitmaps;
+
     @Override
     protected void initView(View view) {
         bitmaps = getArguments().getStringArrayList("data");
@@ -69,7 +74,9 @@ public class PuzzleLPSortFragment extends BaseFragment {
                 pop();
             }
         });
-        view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
+        AppCompatTextView tvSave = view.findViewById(R.id.tv_save);
+        tvSave.setText("确定");
+        tvSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EvenUtil.post(new LpSortEvent(bitmaps));
