@@ -56,6 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/ll_great"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -75,6 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/not_better"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -94,6 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/fantastic"
                 android:gravity="center"
                 android:orientation="vertical">
 

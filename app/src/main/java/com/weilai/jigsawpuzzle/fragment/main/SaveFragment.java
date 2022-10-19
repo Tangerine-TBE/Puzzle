@@ -23,6 +23,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.util.AppStoreUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.UriUtil;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
@@ -134,6 +135,7 @@ public class SaveFragment extends BaseFragment {
             public void onClick(View v) {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, UriUtil.path2Uri(path));
                 shareIntent.setType("image/jpeg");
                 startActivity(Intent.createChooser(shareIntent, "分享到..."));
@@ -154,6 +156,23 @@ public class SaveFragment extends BaseFragment {
 
     @Override
     protected void initListener(View view) {
+        view.findViewById(R.id.ll_great).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(AppStoreUtil.getAppStoreIntent());
+            }
+        });
+        view.findViewById(R.id.not_better).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start(ClientReportFragment.getInstance());
+            }
+        });
+        view.findViewById(R.id.fantastic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
     }
 }

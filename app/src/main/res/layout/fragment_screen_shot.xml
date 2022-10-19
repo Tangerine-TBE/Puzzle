@@ -7,24 +7,28 @@
     <include
         android:id="@+id/layout_title"
         layout="@layout/layout_title_back"/>
+
     <androidx.appcompat.widget.AppCompatEditText
-        android:layout_width="match_parent"
-        android:hint="@string/please"
-        android:gravity="top"
-        android:textSize="16sp"
-        android:layout_below="@id/layout_title"
-        android:layout_margin="12dp"
-        android:padding="12dp"
         android:id="@+id/et_web"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/layout_title"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_button_template"
+        android:backgroundTint="@color/card_view_color"
+        android:gravity="top"
+        android:hint="@string/please"
+        android:padding="12dp"
+        android:textColorHighlight="@color/sel_text_main_color"
+        android:textColorHint="#C0C0C0"
         android:textCursorDrawable="@drawable/text_cursor_drawable"
         android:textSelectHandle="@drawable/text_cursor_drawable"
         android:textSelectHandleLeft="@drawable/text_cursor_drawable"
-        android:textColorHighlight="@color/sel_text_main_color"
         android:textSelectHandleRight="@drawable/text_cursor_drawable"
-        android:textColorHint="#C0C0C0"
-        android:background="@drawable/bg_button_template"
-        android:backgroundTint="@color/card_view_color"
-        android:layout_height="200dp"/>
+        android:textSize="16sp" />
     <androidx.recyclerview.widget.RecyclerView
         android:overScrollMode="never"
         android:scrollbars="none"

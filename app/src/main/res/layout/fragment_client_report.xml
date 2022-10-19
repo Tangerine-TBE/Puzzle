@@ -1,8 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_height="match_parent">
+    <include layout="@layout/layout_title_back"/>
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="请描述具体问题"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_report"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/layout_title"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_button_template"
+            android:backgroundTint="@color/card_view_color"
+            android:gravity="top"
+            android:hint="@string/report_tip"
+            android:padding="12dp"
+            android:textColorHighlight="@color/sel_text_main_color"
+            android:textColorHint="#C0C0C0"
+            android:textCursorDrawable="@drawable/text_cursor_drawable"
+            android:textSelectHandle="@drawable/text_cursor_drawable"
+            android:textSelectHandleLeft="@drawable/text_cursor_drawable"
+            android:textSelectHandleRight="@drawable/text_cursor_drawable"
+            android:textSize="16sp" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@string/info"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"/>
 
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_number"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_button_template"
+            android:backgroundTint="@color/card_view_color"
+            android:gravity="top"
+            android:inputType="textEmailAddress"
+            android:hint="留下联系方式,方便解决遇到的问题联系你~"
+            android:padding="12dp"
+            android:textColorHighlight="@color/sel_text_main_color"
+            android:textColorHint="#C0C0C0"
+            android:textCursorDrawable="@drawable/text_cursor_drawable"
+            android:textSelectHandle="@drawable/text_cursor_drawable"
+            android:textSelectHandleLeft="@drawable/text_cursor_drawable"
+            android:textSelectHandleRight="@drawable/text_cursor_drawable"
+            android:textSize="16sp" />
 
-
+    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_start"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_button_template"
+        android:text="保存"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 </androidx.appcompat.widget.LinearLayoutCompat>

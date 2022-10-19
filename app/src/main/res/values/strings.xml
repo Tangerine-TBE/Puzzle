@@ -41,5 +41,7 @@
     <string name="split_right">裁右</string>
     <string name="delete">删除</string>
     <string name="please">请输入网址...</string>
+    <string name="report_tip">请填写你想反馈的具体内容...</string>
     <string name="screen_shot">一键截图</string>
+    <string name="info">请填写具体信息</string>
 </resources>
