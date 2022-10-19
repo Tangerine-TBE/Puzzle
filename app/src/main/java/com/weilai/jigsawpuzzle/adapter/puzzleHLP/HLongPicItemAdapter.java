@@ -10,18 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -35,8 +31,8 @@ import java.util.List;
  ** Description:
  **/
 public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapter.ViewHolder>{
-    private Context mContext;
-    private List<String> bitmaps;
+    private final Context mContext;
+    private final List<String> bitmaps;
     private View mLastSelectedView;
     private int mLastSelectedPosition = -1;
     public HLongPicItemAdapter(Context context, List<String> bitmaps) {

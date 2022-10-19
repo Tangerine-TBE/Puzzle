@@ -16,6 +16,7 @@ import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.activity.portrait.PortraitBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzle.PuzzleBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzle9P.Puzzle9PBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleHLp.PuzzleHLPBaseActivity;
@@ -73,6 +74,9 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
         view.findViewById(R.id.tv_lines).setOnClickListener(this);
         view.findViewById(R.id.tv_lattice).setOnClickListener(this);
         view.findViewById(R.id.tv_screen_shot).setOnClickListener(this);
+        view.findViewById(R.id.iv_ai).setOnClickListener(this);
+        view.findViewById(R.id.iv_comis).setOnClickListener(this);
+        view.findViewById(R.id.iv_toning).setOnClickListener(this);
 
 
     }
@@ -132,6 +136,12 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                     .forResult(FILTER_PUZZLE_9P_CODE);
         } else if (view.getId() == R.id.tv_screen_shot) {
             startActivity(new Intent(getActivity(), PuzzleSShotBaseActivity.class));
+        }else if (view .getId() == R.id.iv_ai){
+            startActivity(new Intent(getActivity(), PortraitBaseActivity.class));
+        }else if (view.getId() == R.id.iv_comis){
+
+        }else if (view.getId() == R.id.iv_toning){
+
         }
     }
 

@@ -44,8 +44,8 @@
         android:paddingTop="4dp"
         android:paddingEnd="16dp"
         android:paddingBottom="4dp"
-        android:text="保存"
+        android:text="@string/save"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:visibility="invisible" />
 </RelativeLayout>

@@ -38,6 +38,7 @@
         <activity android:name=".activity.puzzleHLp.PuzzleHLPBaseActivity" android:exported="true"/>
         <activity android:name=".activity.puzzleLine.PuzzleLineBaseActivity" android:exported="true"/>
         <activity android:name=".activity.puzzleSS.PuzzleSShotBaseActivity" android:exported="true"/>
+        <activity android:name=".activity.portrait.PortraitBaseActivity" android:exported="true"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.weilai.jigsawpuzzle.fileprovider"

@@ -61,18 +61,16 @@ public class MainBaseActivity extends BaseSimpleActivity {
         mTabLayout.setupWithViewPager(mViewPager);
         initTabLayout();
         /*申请读写权限*/
-        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
-        if (EasyPermissions.hasPermissions(this,permissions)){
-
-        }else {
-            EasyPermissions.requestPermissions(this,"申请读写权限",0,permissions);
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        if (!EasyPermissions.hasPermissions(this, permissions)) {
+            EasyPermissions.requestPermissions(this, "申请读写权限", 0, permissions);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     /**
