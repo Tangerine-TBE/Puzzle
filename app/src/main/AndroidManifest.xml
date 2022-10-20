@@ -30,15 +30,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.template.TemplateBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.puzzle.PuzzleBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.puzzleQr.PuzzleQrBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.puzzleLP.PuzzleLPBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.puzzle9P.Puzzle9PBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.puzzleHLp.PuzzleHLPBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.puzzleLine.PuzzleLineBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.puzzleSS.PuzzleSShotBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.portrait.PortraitBaseActivity" android:exported="true"/>
+        <activity android:name=".activity.template.TemplateBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.puzzle.PuzzleBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.puzzleQr.PuzzleQrBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.puzzleLP.PuzzleLPBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.puzzle9P.Puzzle9PBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.puzzleHLp.PuzzleHLPBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.puzzleLine.PuzzleLineBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.puzzleSS.PuzzleSShotBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.portrait.PortraitBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.special.SpecialBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.weilai.jigsawpuzzle.fileprovider"

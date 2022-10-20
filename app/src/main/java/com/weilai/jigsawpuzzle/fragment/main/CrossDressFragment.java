@@ -24,6 +24,7 @@ import com.weilai.jigsawpuzzle.activity.puzzleLP.PuzzleLPBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleLine.PuzzleLineBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleSS.PuzzleSShotBaseActivity;
+import com.weilai.jigsawpuzzle.activity.special.SpecialBaseActivity;
 import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.main.ImageBannerAdapter;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
@@ -143,7 +144,10 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
             intent.setClass(getContext(),PortraitBaseActivity.class);
             startActivity(intent);
         }else if (view.getId() == R.id.iv_comis){
-
+            Intent intent = new Intent();
+            intent.putExtra("type","comic");
+            intent.setClass(getContext(), SpecialBaseActivity.class);
+            startActivity(intent);
         }else if (view.getId() == R.id.iv_toning){
 
         }

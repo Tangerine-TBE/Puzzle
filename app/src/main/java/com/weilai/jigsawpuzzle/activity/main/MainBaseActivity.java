@@ -73,6 +73,12 @@ public class MainBaseActivity extends BaseSimpleActivity {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
     /**
      * * DATE: 2022/9/14
      * * Author:tangerine
