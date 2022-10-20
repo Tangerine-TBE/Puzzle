@@ -825,7 +825,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
                                     if (isTrue) {
                                         return EffectUtils.portraitCutout(base64);
                                     } else {
-                                        return Observer::onComplete;
+                                        throw new RuntimeException("请求裁剪图出现错误!");
                                     }
                                 }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<String>() {
                                     @Override
