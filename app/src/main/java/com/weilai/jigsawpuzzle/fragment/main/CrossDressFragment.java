@@ -135,9 +135,13 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                     .setCropEngine(new ImageCropEngine(1,1))
                     .forResult(FILTER_PUZZLE_9P_CODE);
         } else if (view.getId() == R.id.tv_screen_shot) {
+
             startActivity(new Intent(getActivity(), PuzzleSShotBaseActivity.class));
         }else if (view .getId() == R.id.iv_ai){
-            startActivity(new Intent(getActivity(), PortraitBaseActivity.class));
+            Intent intent = new Intent();
+            intent.putExtra("type","intelligent");
+            intent.setClass(getContext(),PortraitBaseActivity.class);
+            startActivity(intent);
         }else if (view.getId() == R.id.iv_comis){
 
         }else if (view.getId() == R.id.iv_toning){

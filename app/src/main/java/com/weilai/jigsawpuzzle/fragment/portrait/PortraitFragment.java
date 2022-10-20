@@ -38,6 +38,7 @@ import com.weilai.jigsawpuzzle.adapter.portrait.PortraitTextColorAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.BackGroundBean;
 import com.weilai.jigsawpuzzle.bean.BackGroundGroupBean;
+import com.weilai.jigsawpuzzle.dialog.portrait.PortraitNoSaveDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.util.Base64Utils;
 import com.weilai.jigsawpuzzle.util.BitmapUtils;
@@ -126,18 +127,26 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
 
     }
 
-    public static PortraitFragment getInstance(String path) {
+    public static PortraitFragment getInstance(String path, String type) {
         Bundle bundle = new Bundle();
         bundle.putString("data", path);
+        bundle.putString("type", type);
         PortraitFragment portraitFragment = new PortraitFragment();
         portraitFragment.setArguments(bundle);
         return portraitFragment;
     }
 
+    private String type;
+
     @Override
     protected void initView(View view) {
+        type = getArguments().getString("type");
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
-        tvTitle.setText("智能抠图");
+        if ("portrait".equals(type)) {
+            tvTitle.setText("人像抠图");
+        } else {
+            tvTitle.setText("智能抠图");
+        }
         stickerView = view.findViewById(R.id.stickerView);
         recyclerView = view.findViewById(R.id.recycler);
         ivBig = view.findViewById(R.id.image_big);
@@ -816,7 +825,19 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
                                             if (!bitmap.isRecycled()) {
                                                 bitmap.recycle();
                                             }
-                                            return EffectUtils.analyzeTheFace(baseValue);
+                                            if ("portrait".equals(type)) {
+                                                return EffectUtils.analyzeTheFace(baseValue);
+                                            } else {
+                                                return Observable.create(new ObservableOnSubscribe<Object[]>() {
+                                                    @Override
+                                                    public void subscribe(ObservableEmitter<Object[]> emitter) throws Exception {
+                                                        Object[] objects = new Object[2];
+                                                        objects[0] = true;
+                                                        objects[1] = baseValue;
+                                                        emitter.onNext(objects);
+                                                    }
+                                                });
+                                            }
                                         }
                                 )
                                 .flatMap((Function<Object[], ObservableSource<String>>) o -> {
@@ -900,5 +921,11 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onBackPressedSupport() {
+        new PortraitNoSaveDialog(_mActivity).setConfimText("再想想").setCancelText("退出").setTitleText("抠图尚未保存，是否确定推出编辑").show();
+        return true;
     }
 }
