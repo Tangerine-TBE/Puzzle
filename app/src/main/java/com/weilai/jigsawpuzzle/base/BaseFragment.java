@@ -68,6 +68,24 @@ public abstract class BaseFragment extends SupportFragment {
         return (SupportActivity) _mActivity;
     }
 
+    public void visible(View... views) {
+        for (View view : views) {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void gone(View... views) {
+        for (View view : views) {
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    public void invisible(View... views) {
+        for (View view : views) {
+            view.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Override
     public void onDestroy() {
         if (mDisposable != null) {
@@ -79,6 +97,13 @@ public abstract class BaseFragment extends SupportFragment {
                         }
                     }
                 }
+            }
+        }
+        if (mProcessDialog != null) {
+            if (mProcessDialog.isShowing()) {
+                mProcessDialog.dismiss();
+                mProcessDialog.cancel();
+                mProcessDialog = null;
             }
         }
         EvenUtil.unregister(this);

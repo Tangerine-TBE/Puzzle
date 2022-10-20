@@ -18,4 +18,12 @@ public class DimenUtil {
         final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         return displayMetrics.heightPixels;
     }
+    public static float dipTopx(float dpValue) {
+        final float scale = Config.getApplicationContext().getResources().getDisplayMetrics().density;
+        return (dpValue * scale + 0.5f);
+    }
+    public static int dipTopxAsInt(float dpValue) {
+        final float scale = Config.getApplicationContext().getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
 }

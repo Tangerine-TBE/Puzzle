@@ -1,40 +1,121 @@
 package com.weilai.jigsawpuzzle.fragment.portrait;
 
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSONObject;
+import com.blankj.utilcode.util.PermissionUtils;
+import com.luck.picture.lib.basic.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.SelectMimeType;
+import com.luck.picture.lib.config.SelectModeConfig;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.adapter.portrait.PortraitBackgroundAdapter;
+import com.weilai.jigsawpuzzle.adapter.portrait.PortraitBackgroundGroupAdapter;
+import com.weilai.jigsawpuzzle.adapter.portrait.PortraitTextColorAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.BackGroundBean;
+import com.weilai.jigsawpuzzle.bean.BackGroundGroupBean;
+import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
+import com.weilai.jigsawpuzzle.util.Base64Utils;
+import com.weilai.jigsawpuzzle.util.BitmapUtils;
+import com.weilai.jigsawpuzzle.util.EffectUtils;
+import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.weilai.jigsawpuzzle.util.GlideEngine;
+import com.weilai.jigsawpuzzle.util.GsonUtil;
+import com.xiaopo.flying.sticker.BitmapStickerIcon;
+import com.xiaopo.flying.sticker.DeleteIconEvent;
+import com.xiaopo.flying.sticker.DrawableSticker;
+import com.xiaopo.flying.sticker.RotateIconEvent;
+import com.xiaopo.flying.sticker.SpecialZoomIconEvent;
+import com.xiaopo.flying.sticker.Sticker;
+import com.xiaopo.flying.sticker.StickerView;
+import com.xiaopo.flying.sticker.TextSticker;
+import com.xinlan.imageeditlibrary.editimage.EditTextDialog;
+import com.xinlan.imageeditlibrary.editimage.utils.AssetsUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * * DATE: 2022/10/19
  * * Author:tangerine
  * * Description:
  **/
-public class PortraitFragment extends BaseFragment {
-    private ArrayList<BackGroundBean> groupList;
-    private ArrayList<BackGroundBean> naturalList;
-    private ArrayList<BackGroundBean> carList;
-    private ArrayList<BackGroundBean> beautyList;
-    private ArrayList<BackGroundBean> starList;
-    private ArrayList<BackGroundBean> gameList;
-    private ArrayList<BackGroundBean> sportList;
-    private ArrayList<BackGroundBean> animalList;
-    private ArrayList<BackGroundBean> moveList;
-    private ArrayList<BackGroundBean> artisticList;
-    private ArrayList<BackGroundBean> animeList;
-    private ArrayList<BackGroundBean> textList;
-    private ArrayList<BackGroundBean> couplesList;
-    private ArrayList<BackGroundBean> contractedList;
-    private ArrayList<Integer> colorList;
+public class PortraitFragment extends BaseFragment implements StickerView.OnStickerOperationListener {
+    private static final int BG_CODE = 1;
+    private static final int CUT_OUT_CODE = 2;
+    private List<BackGroundGroupBean> groupList;
+    private List<BackGroundBean> naturalList;
+    private List<BackGroundBean> carList;
+    private List<BackGroundBean> beautyList;
+    private List<BackGroundBean> starList;
+    private List<BackGroundBean> gameList;
+    private List<BackGroundBean> sportList;
+    private List<BackGroundBean> animalList;
+    private List<BackGroundBean> moveList;
+    private List<BackGroundBean> artisticList;
+    private List<BackGroundBean> animeList;
+    private List<BackGroundBean> textList;
+    private List<BackGroundBean> couplesList;
+    private List<BackGroundBean> contractedList;
+    private List<Integer> colorList;
+
+    private PortraitBackgroundGroupAdapter groupAdapter;
+    private PortraitTextColorAdapter textColorAdapter;
+    private PortraitBackgroundAdapter backgroundAdapter;
+
+
+    private boolean isBack;
+    private StickerView stickerView;
+    private RecyclerView recyclerView;
+    private ImageView ivBig;
+    private ImageView ivSmall;
+    private TextView tvName;
+    private ImageView srcImg;
+    private RelativeLayout centerView;
+    private Sticker selectSticker = null;
+    private LinearLayout frame;
+    private RelativeLayout bgRootView;
+    private ImageView arrow_background;
+    private RecyclerView colorRecycle;
+    private ImageView arrow_text;
+    private boolean canSetBg = true;
+
 
     @Override
     protected Object setLayout() {
@@ -57,30 +138,64 @@ public class PortraitFragment extends BaseFragment {
     protected void initView(View view) {
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
         tvTitle.setText("智能抠图");
+        stickerView = view.findViewById(R.id.stickerView);
+        recyclerView = view.findViewById(R.id.recycler);
+        ivBig = view.findViewById(R.id.image_big);
+        ivSmall = view.findViewById(R.id.image_small);
+        tvName = view.findViewById(R.id.name);
+        srcImg = view.findViewById(R.id.srcImg);
+        centerView = view.findViewById(R.id.centerView);
+        frame = view.findViewById(R.id.frame);
+        bgRootView = view.findViewById(R.id.bgRootView);
+        arrow_background = view.findViewById(R.id.arrow_background);
+        colorRecycle = view.findViewById(R.id.colorRecycle);
+        arrow_text = view.findViewById(R.id.arrow_text);
+
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
 
         initData();
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(groupAdapter);
+        colorRecycle.setLayoutManager(new LinearLayoutManager(_mActivity, LinearLayoutManager.HORIZONTAL, false));
+        colorRecycle.setAdapter(textColorAdapter);
+        BitmapStickerIcon bitmapStickerIconDelete = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(), com.xinlan.imageeditlibrary.R.drawable.icon_sticket_delete), BitmapStickerIcon.LEFT_TOP);
+        BitmapStickerIcon bitmapStickerIconRotate = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(), com.xinlan.imageeditlibrary.R.drawable.icon_sticket_move), BitmapStickerIcon.RIGHT_BOTOM);
+        BitmapStickerIcon bitmapStickerIconZoom = new BitmapStickerIcon(ContextCompat.getDrawable(getActivity(), com.xinlan.imageeditlibrary.R.drawable.icon_sticket_zoom), BitmapStickerIcon.LEFT_BOTTOM);
+        bitmapStickerIconRotate.setIconEvent(new RotateIconEvent());
+        bitmapStickerIconDelete.setIconEvent(new DeleteIconEvent());
+        bitmapStickerIconZoom.setIconEvent(new SpecialZoomIconEvent());
+        stickerView.setIcons(Arrays.asList(bitmapStickerIconDelete, bitmapStickerIconZoom, bitmapStickerIconRotate));
+        stickerView.setLocked(false);
+        stickerView.setConstrained(true);
+        stickerView.setOnStickerOperationListener(this);
+        PictureSelector.create(this)
+                .openGallery(SelectMimeType.ofImage())
+                .setImageEngine(GlideEngine.createGlideEngine())
+                .isPreviewImage(false)
+                .isDisplayCamera(false)
+                .setSelectionMode(SelectModeConfig.SINGLE)
+                .forResult(CUT_OUT_CODE);
     }
 
     private void initData() {
-        groupList = (ArrayList<BackGroundBean>) Arrays.asList(new BackGroundBean("album", "相册", "beijing/group/album.png", R.drawable.ic_avatar, false),
-                new BackGroundBean("natural", "自然", "beijing/group/natural.png", R.drawable.ic_avatar, false),
-                new BackGroundBean("car", "汽车", "beijing/group/car.png", R.drawable.ic_avatar, false),
-                new BackGroundBean("game", "游戏", "beijing/group/game.png", R.drawable.ic_avatar, false),
-                new BackGroundBean("beauty", "美女", "beijing/group/beauty.png", R.drawable.ic_avatar, false),
-                new BackGroundBean("star", "明星", "beijing/group/star.png", R.drawable.ic_avatar, true),
-                new BackGroundBean("sports", "体育", "beijing/group/sport.png", R.drawable.ic_avatar, true),
-                new BackGroundBean("animal", "动物萌宠", "beijing/group/anima.png", R.drawable.ic_avatar, true),
-                new BackGroundBean("mov", "影视", "beijing/group/mov.png", R.drawable.ic_avatar, true),
-                new BackGroundBean("contracted", "简约抽象", "beijing/group/contracted.png", R.drawable.ic_avatar, true),
-                new BackGroundBean("anime", "动漫", "beijing/group/anime.png", R.drawable.ic_avatar, true),
-                new BackGroundBean("text", "文字", "beijing/group/text.png", R.drawable.ic_avatar, true),
-                new BackGroundBean("couples", "情侣", "beijing/group/couples.png", R.drawable.ic_avatar, true),
-                new BackGroundBean("artistic", "意境", "beijing/group/artistic.png", R.drawable.ic_avatar, true));
-        naturalList = (ArrayList<BackGroundBean>) Arrays.asList(
+        groupList = Arrays.asList(new BackGroundGroupBean("album", "相册", "beijing/group/album.png", R.drawable.ic_avatar, false),
+                new BackGroundGroupBean("natural", "自然", "beijing/group/natural.png", R.drawable.ic_avatar, false),
+                new BackGroundGroupBean("car", "汽车", "beijing/group/car.png", R.drawable.ic_avatar, false),
+                new BackGroundGroupBean("game", "游戏", "beijing/group/game.png", R.drawable.ic_avatar, false),
+                new BackGroundGroupBean("beauty", "美女", "beijing/group/beauty.png", R.drawable.ic_avatar, false),
+                new BackGroundGroupBean("star", "明星", "beijing/group/star.png", R.drawable.ic_avatar, true),
+                new BackGroundGroupBean("sports", "体育", "beijing/group/sport.png", R.drawable.ic_avatar, true),
+                new BackGroundGroupBean("animal", "动物萌宠", "beijing/group/anima.png", R.drawable.ic_avatar, true),
+                new BackGroundGroupBean("mov", "影视", "beijing/group/mov.png", R.drawable.ic_avatar, true),
+                new BackGroundGroupBean("contracted", "简约抽象", "beijing/group/contracted.png", R.drawable.ic_avatar, true),
+                new BackGroundGroupBean("anime", "动漫", "beijing/group/anime.png", R.drawable.ic_avatar, true),
+                new BackGroundGroupBean("text", "文字", "beijing/group/text.png", R.drawable.ic_avatar, true),
+                new BackGroundGroupBean("couples", "情侣", "beijing/group/couples.png", R.drawable.ic_avatar, true),
+                new BackGroundGroupBean("artistic", "意境", "beijing/group/artistic.png", R.drawable.ic_avatar, true));
+        naturalList = Arrays.asList(
                 new BackGroundBean("natural", "beijing/natural_small/natural_1.jpg", "beijing/natural/natural_1.jpg", false),
                 new BackGroundBean("natural", "beijing/natural_small/natural_2.jpg", "beijing/natural/natural_2.jpeg", false),
                 new BackGroundBean("natural", "beijing/natural_small/natural_3.jpg", "beijing/natural/natural_3.jpg", false),
@@ -101,7 +216,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("natural", "beijing/natural_small/natural_18.jpg", "beijing/natural/natural_18.jpg", false),
                 new BackGroundBean("natural", "beijing/natural_small/natural_19.jpg", "beijing/natural/natural_19.jpg", false),
                 new BackGroundBean("natural", "beijing/natural_small/natural_20.jpg", "beijing/natural/natural_20.jpg", false));
-        carList = (ArrayList<BackGroundBean>) Arrays.asList(
+        carList = Arrays.asList(
                 new BackGroundBean("car", "beijing/car_small/car_1.jpg", "beijing/car/car_1.jpg", false),
                 new BackGroundBean("car", "beijing/car_small/car_2.jpg", "beijing/car/car_2.jpg", false),
                 new BackGroundBean("car", "beijing/car_small/car_3.jpg", "beijing/car/car_3.jpg", false),
@@ -128,7 +243,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("car", "beijing/car_small/car_24.jpg", "beijing/car/car_24.jpg", false),
                 new BackGroundBean("car", "beijing/car_small/car_25.jpg", "beijing/car/car_25.jpg", false)
         );
-        beautyList = (ArrayList<BackGroundBean>) Arrays.asList(
+        beautyList = Arrays.asList(
                 new BackGroundBean("beauty", "beijing/beauty_small/beauty_1.jpg", "beijing/beauty/beauty_1.jpeg", false),
                 new BackGroundBean("beauty", "beijing/beauty_small/beauty_2.jpg", "beijing/beauty/beauty_2.jpg", false),
                 new BackGroundBean("beauty", "beijing/beauty_small/beauty_3.jpg", "beijing/beauty/beauty_3.jpeg", false),
@@ -150,7 +265,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("beauty", "beijing/beauty_small/beauty_19.jpg", "beijing/beauty/beauty_19.jpeg", false),
                 new BackGroundBean("beauty", "beijing/beauty_small/beauty_20.jpg", "beijing/beauty/beauty_20.jpeg", false)
         );
-        starList = (ArrayList<BackGroundBean>) Arrays.asList(
+        starList = Arrays.asList(
                 new BackGroundBean("star", "beijing/star_small/star_1.jpg", "beijing/star/star_1.jpg", true),
                 new BackGroundBean("star", "beijing/star_small/star_2.png", "beijing/star/star_2.png", true),
                 new BackGroundBean("star", "beijing/star_small/star_3.jpg", "beijing/star/star_3.jpg", true),
@@ -178,7 +293,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("star", "beijing/star_small/star_25.jpg", "beijing/star/star_25.jpg", true)
 
         );
-        sportList = (ArrayList<BackGroundBean>) Arrays.asList(
+        sportList = Arrays.asList(
                 new BackGroundBean("sports", "beijing/sports_small/sports_1.jpg", "beijing/sports/sports_1.jpeg", true),
                 new BackGroundBean("sports", "beijing/sports_small/sports_2.jpg", "beijing/sports/sports_2.jpg", true),
                 new BackGroundBean("sports", "beijing/sports_small/sports_3.jpg", "beijing/sports/sports_3.jpeg", true),
@@ -205,7 +320,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("sports", "beijing/sports_small/sports_24.jpg", "beijing/sports/sports_24.jpg", true),
                 new BackGroundBean("sports", "beijing/sports_small/sports_25.jpg", "beijing/sports/sports_25.jpg", true)
         );
-        gameList = (ArrayList<BackGroundBean>) Arrays.asList(
+        gameList = Arrays.asList(
                 new BackGroundBean("game", "beijing/game_small/game_1.jpg", "beijing/game/game_1.jpg", false),
                 new BackGroundBean("game", "beijing/game_small/game_2.jpg", "beijing/game/game_2.jpeg", false),
                 new BackGroundBean("game", "beijing/game_small/game_3.jpg", "beijing/game/game_3.jpeg", false),
@@ -219,7 +334,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("game", "beijing/game_small/game_11.jpg", "beijing/game/game_11.jpg", false)
 
         );
-        animalList = (ArrayList<BackGroundBean>) Arrays.asList(
+        animalList = Arrays.asList(
                 new BackGroundBean("animal", "beijing/animal_small/animal_1.jpg", "beijing/animal/animal_1.jpg", true),
                 new BackGroundBean("animal", "beijing/animal_small/animal_2.jpg", "beijing/animal/animal_2.jpg", true),
                 new BackGroundBean("animal", "beijing/animal_small/animal_3.jpg", "beijing/animal/animal_3.jpg", true),
@@ -240,7 +355,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("animal", "beijing/animal_small/animal_18.jpg", "beijing/animal/animal_18.jpg", true),
                 new BackGroundBean("animal", "beijing/animal_small/animal_19.jpg", "beijing/animal/animal_19.jpg", true)
         );
-        moveList = (ArrayList<BackGroundBean>) Arrays.asList(
+        moveList = Arrays.asList(
                 new BackGroundBean("mov", "beijing/mov_small/mov_1.jpg", "beijing/mov/mov_1.jpg", true),
                 new BackGroundBean("mov", "beijing/mov_small/mov_2.jpg", "beijing/mov/mov_2.jpg", true),
                 new BackGroundBean("mov", "beijing/mov_small/mov_3.jpg", "beijing/mov/mov_3.jpg", true),
@@ -265,7 +380,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("mov", "beijing/mov_small/mov_22.png", "beijing/mov/mov_22.png", true),
                 new BackGroundBean("mov", "beijing/mov_small/mov_23.jpg", "beijing/mov/mov_23.jpg", true)
         );
-        artisticList = (ArrayList<BackGroundBean>) Arrays.asList(
+        artisticList = Arrays.asList(
                 new BackGroundBean("artistic", "beijing/artistic_small/artistic_1.jpg", "beijing/artistic/artistic_1.jpg", true),
                 new BackGroundBean("artistic", "beijing/artistic_small/artistic_2.jpg", "beijing/artistic/artistic_2.jpg", true),
                 new BackGroundBean("artistic", "beijing/artistic_small/artistic_3.jpg", "beijing/artistic/artistic_3.jpg", true),
@@ -284,7 +399,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("artistic", "beijing/artistic_small/artistic_16.jpg", "beijing/artistic/artistic_16.jpg", true),
                 new BackGroundBean("artistic", "beijing/artistic_small/artistic_17.jpg", "beijing/artistic/artistic_17.jpg", true)
         );
-        animeList = (ArrayList<BackGroundBean>) Arrays.asList(
+        animeList = Arrays.asList(
                 new BackGroundBean("anime", "beijing/anime_small/anime_1.jpg", "beijing/anime/anime_1.jpeg", true),
                 new BackGroundBean("anime", "beijing/anime_small/anime_2.jpg", "beijing/anime/anime_2.jpg", true),
                 new BackGroundBean("anime", "beijing/anime_small/anime_3.jpg", "beijing/anime/anime_3.jpg", true),
@@ -313,7 +428,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("anime", "beijing/anime_small/anime_26.jpg", "beijing/anime/anime_26.jpg", true),
                 new BackGroundBean("anime", "beijing/anime_small/anime_27.jpg", "beijing/anime/anime_27.jpeg", true)
         );
-        textList = (ArrayList<BackGroundBean>) Arrays.asList(
+        textList = Arrays.asList(
                 new BackGroundBean("text", "beijing/text_small/text_1.jpg", "beijing/text/text_1.jpg", true),
                 new BackGroundBean("text", "beijing/text_small/text_2.jpg", "beijing/text/text_2.jpg", true),
                 new BackGroundBean("text", "beijing/text_small/text_3.jpg", "beijing/text/text_3.jpg", true),
@@ -341,7 +456,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("text", "beijing/text_small/text_25.jpg", "beijing/text/text_25.jpeg", true),
                 new BackGroundBean("text", "beijing/text_small/text_26.jpg", "beijing/text/text_26.jpg", true)
         );
-        couplesList = (ArrayList<BackGroundBean>) Arrays.asList(
+        couplesList = Arrays.asList(
                 new BackGroundBean("couples", "beijing/couples_small/couples_1.jpg", "beijing/couples/couples_1.jpg", true),
                 new BackGroundBean("couples", "beijing/couples_small/couples_2.jpg", "beijing/couples/couples_2.jpg", true),
                 new BackGroundBean("couples", "beijing/couples_small/couples_3.jpg", "beijing/couples/couples_3.jpg", true),
@@ -364,7 +479,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("couples", "beijing/couples_small/couples_20.jpg", "beijing/couples/couples_20.jpg", true),
                 new BackGroundBean("couples", "beijing/couples_small/couples_21.jpg", "beijing/couples/couples_21.jpg", true)
         );
-        contractedList = (ArrayList<BackGroundBean>) Arrays.asList(
+        contractedList = Arrays.asList(
                 new BackGroundBean("contracted", "beijing/contracted_small/contracted_1.jpg", "beijing/contracted/contracted_1.jpeg", true),
                 new BackGroundBean("contracted", "beijing/contracted_small/contracted_2.jpg", "beijing/contracted/contracted_2.jpeg", true),
                 new BackGroundBean("contracted", "beijing/contracted_small/contracted_3.jpg", "beijing/contracted/contracted_3.jpeg", true),
@@ -381,7 +496,7 @@ public class PortraitFragment extends BaseFragment {
                 new BackGroundBean("contracted", "beijing/contracted_small/contracted_14.jpg", "beijing/contracted/contracted_14.jpeg", true),
                 new BackGroundBean("contracted", "beijing/contracted_small/contracted_15.jpg", "beijing/contracted/contracted_15.jpeg", true)
         );
-        colorList = (ArrayList<Integer>) Arrays.asList(Color.parseColor("#ff0000"),
+        colorList = Arrays.asList(Color.parseColor("#ff0000"),
                 Color.parseColor("#ff4000"),
                 Color.parseColor("#ff8000"),
                 Color.parseColor("#ffbf00"),
@@ -405,10 +520,113 @@ public class PortraitFragment extends BaseFragment {
                 Color.parseColor("#ff00bf"),
                 Color.parseColor("#ff0080"),
                 Color.parseColor("#ff0040"));
+        groupAdapter = new PortraitBackgroundGroupAdapter(groupList, new PortraitBackgroundGroupAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                switch (position) {
+                    case 0:
+                        PictureSelector.create(PortraitFragment.this)
+                                .openGallery(SelectMimeType.ofImage())
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .isPreviewImage(true)
+                                .isDisplayCamera(false)
+                                .setSelectionMode(SelectModeConfig.SINGLE)
+                                .forResult(BG_CODE);
+                        break;
+                    case 1:
+                        setList(naturalList);
+                        break;
+                    case 2:
+                        setList(carList);
+                        break;
+                    case 3:
+                        setList(gameList)
+                        ;
+                        break;
+                    case 4:
+                        setList(beautyList)
+                        ;
+                        break;
+                    case 5:
+                        setList(starList)
+                        ;
+                        break;
+                    case 6:
+                        setList(sportList)
+                        ;
+                        break;
+                    case 7:
+                        setList(animalList)
+                        ;
+                        break;
+                    case 8:
+                        setList(moveList)
+                        ;
+                        break;
+                    case 9:
+                        setList(contractedList)
+                        ;
+                        break;
+                    case 10:
+                        setList(animeList)
+                        ;
+                        break;
+                    case 11:
+                        setList(textList)
+                        ;
+                        break;
+                    case 12:
+                        setList(couplesList)
+                        ;
+                        break;
+                    case 13:
+                        setList(artisticList)
+                        ;
+                        break;
+                    default:
+                        break;
 
-
+                }
+            }
+        });
+        backgroundAdapter = new PortraitBackgroundAdapter(new PortraitBackgroundAdapter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(BackGroundBean backGroundBean) {
+                Bitmap bitmap = adjust(AssetsUtil.getAssertFile(_mActivity, backGroundBean.getImgSrc()));
+                if (bitmap == null) {
+                    Toast.makeText(_mActivity, "出错了,请重试", Toast.LENGTH_SHORT).show();
+                }
+                srcImg.setImageBitmap(bitmap);
+            }
+        });
+        textColorAdapter = new PortraitTextColorAdapter(colorList, new PortraitTextColorAdapter.OnItemClickedListener() {
+            @Override
+            public void onItemClicked(int position) {
+                if (selectSticker != null && selectSticker instanceof TextSticker) {
+                    ((TextSticker) selectSticker).setTextColor(colorList.get(position));
+                    stickerView.invalidate();
+                }
+            }
+        });
     }
 
+    private Bitmap adjust(Bitmap bitmap) {
+        float bitW = bitmap.getWidth();
+        float bitH = bitmap.getHeight();
+        float cenW = centerView.getWidth();
+        float cenH = centerView.getHeight();
+        float scale = bitW > bitH ? cenW / bitW : cenH / bitH;
+        return BitmapUtils.bitMapScale(bitmap, scale);
+    }
+
+    private void setList(List<BackGroundBean> list) {
+        isBack = true;
+        backgroundAdapter.setList(list);
+        recyclerView.setAdapter(backgroundAdapter);
+        ivBig.setImageResource(R.drawable.shape_white_bg_radius_4dp);
+        ivSmall.setImageResource(R.drawable.ic_portrait_item_back);
+        tvName.setText("返回");
+    }
 
     @Override
     protected void initListener(View view) {
@@ -418,5 +636,269 @@ public class PortraitFragment extends BaseFragment {
                 _mActivity.finish();
             }
         });
+        view.findViewById(R.id.background).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.findViewById(R.id.arrow_background).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.bgRootView).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.arrow_move).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.arrow_eraser).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.arrow_text).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.colorRecycle).setVisibility(View.GONE);
+            }
+        });
+        view.findViewById(R.id.move).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.findViewById(R.id.arrow_move).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.arrow_background).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.arrow_eraser).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.arrow_text).setVisibility(View.INVISIBLE);
+            }
+        });
+        view.findViewById(R.id.eraser).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.findViewById(R.id.arrow_eraser).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.arrow_background).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.arrow_move).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.arrow_text).setVisibility(View.INVISIBLE);
+            }
+        });
+        view.findViewById(R.id.text).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.findViewById(R.id.arrow_text).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.colorRecycle).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.arrow_background).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.arrow_move).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.arrow_eraser).setVisibility(View.INVISIBLE);
+                view.findViewById(R.id.bgRootView).setVisibility(View.GONE);
+                TextSticker textSticker = new TextSticker(_mActivity);
+                textSticker.setText("双击输入文字");
+                textSticker.setTextColor(Color.BLACK);
+                textSticker.setTextAlign(Layout.Alignment.ALIGN_CENTER);
+                textSticker.resizeText();
+                stickerView.addSticker(textSticker);
+            }
+        });
+        view.findViewById(R.id.noBg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isBack) {
+                    isBack = false;
+                    recyclerView.setAdapter(groupAdapter);
+                    ivBig.setImageResource(R.drawable.shape_portrait_item_no_bg);
+                    ivSmall.setImageResource(R.drawable.ic_portrait_item_no_bg);
+                    tvName.setText("无背景");
+                } else {
+                    srcImg.setImageBitmap(BitmapUtils.getBitmap(_mActivity, R.drawable.shape_portrait_transparent_bg, centerView.getWidth(), centerView.getHeight()));
+                }
+            }
+        });
+        view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Observable.create(new ObservableOnSubscribe<String>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                        Bitmap bitmap = stickerView.createBitmap();
+                        String path = FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + "");
+                        emitter.onNext(path);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        start(SaveFragment.getInstance(s));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+            }
+        });
+        view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+
+    @Override
+    public void onStickerAdded(@NonNull Sticker sticker) {
+        selectSticker = sticker;
+
+    }
+
+    @Override
+    public void onStickerClicked(@NonNull Sticker sticker) {
+        selectSticker = sticker;
+        visible(frame);
+        if (sticker instanceof TextSticker) {
+            gone(bgRootView, arrow_background);
+            visible(colorRecycle, arrow_text);
+        } else {
+            visible(bgRootView, arrow_background);
+            gone(colorRecycle, arrow_text);
+        }
+    }
+
+    @Override
+    public void onStickerDeleted(@NonNull Sticker sticker) {
+        visible(frame);
+
+    }
+
+    @Override
+    public void onStickerDragFinished(@NonNull Sticker sticker) {
+        visible(frame);
+        selectSticker = sticker;
+    }
+
+    @Override
+    public void onStickerTouchedDown(@NonNull Sticker sticker) {
+        gone(frame);
+    }
+
+    @Override
+    public void onStickerZoomFinished(@NonNull Sticker sticker) {
+        visible(frame);
+        selectSticker = sticker;
+    }
+
+    @Override
+    public void onStickerFlipped(@NonNull Sticker sticker) {
+        visible(frame);
+        selectSticker = sticker;
+    }
+
+    @Override
+    public void onStickerDoubleTapped(@NonNull Sticker sticker) {
+        if (sticker instanceof TextSticker) {
+            new EditTextDialog(_mActivity, new EditTextDialog.EditTextCallback() {
+                @Override
+                public void editText(String str, Sticker sticker) {
+                    ((TextSticker) sticker).setText(str);
+                    ((TextSticker) sticker).resizeText();
+                    stickerView.invalidate();
+                }
+            }).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CUT_OUT_CODE) {
+            if (data != null) {
+                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+                if (list != null) {
+                    int size = list.size();
+                    if (size > 0) {
+                        String path = list.get(0).getAvailablePath();
+                        showProcessDialog();
+                        BitmapUtils.loadBitmapWithSize(path)
+                                .flatMap((Function<Bitmap, ObservableSource<Object[]>>) bitmap -> {
+                                            String baseValue = Base64Utils.bitmapToBase64(bitmap);
+                                            if (!bitmap.isRecycled()) {
+                                                bitmap.recycle();
+                                            }
+                                            return EffectUtils.analyzeTheFace(baseValue);
+                                        }
+                                )
+                                .flatMap((Function<Object[], ObservableSource<String>>) o -> {
+                                    boolean isTrue = (boolean) o[0];
+                                    String base64 = (String) o[1];
+                                    if (isTrue) {
+                                        return EffectUtils.portraitCutout(base64);
+                                    } else {
+                                        return Observer::onComplete;
+                                    }
+                                }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<String>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+                                        mDisposable.add(d);
+                                    }
+
+                                    @Override
+                                    public void onNext(String s) {
+                                        JSONObject jsonObject = JSONObject.parseObject(s);
+                                        String imageBase64 = jsonObject.getString("ResultImage");
+                                        if (!TextUtils.isEmpty(imageBase64)) {
+                                            BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), Base64Utils.base64ToBitmap(imageBase64));
+                                            if (canSetBg) {
+                                                canSetBg = false;
+                                                srcImg.setImageBitmap(BitmapUtils.getBitmap(_mActivity, R.drawable.shape_portrait_transparent_bg, centerView.getWidth(), centerView.getHeight()));
+                                            }
+                                            stickerView.addSticker(new DrawableSticker(bitmapDrawable));
+                                        } else {
+                                            _mActivity.finish();
+                                        }
+                                        hideProcessDialog();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Toast.makeText(_mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        _mActivity.finish();
+                                        hideProcessDialog();
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                    }
+                                });
+                    }
+                }
+            } else {
+                _mActivity.finish();
+            }
+        } else if (requestCode == BG_CODE) {
+            if (data != null) {
+                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+                if (list != null) {
+                    int size = list.size();
+                    if (size > 0) {
+                        String path = list.get(0).getAvailablePath();
+                        BitmapUtils.loadBitmapWithSize(path).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<Bitmap>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                                mDisposable.add(d);
+                            }
+
+                            @Override
+                            public void onNext(Bitmap bitmap) {
+                                srcImg.setImageBitmap(adjust(bitmap));
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(_mActivity, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
+                    }
+                }
+
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -1,6 +1,5 @@
 package com.weilai.jigsawpuzzle.fragment.puzzleLPic;
 
-import static com.weilai.jigsawpuzzle.Constant.IMAGE_PATH;
 
 import android.content.Intent;
 import android.content.res.TypedArray;

@@ -13,8 +13,6 @@ public class PortraitBaseActivity extends BaseFragmentActivity {
     @Override
     public BaseFragment setRootFragment() {
         String data = getIntent().getStringExtra("data");
-
-
         return PortraitFragment.getInstance(data);
     }
 }

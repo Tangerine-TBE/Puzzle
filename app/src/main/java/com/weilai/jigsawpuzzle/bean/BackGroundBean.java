@@ -3,28 +3,20 @@ package com.weilai.jigsawpuzzle.bean;
 import com.weilai.jigsawpuzzle.keep.IBean;
 
 /**
- ** DATE: 2022/10/19
+ ** DATE: 2022/10/20
  ** Author:tangerine
  ** Description:
  **/
 public class BackGroundBean implements IBean {
-    private  String id;
-    private String name;
-    private String imgBig;
-    private int imgSmall;
+    private String id;
+    private String  imgSmall;
+    private String imgSrc;
     private boolean needVip;
 
-    public BackGroundBean(String id, String name, String imgBig, int imgSmall, boolean needVip) {
+    public BackGroundBean(String id, String imgSmall, String imgSrc, boolean needVip) {
         this.id = id;
-        this.name = name;
-        this.imgBig = imgBig;
         this.imgSmall = imgSmall;
-        this.needVip = needVip;
-    }
-    public BackGroundBean(String id, String name, String imgBig, boolean needVip) {
-        this.id = id;
-        this.name = name;
-        this.imgBig = imgBig;
+        this.imgSrc = imgSrc;
         this.needVip = needVip;
     }
 
@@ -36,28 +28,20 @@ public class BackGroundBean implements IBean {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImgBig() {
-        return imgBig;
-    }
-
-    public void setImgBig(String imgBig) {
-        this.imgBig = imgBig;
-    }
-
-    public int getImgSmall() {
+    public String getImgSmall() {
         return imgSmall;
     }
 
-    public void setImgSmall(int imgSmall) {
+    public void setImgSmall(String imgSmall) {
         this.imgSmall = imgSmall;
+    }
+
+    public String getImgSrc() {
+        return imgSrc;
+    }
+
+    public void setImgSrc(String imgSrc) {
+        this.imgSrc = imgSrc;
     }
 
     public boolean isNeedVip() {

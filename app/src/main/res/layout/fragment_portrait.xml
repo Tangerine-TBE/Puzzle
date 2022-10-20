@@ -7,27 +7,30 @@
     android:background="@color/white"
     android:fitsSystemWindows="true">
     <include android:id="@+id/bar" layout="@layout/layout_title_back"/>
+
     <RelativeLayout
         android:id="@+id/centerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/bar"
-        android:layout_above="@id/bottomView">
+        android:layout_above="@id/bottomView"
+        android:layout_below="@id/bar">
+
         <com.xiaopo.flying.sticker.StickerView
             android:id="@+id/stickerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:showBorder="true"
-            app:borderColor="@color/sel_text_main_color"
-            app:showIcons="true"
+            android:layout_centerInParent="true"
             app:borderAlpha="200"
-            android:layout_centerInParent="true">
+            app:borderColor="@color/sel_text_main_color"
+            app:showBorder="true"
+            app:showIcons="true">
+
             <ImageView
                 android:id="@+id/srcImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"/>
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter" />
         </com.xiaopo.flying.sticker.StickerView>
     </RelativeLayout>
     <LinearLayout
@@ -44,6 +47,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/noBg"
                 android:layout_width="wrap_content"
@@ -102,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/noBg"/>
+                android:layout_toEndOf="@id/noBg" />
         </RelativeLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/colorRecycle"
