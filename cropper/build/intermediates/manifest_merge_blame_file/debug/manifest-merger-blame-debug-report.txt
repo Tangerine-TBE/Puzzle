@@ -4,8 +4,8 @@
 4
 5    <uses-sdk
 6        android:minSdkVersion="21"
-6-->E:\puzzle-p\cropper\src\main\AndroidManifest.xml
+6-->C:\Users\Administrator.SXCSXC-C9SC9CEG\AndroidStudioProjects\puzzle-p\cropper\src\main\AndroidManifest.xml
 7        android:targetSdkVersion="30" />
-7-->E:\puzzle-p\cropper\src\main\AndroidManifest.xml
+7-->C:\Users\Administrator.SXCSXC-C9SC9CEG\AndroidStudioProjects\puzzle-p\cropper\src\main\AndroidManifest.xml
 8
 9</manifest>

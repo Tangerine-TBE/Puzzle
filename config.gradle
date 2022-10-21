@@ -1,0 +1,25 @@
+/**
+ *  全局统一配置文件
+ */
+ext {
+    //true 每个业务Module可以单独开发
+    //false 每个业务Module以lib的方式运行
+    //修改之后需要Sync方可生效
+    isModule = false
+    //url配置
+    host = [
+            ad     : '"http://114.215.47.46:8080"',//广告host
+            content: '"https://open.staging.qingting.fm"'//内容host
+    ]
+    //版本号
+    versions = [
+            applicationId    : "com.weilai.jigsawpuzzle",        //应用ID
+            applicationName  : "拼图抠图",
+            versionCode      : 1,                    //版本号
+            versionName      : "1.0",              //版本名称
+            compileSdkVersion: 30,
+            minSdkVersion    : 21,
+            targetSdkVersion : 30,
+
+    ]
+}

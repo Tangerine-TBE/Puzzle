@@ -64,7 +64,8 @@ class SplashActivity : AppCompatActivity() {
                             BaseConstant.channel, UMConfigure.DEVICE_TYPE_PHONE, null)
                     }
                     dialog.dismiss()
-                    askPermissions()
+                    checkIn()
+//                    askPermissions()
                 }
                 override fun no() {
                     dialog.dismiss()
@@ -84,7 +85,9 @@ class SplashActivity : AppCompatActivity() {
                 MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
             }
 //            GDTAdSdk.init(BaseApplication.application,ADConstants.kGDTMobSDKAppKey)
-            askPermissions()
+//            askPermissions()
+            PuzzleApplication.handler.postDelayed({  checkIn() },2000)
+
         }
     }
 
@@ -96,42 +99,6 @@ class SplashActivity : AppCompatActivity() {
             .navigationBarColor(R.color.white)
             .init()
     }
-
-
-    private fun askPermissions() {
-//        val userPermission=if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.Q){
-//            listOf(
-//                    Manifest.permission.READ_PHONE_STATE,
-//                    Manifest.permission.READ_EXTERNAL_STORAGE,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-//                    )
-//        }else{
-//            listOf(
-//                    Manifest.permission.READ_PHONE_STATE,
-//                    Manifest.permission.READ_EXTERNAL_STORAGE,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-//            )
-//        }
-//        AndPermission.with(this)
-//            .runtime()
-//                .permission(userPermission.toTypedArray())
-//                .onGranted {
-//                    builder = AdController.Builder(this,ADConstants.START_PAGE)
-//                            .setContainer(splash_container)
-//                            .create()
-//                    builder?.show()
-//                }
-//                .onDenied {
-//                    builder = AdController.Builder(this,ADConstants.START_PAGE)
-//                            .setContainer(splash_container)
-//                            .create()
-//                    builder?.show()
-////                    checkIn()
-//                }
-//                .rationale(DefaultRationale())
-//                .start()
-    }
-
     override fun onPause() {
         super.onPause()
         canJump = false

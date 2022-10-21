@@ -28,7 +28,7 @@ class AgreementContentActivity:AppCompatActivity() {
         const val FLAG_YINSI="yingsi"
         const val FLAG_FUWU="fuwu"
         const val email = "1508306421@qq.com"
-        const val com = "武汉市射手科技有限公司"
+        const val com = "深圳市飞速科技有限公司"
     }
     private val umUrl = "https://www.umeng.com/page/policy?spm=a211eg.10560647.0.0.547034dcafEUZJ"
     private val gdtUrl = "https://imgcache.qq.com/gdt/cdn/adn/uniondoc/ylh_sdk_privacy_statement.html"

@@ -4,7 +4,6 @@
 
     <application>
 
-
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
