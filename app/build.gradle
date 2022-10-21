@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.application'
+    id 'kotlin-android-extensions'
+    id  'kotlin-android'
 }
 
 android {
@@ -20,7 +22,16 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            debuggable false  //可以debug
+            buildConfigField("String", "AD_HOST", "\"http://114.215.47.46:8080\"")
+            buildConfigField("String", "CONTENT_HOST", "\"https://open.staging.qingting.fm\"")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            buildConfigField("String", "AD_HOST", "\"http://114.215.47.46:8080\"")
+            buildConfigField("String", "CONTENT_HOST", "\"https://open.staging.qingting.fm\"")
+            debuggable true  //可以debug
+            minifyEnabled false //启用Proguard
         }
     }
     compileOptions {
@@ -32,11 +43,15 @@ android {
             jniLibs.srcDirs = ['libs']
         }
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
 }
 
 dependencies {
-
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
@@ -51,6 +66,7 @@ dependencies {
     implementation project(path: ':library')
     implementation "androidx.multidex:multidex:2.0.1"
     implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation 'com.github.getActivity:XXPermissions:11.5'
     implementation "androidx.core:core:1.6.0"
     implementation group: 'xerces', name: 'xercesImpl', version: '2.11.0'
 //    /*For picSelecter*/
@@ -63,6 +79,10 @@ dependencies {
     implementation project(path: ':imageeditlibrary')
     implementation project(path: ':mapping')
     implementation project(path: ':module_gpuimage')
+    implementation project(path: ':doodle')
+    implementation project(path: ':doodle')
+    implementation project(path: ':cropping')
+    implementation project(path: ':cropper')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 //    implementation 'io.github.lucksiege:ucrop:v3.10.6'
     implementation 'me.yokeyword:fragmentationx:1.0.2'
@@ -83,4 +103,12 @@ dependencies {
     implementation 'io.github.razerdp:BasePopup:3.2.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+//    implementation 'com.pangle.cn:ads-sdk-pro:4.8.0.8'
+    implementation "com.gyf.immersionbar:immersionbar:3.0.0"
+//    implementation 'com.just.agentweb:agentweb:4.1.5'
+
+    implementation  'com.umeng.umsdk:common:9.5.2'// 必选
+    implementation  'com.umeng.umsdk:asms:1.6.3'// 必选
+    implementation 'com.umeng.umsdk:apm:1.7.0' // 错误分析升级为独立产品U-APM可按需集成，可选
+    implementation  'com.umeng.umsdk:abtest:1.0.0'//使用U-App中ABTest能力，可选
 }

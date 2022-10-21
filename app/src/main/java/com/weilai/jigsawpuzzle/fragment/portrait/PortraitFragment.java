@@ -1,7 +1,6 @@
 package com.weilai.jigsawpuzzle.fragment.portrait;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,22 +18,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.blankj.utilcode.util.PermissionUtils;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.portrait.PortraitBackgroundAdapter;
 import com.weilai.jigsawpuzzle.adapter.portrait.PortraitBackgroundGroupAdapter;
-import com.weilai.jigsawpuzzle.adapter.portrait.PortraitTextColorAdapter;
+import com.weilai.jigsawpuzzle.adapter.portrait.TextColorAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.BackGroundBean;
 import com.weilai.jigsawpuzzle.bean.BackGroundGroupBean;
@@ -45,7 +41,6 @@ import com.weilai.jigsawpuzzle.util.BitmapUtils;
 import com.weilai.jigsawpuzzle.util.EffectUtils;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
-import com.weilai.jigsawpuzzle.util.GsonUtil;
 import com.xiaopo.flying.sticker.BitmapStickerIcon;
 import com.xiaopo.flying.sticker.DeleteIconEvent;
 import com.xiaopo.flying.sticker.DrawableSticker;
@@ -66,7 +61,6 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -97,7 +91,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
     private List<Integer> colorList;
 
     private PortraitBackgroundGroupAdapter groupAdapter;
-    private PortraitTextColorAdapter textColorAdapter;
+    private TextColorAdapter textColorAdapter;
     private PortraitBackgroundAdapter backgroundAdapter;
 
 
@@ -159,7 +153,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
         arrow_background = view.findViewById(R.id.arrow_background);
         colorRecycle = view.findViewById(R.id.colorRecycle);
         arrow_text = view.findViewById(R.id.arrow_text);
-
+        view.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -608,7 +602,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
                 srcImg.setImageBitmap(bitmap);
             }
         });
-        textColorAdapter = new PortraitTextColorAdapter(colorList, new PortraitTextColorAdapter.OnItemClickedListener() {
+        textColorAdapter = new TextColorAdapter(colorList, new TextColorAdapter.OnItemClickedListener() {
             @Override
             public void onItemClicked(int position) {
                 if (selectSticker != null && selectSticker instanceof TextSticker) {
@@ -656,6 +650,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
                 view.findViewById(R.id.colorRecycle).setVisibility(View.GONE);
             }
         });
+
         view.findViewById(R.id.move).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -11,6 +11,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/cropper" />
+            <option value="$PROJECT_DIR$/cropping" />
+            <option value="$PROJECT_DIR$/doodle" />
             <option value="$PROJECT_DIR$/imageeditlibrary" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/mapping" />

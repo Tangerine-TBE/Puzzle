@@ -7,12 +7,14 @@ import com.abc.matting.tencentcloudapi.bda.v20200324.BdaClient;
 import com.abc.matting.tencentcloudapi.bda.v20200324.models.SegmentPortraitPicRequest;
 import com.abc.matting.tencentcloudapi.bda.v20200324.models.SegmentPortraitPicResponse;
 import com.abc.matting.tencentcloudapi.common.Credential;
+import com.abc.matting.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.abc.matting.tencentcloudapi.common.profile.ClientProfile;
 import com.abc.matting.tencentcloudapi.common.profile.HttpProfile;
 import com.abc.matting.tencentcloudapi.ft.v20200304.FtClient;
 import com.abc.matting.tencentcloudapi.ft.v20200304.models.AgeInfo;
 import com.abc.matting.tencentcloudapi.ft.v20200304.models.ChangeAgePicRequest;
 import com.abc.matting.tencentcloudapi.ft.v20200304.models.ChangeAgePicResponse;
+import com.abc.matting.tencentcloudapi.ft.v20200304.models.FaceCartoonPicResponse;
 import com.abc.matting.tencentcloudapi.iai.v20180301.IaiClient;
 import com.abc.matting.tencentcloudapi.iai.v20180301.models.DeleteFaceResponse;
 import com.abc.matting.tencentcloudapi.iai.v20180301.models.DetectFaceRequest;
@@ -42,6 +44,8 @@ import okhttp3.ResponseBody;
  * * Description:
  **/
 public class EffectUtils {
+
+
     public static String toOld(Long age, String base64) {
         try {
             Credential credential = new Credential(Constant.tencentcloudapi_SecretId, Constant.tencentcloudapi_SecretKey);

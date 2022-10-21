@@ -15,59 +15,79 @@
             android:background="@mipmap/special_title"
             android:layout_height="wrap_content"/>
     </androidx.appcompat.widget.Toolbar>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:paddingStart="22dp"
         android:paddingEnd="22dp"
+        android:orientation="vertical"
         android:layout_marginTop="26dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/aiv_old"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:src="@mipmap/item_camera_old"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/aiv_old"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@mipmap/item_camera_old"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/aiv_unbelived"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@mipmap/item_camera_unbelived"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/aiv_child"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/aiv_old"
-            app:layout_constraintStart_toStartOf="parent"
-            android:src="@mipmap/item_camera_child"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/aiv_csex"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/aiv_old"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@mipmap/item_camera_csex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/aiv_image"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/aiv_csex"
-            app:layout_constraintStart_toStartOf="parent"
-            android:src="@mipmap/item_camera_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/aiv_disappear"
-            android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aiv_csex"
-            android:src="@mipmap/item_camera_disappear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/aiv_unbelived"
+                android:layout_weight="1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@mipmap/item_camera_unbelived"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/aiv_child"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@id/aiv_old"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@mipmap/item_camera_child"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/aiv_csex"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@id/aiv_old"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@mipmap/item_camera_csex"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/aiv_image"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                app:layout_constraintTop_toBottomOf="@id/aiv_csex"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@mipmap/item_camera_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/aiv_disappear"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/aiv_csex"
+                android:visibility="invisible"
+                android:src="@mipmap/item_camera_disappear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

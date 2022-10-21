@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:orientation="vertical"
+    android:gravity="center">
+    <RelativeLayout
+        android:layout_width="38dp"
+        android:layout_height="38dp">
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/vip_tip"
+            android:layout_width="match_parent"
+            android:layout_height="14dp"
+            android:text="VIP"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:background="@drawable/shape_filter_item_vip_bg"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"/>
+        <View
+            android:id="@+id/selectBorder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_orange_stroke"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="原图"
+        android:textColor="@color/black"
+        android:textSize="10sp"
+        android:layout_marginTop="4dp"
+        tools:ignore="SmallSp" />
+</LinearLayout>

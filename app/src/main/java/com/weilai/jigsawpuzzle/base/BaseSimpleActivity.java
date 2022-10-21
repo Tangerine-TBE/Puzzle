@@ -32,7 +32,23 @@ public abstract class BaseSimpleActivity extends AppCompatActivity {
     protected abstract void setStatusBar();
     protected abstract void initView(View view);
     protected abstract void initListener(View view);
+    public void visible(View... views) {
+        for (View view : views) {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
 
+    public void gone(View... views) {
+        for(View view : views){
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    public void invisible(View... views) {
+        for (View view : views) {
+            view.setVisibility(View.INVISIBLE);
+        }
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         final View view;

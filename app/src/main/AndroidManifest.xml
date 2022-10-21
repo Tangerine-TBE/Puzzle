@@ -23,7 +23,7 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.Puzzle">
-        <activity android:name=".activity.main.MainBaseActivity"
+        <activity android:name=".activity.special.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,7 +39,19 @@
         <activity android:name=".activity.puzzleLine.PuzzleLineBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
         <activity android:name=".activity.puzzleSS.PuzzleSShotBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
         <activity android:name=".activity.portrait.PortraitBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.special.SpecialBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".fragment.special.OldActivity2" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".activity.special.SplashActivityAD" android:exported="true"  android:screenOrientation="portrait"/>
+        <activity android:name=".activity.main.SaveBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".fragment.special.MagicCameraActivity" android:exported="true" android:screenOrientation="portrait"/>
+        <activity android:name=".fragment.special.AdjustActivity" android:exported="true"/>
+        <activity android:name=".fragment.special.AddTextActivity" android:exported="true"/>
+        <activity android:name=".fragment.special.BeautyActivity" android:exported="true"/>
+        <activity android:name=".fragment.special.CropActivity" android:exported="true"/>
+        <activity android:name=".fragment.special.DoodleActivity" android:exported="true"/>
+        <activity android:name="com.abc.matting.ui.activity.EffectEndActivity" android:exported="true"/>
+        <activity android:name=".fragment.special.ScaleActivity" android:exported="true"/>
+        <activity android:name=".fragment.special.StickerActivity" android:exported="true"/>
+        <activity android:name=".fragment.special.FilterActivity" android:exported="true"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.weilai.jigsawpuzzle.fileprovider"

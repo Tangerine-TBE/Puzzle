@@ -153,6 +153,14 @@ public class TextSticker extends Sticker {
     }
     return this;
   }
+  @NonNull public TextSticker setDrawable(@NonNull Drawable drawable, float left, float top, float right, float bottom) {
+    this.drawable = drawable;
+    realBounds.set(0, 0, getWidth(), getHeight());
+    int w = getWidth();
+    int h = getHeight();
+    textRect.set((int) (w*left), (int) (h*top), (int) (w - w*right), (int) (h - h*bottom));
+    return this;
+  }
 
   @NonNull public TextSticker setTypeface(@Nullable Typeface typeface) {
     textPaint.setTypeface(typeface);

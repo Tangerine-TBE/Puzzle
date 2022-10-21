@@ -38,6 +38,7 @@ public class StickerView extends FrameLayout {
   private final boolean showIcons;
   private final boolean showBorder;
   private final boolean bringToFrontCurrentSticker;
+  private boolean isShowSticker = true;
 
   @IntDef({
       ActionMode.NONE, ActionMode.DRAG, ActionMode.ZOOM_WITH_TWO_FINGER, ActionMode.ICON,
@@ -49,7 +50,11 @@ public class StickerView extends FrameLayout {
     int ICON = 3;
     int CLICK = 4;
   }
-
+  @NonNull public StickerView setShowSticker(boolean showSticker){
+    this.isShowSticker = showSticker;
+    invalidate();
+    return this;
+  }
   @IntDef(flag = true, value = { FLIP_HORIZONTALLY, FLIP_VERTICALLY })
   @Retention(RetentionPolicy.SOURCE) protected @interface Flip {
   }
@@ -188,7 +193,8 @@ public class StickerView extends FrameLayout {
 
   @Override protected void dispatchDraw(Canvas canvas) {
     super.dispatchDraw(canvas);
-    drawStickers(canvas);
+    if (isShowSticker)
+      drawStickers(canvas);
   }
 
   protected void drawStickers(Canvas canvas) {

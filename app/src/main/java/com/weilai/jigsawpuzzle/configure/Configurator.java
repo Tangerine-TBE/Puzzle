@@ -1,9 +1,14 @@
 package com.weilai.jigsawpuzzle.configure;
 
+import static com.weilai.jigsawpuzzle.configure.ConfigureType.APPLICATION;
 import static com.weilai.jigsawpuzzle.configure.ConfigureType.CONFIGURE_READ;
 
+import android.app.Application;
+import android.content.Context;
 import android.graphics.Paint;
 import android.util.ArrayMap;
+
+import com.weilai.jigsawpuzzle.util.SPUtil;
 
 /**
  ** DATE: 2022/10/10
@@ -31,6 +36,14 @@ public class Configurator {
             throw  new RuntimeException("Configuration is not ready yet!");
         }
 
+    }
+    public final Configurator withSp(Context context){
+        SPUtil.init(context);
+        return this;
+    }
+    public final Configurator withApplication(Application application){
+        CONFIGS.put(APPLICATION.name(),application);
+        return this;
     }
     final ArrayMap<String,Object> getConfigs(){
         return CONFIGS;

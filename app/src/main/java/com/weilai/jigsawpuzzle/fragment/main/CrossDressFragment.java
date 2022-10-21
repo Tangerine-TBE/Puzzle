@@ -10,6 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.weilai.jigsawpuzzle.Constants;
+import com.weilai.jigsawpuzzle.fragment.special.FilterActivity;
+import com.weilai.jigsawpuzzle.fragment.special.MagicCameraActivity;
+import com.weilai.jigsawpuzzle.fragment.special.OldActivity2;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -24,17 +31,18 @@ import com.weilai.jigsawpuzzle.activity.puzzleLP.PuzzleLPBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleLine.PuzzleLineBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleSS.PuzzleSShotBaseActivity;
-import com.weilai.jigsawpuzzle.activity.special.SpecialBaseActivity;
 import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.main.ImageBannerAdapter;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.ImageCropEngine;
+import com.weilai.jigsawpuzzle.util.ToastUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.config.IndicatorConfig;
 import com.youth.banner.indicator.RectangleIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * * DATE: 2022/9/13
@@ -47,6 +55,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
     private static final int FILTER_PUZZLE_9P_CODE = 3;
     private static final int FILTER_PUZZLE_HLP_CODE = 4;
     private static final int FILTER_PUZZLE_LINE_CODE = 5;
+    private static final int FILTER_PUZZLE_FITTER_CODE = 6;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -136,19 +145,52 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                     .setCropEngine(new ImageCropEngine(1,1))
                     .forResult(FILTER_PUZZLE_9P_CODE);
         } else if (view.getId() == R.id.tv_screen_shot) {
-
             startActivity(new Intent(getActivity(), PuzzleSShotBaseActivity.class));
         }else if (view .getId() == R.id.iv_ai){
-            Intent intent = new Intent();
-            intent.putExtra("type","intelligent");
-            intent.setClass(getContext(),PortraitBaseActivity.class);
-            startActivity(intent);
+            XXPermissions.with(this).permission(Permission.CAMERA).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        Intent intent = new Intent();
+                        intent.putExtra("type","intelligent");
+                        intent.setClass(getContext(),PortraitBaseActivity.class);
+                        startActivity(intent);
+                    }
+                }
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    if(never){
+                        XXPermissions.startPermissionActivity(getContext(),permissions);
+                    }
+                }
+            });
         }else if (view.getId() == R.id.iv_comis){
-            Intent intent = new Intent();
-            intent.putExtra("type","comic");
-            intent.setClass(getContext(), SpecialBaseActivity.class);
-            startActivity(intent);
+
+            XXPermissions.with(this).permission(Permission.CAMERA).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        Intent intent = new Intent();
+                        intent.putExtra("typeKey","comic");
+                        intent.setClass(getContext(), OldActivity2.class);
+                        startActivity(intent);
+                    }
+                }
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    if(never){
+                        XXPermissions.startPermissionActivity(getContext(),permissions);
+                    }
+                }
+            });
+
         }else if (view.getId() == R.id.iv_toning){
+            PictureSelector.create(this)
+                    .openGallery(SelectMimeType.ofImage())
+                    .isDisplayCamera(true)
+                    .setSelectionMode(SelectModeConfig.SINGLE)
+                    .setImageEngine(GlideEngine.createGlideEngine())
+                    .forResult(FILTER_PUZZLE_FITTER_CODE);
 
         }
     }
@@ -177,6 +219,9 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
                         intent.setClass(getContext(), PuzzleHLPBaseActivity.class);
                     }else if (requestCode == FILTER_PUZZLE_LINE_CODE){
                         intent.setClass(getContext(), PuzzleLineBaseActivity.class);
+                    }else if (requestCode == FILTER_PUZZLE_FITTER_CODE){
+                        intent.putExtra("img_page",arrayList.get(0));
+                        intent.setClass(getContext(),FilterActivity.class);
                     }
                     startActivity(intent);
                 }

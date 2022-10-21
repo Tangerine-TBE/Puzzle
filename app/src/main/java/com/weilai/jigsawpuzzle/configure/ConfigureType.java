@@ -7,5 +7,6 @@ package com.weilai.jigsawpuzzle.configure;
  **/
 public enum ConfigureType {
     CONFIGURE_READ,
-    APPLICATION_CONTEXT
+    APPLICATION_CONTEXT,
+    APPLICATION
 }

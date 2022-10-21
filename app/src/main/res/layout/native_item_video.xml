@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="ContentDescription,SpUsage,RtlHardcoded">
+
+    <TextView
+        android:id="@+id/ad_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="#020202"
+        android:textSize="18dp"
+        tools:text="快手广告快手广告快手广告快手广告快手广告快手广告快手广告快手广告快手广告快手广告" />
+
+    <FrameLayout
+        android:id="@+id/video_container"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <include
+        android:id="@+id/ad_actionBar_container"
+        layout="@layout/native_item_app_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginTop="4dp"
+        tools:ignore="ContentDescription,RtlHardcoded">
+
+        <ImageView
+            android:id="@+id/ksad_logo_icon"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/test_logo_gray"
+            tools:visibility="visible"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="2dp" />
+
+        <TextView
+            android:id="@+id/ksad_logo_text"
+            android:layout_toRightOf="@id/ksad_logo_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:textSize="10sp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:paddingLeft="2dp"
+            android:paddingRight="3dp"
+            android:text="广告"
+            tools:visibility="visible"
+            android:textColor="#9C9C9C" />
+
+        <ImageView
+            android:id="@+id/ad_dislike"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/test_dislike_gray" />
+    </RelativeLayout>
+</LinearLayout>
