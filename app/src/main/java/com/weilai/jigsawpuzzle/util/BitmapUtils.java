@@ -84,7 +84,8 @@ public class BitmapUtils {
 //        mediaScanner.scanFiles(filePaths, mimeTypes);
 
     }
-    public static void saveImageToGallery(Bitmap mBitmap,String fileDir,String fileName,boolean toGallery) {
+
+    public static void saveImageToGallery(Bitmap mBitmap, String fileDir, String fileName, boolean toGallery) {
         // 首先保存图片
 //        String appDirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/Drawing";
         File file = new File(fileDir, fileName);
@@ -124,6 +125,7 @@ public class BitmapUtils {
 //        mediaScanner.scanFiles(filePaths, mimeTypes);
 
     }
+
     public static int calculateSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -137,6 +139,7 @@ public class BitmapUtils {
         }
         return inSampleSize;
     }
+
     public static Bitmap getBitmapFromAssetsFile(String fileName) {
         Bitmap image = null;
         AssetManager am = Config.getApplicationContext().getResources().getAssets();
@@ -144,12 +147,12 @@ public class BitmapUtils {
             InputStream is = am.open(fileName);
             image = BitmapFactory.decodeStream(is);
             is.close();
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return image;
     }
+
     public static void saveBitmapPhoto(Bitmap bm) {
         ContentResolver resolver = Config.getApplicationContext().getContentResolver();
         ContentValues contentValues = new ContentValues();
@@ -169,6 +172,7 @@ public class BitmapUtils {
         }
 
     }
+
     public static Observable<Bitmap> loadBitmapWithSize(String path) {
         return Observable.create(new ObservableOnSubscribe<Bitmap>() {
             @Override
@@ -188,10 +192,10 @@ public class BitmapUtils {
                             e.printStackTrace();
                         }
                         BitmapFactory.Options options = new BitmapFactory.Options();
-                       Bitmap bitmap =  BitmapFactory.decodeStream(stream, null, options);
-                       int size = bitmap.getByteCount();
-                        if ( size > 1080 * 1080 * 5L) {
-                            if (!bitmap.isRecycled()){
+                        Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
+                        int size = bitmap.getByteCount();
+                        if (size > 1080 * 1080 * 5L) {
+                            if (!bitmap.isRecycled()) {
                                 bitmap.recycle();
                             }
                             throw new RuntimeException("图片过大!");
@@ -203,6 +207,29 @@ public class BitmapUtils {
             }
         });
 
+    }
+
+    public static boolean shouldLoadBitmap(String path, boolean vertical) {
+        Uri srcUri;
+        if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
+            srcUri = Uri.parse(path);
+        } else {
+            srcUri = Uri.fromFile(new File(path));
+        }
+        InputStream stream = null;
+        try {
+            stream = Config.getApplicationContext().getContentResolver().openInputStream(srcUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(stream, null, options);
+        if (vertical) {
+            return options.outHeight <= DimenUtil.getScreenHeight() * 3;
+        } else {
+            return options.outWidth <= DimenUtil.getScreenWidth() * 3;
+        }
     }
 
     public static Bitmap getBitmap(Context context, int vectorDrawableId, int w, int h) {
@@ -218,7 +245,15 @@ public class BitmapUtils {
 //        }
         return bitmap;
     }
-
+    public static Uri pathToUri(String path){
+        Uri srcUri;
+        if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
+            srcUri = Uri.parse(path);
+        } else {
+            srcUri = Uri.fromFile(new File(path));
+        }
+        return srcUri;
+    }
     public static Bitmap bitMapScale(Bitmap bitmap, float scale) {
         Matrix matrix = new Matrix();
         matrix.postScale(scale, scale); //长和宽放大缩小的比例

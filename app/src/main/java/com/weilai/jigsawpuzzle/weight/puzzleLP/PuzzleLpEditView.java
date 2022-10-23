@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.bean.PicInfo;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 
 import java.io.File;

@@ -21,8 +21,7 @@ public class ClientReportFragment extends BaseFragment {
 
     }
     public static ClientReportFragment getInstance(){
-        ClientReportFragment clientReportFragment = new ClientReportFragment();
-        return clientReportFragment;
+        return new ClientReportFragment();
     }
     @Override
     protected Object setLayout() {

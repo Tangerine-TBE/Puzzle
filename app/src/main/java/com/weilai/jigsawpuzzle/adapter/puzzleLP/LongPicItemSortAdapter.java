@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.bean.PicInfo;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
 
 import java.io.File;
@@ -35,9 +36,9 @@ import java.util.List;
 public class LongPicItemSortAdapter extends RecyclerView.Adapter<LongPicItemSortAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<String> bitmaps;
+    private List<PicInfo> bitmaps;
 
-    public LongPicItemSortAdapter(Context context, List<String> bitmaps) {
+    public LongPicItemSortAdapter(Context context, List<PicInfo> bitmaps) {
         this.mContext = context;
         this.bitmaps = bitmaps;
     }
@@ -53,12 +54,14 @@ public class LongPicItemSortAdapter extends RecyclerView.Adapter<LongPicItemSort
     @Override
     public void onBindViewHolder(@NonNull LongPicItemSortAdapter.ViewHolder holder, int position) {
         Bitmap bitmap = null;
-        if (!TextUtils.isEmpty(bitmaps.get(position))) {
+        PicInfo picInfo = bitmaps.get(position);
+        String path = picInfo.path;
+        if (!TextUtils.isEmpty(path)) {
             Uri srcUri;
-            if (PictureMimeType.isContent(bitmaps.get(position)) || PictureMimeType.isHasHttp(bitmaps.get(position))) {
-                srcUri = Uri.parse(bitmaps.get(position));
+            if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
+                srcUri = Uri.parse(path);
             } else {
-                srcUri = Uri.fromFile(new File(bitmaps.get(position)));
+                srcUri = Uri.fromFile(new File(path));
             }
             if (srcUri != null) {
                 InputStream stream = null;

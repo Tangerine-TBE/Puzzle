@@ -14,6 +14,7 @@ import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.weilai.jigsawpuzzle.activity.portrait.PortraitBaseActivity;
+import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.fragment.special.MagicCameraActivity;
 import com.weilai.jigsawpuzzle.fragment.special.OldActivity2;
 import com.weilai.jigsawpuzzle.R;
@@ -25,11 +26,19 @@ import java.util.List;
  ** Author:tangerine
  ** Description:特效
  **/
-public class EditImageFragment extends Fragment {
-    @Nullable
+public class EditImageFragment extends BaseFragment {
     @Override
-    public View onCreateView(@NonNull  LayoutInflater inflater, @Nullable  ViewGroup container, @Nullable  Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_edit_image,container,false);
+    protected Object setLayout() {
+        return R.layout.fragment_edit_image;
+    }
+
+    @Override
+    protected void initView(View view) {
+
+    }
+
+    @Override
+    protected void initListener(View view) {
         Intent intent = new Intent();
         intent.setClass(getContext(), OldActivity2.class);
         view.findViewById(R.id.aiv_old).setOnClickListener(new View.OnClickListener() {
@@ -145,6 +154,6 @@ public class EditImageFragment extends Fragment {
                 });
             }
         });
-        return view;
     }
+
 }

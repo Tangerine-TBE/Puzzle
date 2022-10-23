@@ -5,10 +5,11 @@
     android:background="@color/bg_cross_gray"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <com.youth.banner.Banner
-        android:id ="@+id/banner"
+        android:id="@+id/banner"
         android:layout_width="match_parent"
-        android:layout_height="270dp"/>
+        android:layout_height="270dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/item_layout"

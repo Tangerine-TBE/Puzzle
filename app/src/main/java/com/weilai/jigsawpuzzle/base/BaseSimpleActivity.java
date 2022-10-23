@@ -22,12 +22,14 @@ import com.weilai.jigsawpuzzle.util.StatusBarUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import me.yokeyword.fragmentation.SupportActivity;
+
 /**
  * * DATE: 2022/9/13
  * * Author:tangerine
  * * Description: BaseSimpleActivity
  **/
-public abstract class BaseSimpleActivity extends AppCompatActivity {
+public abstract class BaseSimpleActivity extends SupportActivity {
     protected abstract Object setLayout();
     protected abstract void setStatusBar();
     protected abstract void initView(View view);

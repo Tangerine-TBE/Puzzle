@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemSortAdapter;
+import com.weilai.jigsawpuzzle.bean.PicInfo;
 import com.weilai.jigsawpuzzle.util.L;
 
 import java.util.Collections;
@@ -20,11 +21,11 @@ import java.util.List;
  * * Description:
  **/
 public class ItemDrag extends ItemTouchHelper.Callback {
-    public ItemDrag(List<String> bitmaps, LongPicItemSortAdapter longPicItemAdapter){
+    public ItemDrag(List<PicInfo> bitmaps, LongPicItemSortAdapter longPicItemAdapter){
         this.bitmaps = bitmaps;
         this.longPicItemAdapter = longPicItemAdapter;
     }
-    private final List<String> bitmaps;
+    private final List<PicInfo> bitmaps;
     private final LongPicItemSortAdapter longPicItemAdapter;
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {

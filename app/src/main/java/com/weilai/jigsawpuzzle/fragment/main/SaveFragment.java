@@ -24,6 +24,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.RecordInfoDao;
+import com.weilai.jigsawpuzzle.activity.main.ClientReportBaseActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.db.RecordInfo;
 import com.weilai.jigsawpuzzle.dialog.save.BitmapInfoPopUp;
@@ -188,7 +189,7 @@ public class SaveFragment extends BaseFragment {
         view.findViewById(R.id.not_better).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                start(ClientReportFragment.getInstance());
+                startActivity(new Intent(_mActivity, ClientReportBaseActivity.class));
             }
         });
         view.findViewById(R.id.fantastic).setOnClickListener(new View.OnClickListener() {

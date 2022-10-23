@@ -28,6 +28,7 @@ import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzleHLP.HLongPicItemAdapter;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.bean.PicInfo;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpColorPopUp;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
@@ -37,10 +38,12 @@ import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.fragment.puzzleLPic.PuzzleLPSortFragment;
 import com.weilai.jigsawpuzzle.fragment.puzzleLPic.PuzzleLongPicFragment;
 import com.weilai.jigsawpuzzle.fragment.puzzleLPic.PuzzleLpSplitFragment;
+import com.weilai.jigsawpuzzle.util.BitmapUtils;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.L;
+import com.weilai.jigsawpuzzle.util.ToastUtil;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzleHLP.PaddingHirItemDecoration;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
@@ -73,7 +76,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
     private final int[] titlesIcon = new int[]{R.mipmap.icon_lp_frame, R.mipmap.icon_add, R.mipmap.icon_sort};
     private RecyclerView mRvLP;
 
-    private ArrayList<String> bitmaps;
+    private ArrayList<PicInfo> picInfos;
     private static final int FILTER_PUZZLE_LP_CODE = 1;
     private static final int FILTER_PUZZLE_LP_SINGLE = 2;
     private static final int FILTER_PUZZLE_LP_EDIT = 3;
@@ -127,8 +130,9 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         mFlyTabLayout.setOnTabSelectListener(this);
         //遍历所有的Bitmap
         assert getArguments() != null;
-        bitmaps = getArguments().getStringArrayList("data");
-        hLongPicItemAdapter = new HLongPicItemAdapter(_mActivity, bitmaps);
+        ArrayList<String> bitmaps = getArguments().getStringArrayList("data");
+        initData(bitmaps);
+        hLongPicItemAdapter = new HLongPicItemAdapter(_mActivity, picInfos);
         mRvLP.setAdapter(hLongPicItemAdapter);
         paddingItemDecoration = new PaddingHirItemDecoration();
         mRvLP.addItemDecoration(paddingItemDecoration);
@@ -136,6 +140,16 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                 android.R.attr.actionBarSize
         });
         actionbarSizeTypedArray.recycle();
+    }
+
+    private void initData(ArrayList<String> data) {
+        picInfos = new ArrayList<>();
+        for (String path : data) {
+            PicInfo picInfo = new PicInfo();
+            picInfo.shouldLoad = BitmapUtils.shouldLoadBitmap(path, true);
+            picInfo.path = path;
+            picInfos.add(picInfo);
+        }
     }
 
     @Override
@@ -188,14 +202,14 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                                 View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenHeight() / 2, View.MeasureSpec.EXACTLY)
                         );
                         holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
-                                DimenUtil.getScreenHeight() /2);
+                                DimenUtil.getScreenHeight() / 2);
                         int padding = paddingItemDecoration.getProcess();
-                        if (i ==  0){
-                            holder.itemView.setPadding(padding,padding,0,padding);
-                        }else if (i == size-1){
-                            holder.itemView.setPadding(padding,padding,padding,padding);
-                        }else{
-                            holder.itemView .setPadding(padding,padding,0,padding);
+                        if (i == 0) {
+                            holder.itemView.setPadding(padding, padding, 0, padding);
+                        } else if (i == size - 1) {
+                            holder.itemView.setPadding(padding, padding, padding, padding);
+                        } else {
+                            holder.itemView.setPadding(padding, padding, 0, padding);
                         }
                         holder.itemView.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
                         arrayList.add(holder);
@@ -292,7 +306,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
 
                 break;
             case 2:
-                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(bitmaps);
+                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(picInfos);
                 start(puzzleLPSortFragment);
                 break;
             default:
@@ -310,7 +324,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDataSortChange(LpSortEvent event) {
-        bitmaps = (ArrayList<String>) event.data;
+        picInfos = (ArrayList<PicInfo>) event.data;
         hLongPicItemAdapter.notifyDataSetChanged();
         puzzleLPSortFragment.pop();
         puzzleLPSortFragment = null;
@@ -321,14 +335,20 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         ArrayList<String> data = (ArrayList<String>) event.data;
         int type = event.type;
         if (type == 1) {
-            bitmaps.remove(selectedPosition);
-            bitmaps.add(selectedPosition, data.get(0));
+            PicInfo picInfo = picInfos.get(selectedPosition);
+            picInfo.path = data.get(0);
+            picInfos.remove(selectedPosition);
+            picInfos.add(selectedPosition, picInfo);
         } else if (type == 2) {
-            bitmaps.remove(selectedPosition);
-            bitmaps.add(selectedPosition, data.get(0));
-            if (selectedPosition + 1 < bitmaps.size()) {
-                bitmaps.remove(selectedPosition + 1);
-                bitmaps.add(selectedPosition + 1, data.get(1));
+            PicInfo picInfo = picInfos.get(selectedPosition);
+            picInfo.path = data.get(0);
+            picInfos.remove(selectedPosition);
+            picInfos.add(selectedPosition, picInfo);
+            if (selectedPosition + 1 < picInfos.size()) {
+                PicInfo picInfo1 = picInfos.get(selectedPosition + 1);
+                picInfo1.path = data.get(1);
+                picInfos.remove(selectedPosition + 1);
+                picInfos.add(selectedPosition + 1, picInfo1);
             }
         }
         hLongPicItemAdapter.notifyDataSetChanged();
@@ -338,46 +358,55 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FILTER_PUZZLE_LP_CODE) {
-            if (data != null) {
-                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+        if (data != null) {
+            ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+            if (requestCode == FILTER_PUZZLE_LP_CODE) {
                 if (list != null) {
                     int size = list.size();
                     if (size > 0) {
                         for (LocalMedia localMedia : list) {
-                            String path = localMedia.getPath();
-                            bitmaps.add(path);
-                            hLongPicItemAdapter.notifyItemInserted(bitmaps.size());
+                            if (localMedia.getSize() > 10368000) {
+                                ToastUtil.showToast(localMedia.getFileName() + ",这个文件太大了");
+                                return;
+                            }
+                            String path = localMedia.getAvailablePath();
+                            PicInfo picInfo = new PicInfo();
+                            picInfo.path = path;
+                            picInfo.shouldLoad = BitmapUtils.shouldLoadBitmap(path, true);
+                            picInfos.add(picInfo);
+                            hLongPicItemAdapter.notifyItemInserted(picInfos.size());
                         }
                     }
                 }
-            }
-        } else if (requestCode == FILTER_PUZZLE_LP_SINGLE) {
-            if (data != null) {
-                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+            } else if (requestCode == FILTER_PUZZLE_LP_SINGLE) {
                 if (list != null) {
                     int size = list.size();
                     if (size > 0) {
                         String path = list.get(0).getAvailablePath();
-                        bitmaps.remove(selectedPosition);
-                        bitmaps.add(selectedPosition, path);
+                        PicInfo picInfo = new PicInfo();
+                        picInfo.path = path;
+                        picInfo.shouldLoad = BitmapUtils.shouldLoadBitmap(path, true);
+                        picInfos.remove(selectedPosition);
+                        picInfos.add(selectedPosition, picInfo);
                         hLongPicItemAdapter.notifyItemChanged(selectedPosition);
                     }
                 }
-            }
-        } else if (requestCode == FILTER_PUZZLE_LP_EDIT) {
-            if (data != null) {
+            } else if (requestCode == FILTER_PUZZLE_LP_EDIT) {
                 String filePath = data.getStringExtra("extra_output");
                 if (selectedPosition != -1) {
                     boolean isEdit = data.getBooleanExtra("image_is_edit", false);
                     if (isEdit) {
-                        bitmaps.remove(selectedPosition);
-                        bitmaps.add(selectedPosition, filePath);
+                        PicInfo picInfo = new PicInfo();
+                        picInfo.path = filePath;
+                        picInfo.shouldLoad = BitmapUtils.shouldLoadBitmap(filePath, true);
+                        picInfos.remove(selectedPosition);
+                        picInfos.add(selectedPosition, picInfo);
                         hLongPicItemAdapter.notifyItemChanged(selectedPosition);
                     }
                 }
             }
         }
+
     }
 
     @Override
@@ -400,29 +429,29 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         selectedPosition = position;
         hLongPicItemAdapter.resetItem();
         mPuzzleLpPopUp.dismiss();
-        ArrayList<String> bitmapsInfo = new ArrayList<>();
+        ArrayList<PicInfo> bitmapsInfo = new ArrayList<>();
         switch (view.getId()) {
             case 0:
                 //裁顶
                 if (selectedPosition == 0) {
-                    bitmapsInfo.add(bitmaps.get(selectedPosition));
+                    bitmapsInfo.add(picInfos.get(selectedPosition));
                     puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1, 2);
                     start(puzzleLpSplitFragment);
                 }
                 break;
             case 1:
-                bitmapsInfo.add(bitmaps.get(selectedPosition));
-                if (selectedPosition + 1 < bitmaps.size()) {
-                    bitmapsInfo.add(bitmaps.get(selectedPosition + 1));
+                bitmapsInfo.add(picInfos.get(selectedPosition));
+                if (selectedPosition + 1 < picInfos.size()) {
+                    bitmapsInfo.add(picInfos.get(selectedPosition + 1));
                 }
-                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2, 2);
+                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2, 1);
                 start(puzzleLpSplitFragment);
                 //裁底
                 break;
             case 2:
                 //编辑
                 Intent it = new Intent(getContext(), EditImageActivity.class);
-                it.putExtra(EditImageActivity.FILE_PATH, bitmaps.get(selectedPosition));
+                it.putExtra(EditImageActivity.FILE_PATH, picInfos.get(selectedPosition));
                 it.putExtra(EditImageActivity.EXTRA_OUTPUT, FileUtil.getAnPicPath(System.currentTimeMillis() + "_editor"));
                 startActivityForResult(it, FILTER_PUZZLE_LP_EDIT);
                 break;
@@ -437,7 +466,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
 
                 break;
             case 4:
-                bitmaps.remove(position);
+                picInfos.remove(position);
                 hLongPicItemAdapter.notifyDataSetChanged();
                 //删除
                 break;

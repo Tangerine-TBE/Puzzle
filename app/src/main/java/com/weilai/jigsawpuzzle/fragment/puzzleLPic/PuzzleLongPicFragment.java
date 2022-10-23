@@ -35,12 +35,14 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.adapter.puzzleLP.LongPicItemAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.bean.PicInfo;
 import com.weilai.jigsawpuzzle.bean.TabEntity;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpColorPopUp;
 import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.event.LpSplitEvent;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
+import com.weilai.jigsawpuzzle.util.BitmapUtils;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
@@ -79,7 +81,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     private final int[] titlesIcon = new int[]{R.mipmap.icon_lp_frame, R.mipmap.icon_add, R.mipmap.icon_sort};
     private RecyclerView mRvLP;
 
-    private ArrayList<String> bitmaps;
+    private ArrayList<PicInfo> picInfos;
     private static final int FILTER_PUZZLE_LP_CODE = 1;
     private static final int FILTER_PUZZLE_LP_SINGLE = 2;
     private static final int FILTER_PUZZLE_LP_EDIT = 3;
@@ -133,8 +135,9 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         mFlyTabLayout.setOnTabSelectListener(this);
         //遍历所有的Bitmap
         assert getArguments() != null;
-        bitmaps = getArguments().getStringArrayList("data");
-        longPicItemAdapter = new LongPicItemAdapter(_mActivity, bitmaps);
+       ArrayList<String> bitmaps = getArguments().getStringArrayList("data");
+        initData(bitmaps);
+        longPicItemAdapter = new LongPicItemAdapter(_mActivity, picInfos);
         mRvLP.setAdapter(longPicItemAdapter);
         paddingItemDecoration = new PaddingItemDecoration(mRvLP);
 //        mRvLP.addItemDecoration(paddingItemDecoration);
@@ -143,6 +146,15 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         });
         mActionBarHeight = actionbarSizeTypedArray.getDimension(0, 0);
         actionbarSizeTypedArray.recycle();
+    }
+    private void initData(ArrayList<String> data){
+        picInfos = new ArrayList<>();
+        for (String path :data){
+            PicInfo picInfo = new PicInfo();
+            picInfo.shouldLoad = BitmapUtils.shouldLoadBitmap(path,true);
+            picInfo.path = path;
+            picInfos.add(picInfo);
+        }
     }
 
     @Override
@@ -205,7 +217,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                     relativeLayout.layout(0, 0, DimenUtil.getScreenWidth() * 5/7,
                             relativeLayout.getMeasuredHeight());
-                    PhotoView itemView = relativeLayout.findViewById(R.id.iv_img);
+                    ImageView itemView = relativeLayout.findViewById(R.id.iv_img);
 
                     int padding = paddingItemDecoration.getProcess();
                     if (i == 0) {
@@ -305,7 +317,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                         .forResult(FILTER_PUZZLE_LP_CODE);
                 break;
             case 2:
-                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(bitmaps);
+                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(picInfos);
                 start(puzzleLPSortFragment);
                 break;
             default:
@@ -323,7 +335,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDataSortChange(LpSortEvent event) {
-        bitmaps = (ArrayList<String>) event.data;
+        picInfos = (ArrayList<PicInfo>) event.data;
         longPicItemAdapter.notifyDataSetChanged();
         puzzleLPSortFragment.pop();
         puzzleLPSortFragment = null;
@@ -334,14 +346,20 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         ArrayList<String> data = (ArrayList<String>) event.data;
         int type = event.type;
         if (type == 1) {
-            bitmaps.remove(selectedPosition);
-            bitmaps.add(selectedPosition, data.get(0));
+            PicInfo picInfo = picInfos.get(selectedPosition);
+            picInfo.path = data.get(0);
+            picInfos.remove(selectedPosition);
+            picInfos.add(selectedPosition, picInfo);
         } else if (type == 2) {
-            bitmaps.remove(selectedPosition);
-            bitmaps.add(selectedPosition, data.get(0));
-            if (selectedPosition + 1 < bitmaps.size()) {
-                bitmaps.remove(selectedPosition + 1);
-                bitmaps.add(selectedPosition + 1, data.get(1));
+            PicInfo picInfo = picInfos.get(selectedPosition);
+            picInfo.path = data.get(0);
+            picInfos.remove(selectedPosition);
+            picInfos.add(selectedPosition, picInfo);
+            if (selectedPosition + 1 < picInfos.size()) {
+                PicInfo picInfo1 = picInfos.get(selectedPosition + 1);
+                picInfo1.path = data.get(1);
+                picInfos.remove(selectedPosition + 1);
+                picInfos.add(selectedPosition + 1, picInfo1);
             }
         }
         longPicItemAdapter.notifyDataSetChanged();
@@ -363,8 +381,11 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                                 return;
                             }
                             String path = localMedia.getAvailablePath();
-                            bitmaps.add(path);
-                            longPicItemAdapter.notifyItemInserted(bitmaps.size());
+                            PicInfo picInfo = new PicInfo();
+                            picInfo.path = path;
+                            picInfo.shouldLoad = BitmapUtils.shouldLoadBitmap(path,true);
+                            picInfos.add(picInfo);
+                            longPicItemAdapter.notifyItemInserted(picInfos.size());
                         }
                     }
                 }
@@ -373,8 +394,11 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                         int size = list.size();
                         if (size > 0) {
                             String path = list.get(0).getAvailablePath();
-                            bitmaps.remove(selectedPosition);
-                            bitmaps.add(selectedPosition, path);
+                            PicInfo picInfo = new PicInfo();
+                            picInfo.path = path;
+                            picInfo.shouldLoad = BitmapUtils.shouldLoadBitmap(path,true);
+                            picInfos.remove(selectedPosition);
+                            picInfos.add(selectedPosition, picInfo);
                             longPicItemAdapter.notifyItemChanged(selectedPosition);
                         }
                     }
@@ -383,8 +407,11 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                     if (selectedPosition != -1) {
                         boolean isEdit = data.getBooleanExtra("image_is_edit", false);
                         if (isEdit) {
-                            bitmaps.remove(selectedPosition);
-                            bitmaps.add(selectedPosition, filePath);
+                            PicInfo picInfo = new PicInfo();
+                            picInfo.path = filePath;
+                            picInfo.shouldLoad = BitmapUtils.shouldLoadBitmap(filePath,true);
+                            picInfos.remove(selectedPosition);
+                            picInfos.add(selectedPosition, picInfo);
                             longPicItemAdapter.notifyItemChanged(selectedPosition);
                         }
                     }
@@ -413,20 +440,20 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         selectedPosition = position;
         longPicItemAdapter.resetItem();
         mPuzzleLpPopUp.dismiss();
-        ArrayList<String> bitmapsInfo = new ArrayList<>();
+        ArrayList<PicInfo> bitmapsInfo = new ArrayList<>();
         switch (view.getId()) {
             case 0:
                 //裁顶
                 if (selectedPosition == 0) {
-                    bitmapsInfo.add(bitmaps.get(selectedPosition));
+                    bitmapsInfo.add(picInfos.get(selectedPosition));
                     puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1, 1);
                     start(puzzleLpSplitFragment);
                 }
                 break;
             case 1:
-                bitmapsInfo.add(bitmaps.get(selectedPosition));
-                if (selectedPosition + 1 < bitmaps.size()) {
-                    bitmapsInfo.add(bitmaps.get(selectedPosition + 1));
+                bitmapsInfo.add(picInfos.get(selectedPosition));
+                if (selectedPosition + 1 < picInfos.size()) {
+                    bitmapsInfo.add(picInfos.get(selectedPosition + 1));
                 }
                 puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2, 1);
                 start(puzzleLpSplitFragment);
@@ -435,7 +462,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             case 2:
                 //编辑
                 Intent it = new Intent(getContext(), EditImageActivity.class);
-                it.putExtra(EditImageActivity.FILE_PATH, bitmaps.get(selectedPosition));
+                it.putExtra(EditImageActivity.FILE_PATH, picInfos.get(selectedPosition));
                 it.putExtra(EditImageActivity.EXTRA_OUTPUT, FileUtil.getAnPicPath(System.currentTimeMillis() + "_editor"));
                 startActivityForResult(it, FILTER_PUZZLE_LP_EDIT);
                 break;
@@ -450,7 +477,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
 
                 break;
             case 4:
-                bitmaps.remove(position);
+                picInfos.remove(position);
                 longPicItemAdapter.notifyDataSetChanged();
                 //删除
                 break;

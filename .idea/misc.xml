@@ -8,8 +8,11 @@
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/drawable/bg_background_puzzle_up.xml" value="0.243" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/drawable/bg_puzzlelp_selected.xml" value="0.243" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/drawable/bg_puzzlelp_selted.xml" value="0.243" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/activity_main.xml" value="0.2630208333333333" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/activity_splash.xml" value="0.22" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/fragment_client_report.xml" value="0.15925925925925927" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/fragment_cross_dress.xml" value="0.2630208333333333" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/fragment_data.xml" value="0.26197916666666665" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/fragment_mine.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/fragment_puzzle_hlp.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/fragment_puzzle_lp.xml" value="0.36614583333333334" />
@@ -18,6 +21,7 @@
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/item_long_pic_sort.xml" value="0.26145833333333335" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/item_pic_hlong.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/item_pic_long.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/item_record.xml" value="0.26197916666666665" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/item_template.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/layout_edit_color.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/layout_edit_tool.xml" value="0.24010416666666667" />

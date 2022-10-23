@@ -20,6 +20,8 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.bean.PicInfo;
+import com.weilai.jigsawpuzzle.util.BitmapUtils;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,10 +37,10 @@ import java.util.List;
  **/
 public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapter.ViewHolder>{
     private final Context mContext;
-    private final List<String> bitmaps;
+    private final List<PicInfo> bitmaps;
     private View mLastSelectedView;
     private int mLastSelectedPosition = -1;
-    public HLongPicItemAdapter(Context context, List<String> bitmaps) {
+    public HLongPicItemAdapter(Context context, List<PicInfo> bitmaps) {
         this.mContext = context;
         this.bitmaps = bitmaps;
     }
@@ -53,13 +55,9 @@ public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapte
     @Override
     public void onBindViewHolder(@NonNull HLongPicItemAdapter.ViewHolder holder, int position) {
         Bitmap bitmap = null;
-        if (!TextUtils.isEmpty(bitmaps.get(position))) {
-            Uri srcUri;
-            if (PictureMimeType.isContent(bitmaps.get(position)) || PictureMimeType.isHasHttp(bitmaps.get(position))) {
-                srcUri = Uri.parse(bitmaps.get(position));
-            } else {
-                srcUri = Uri.fromFile(new File(bitmaps.get(position)));
-            }
+        String path = bitmaps.get(position).path;
+        if (!TextUtils.isEmpty(path)) {
+            Uri srcUri = BitmapUtils.pathToUri(path);
             if (srcUri != null) {
                 InputStream stream = null;
                 try {

@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.bean.PicInfo;
 import com.weilai.jigsawpuzzle.event.LpSplitEvent;
 import com.weilai.jigsawpuzzle.util.EvenUtil;
 import com.weilai.jigsawpuzzle.util.ToastUtil;
@@ -35,9 +36,9 @@ public class PuzzleLpSplitFragment extends BaseFragment {
     private PuzzleLpSplitFragment() {
     }
 
-    public static PuzzleLpSplitFragment getInstance(ArrayList<String> bitmapInfo, int type, int mode) {
+    public static PuzzleLpSplitFragment getInstance(ArrayList<PicInfo> bitmapInfo, int type, int mode) {
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList("bitmapInfo", bitmapInfo);
+        bundle.putParcelableArrayList("bitmapInfo", bitmapInfo);
         bundle.putInt("type", type);
         bundle.putInt("mode", mode);
         PuzzleLpSplitFragment puzzleLpSplitFragment = new PuzzleLpSplitFragment();
@@ -71,17 +72,17 @@ public class PuzzleLpSplitFragment extends BaseFragment {
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        ArrayList<String> bitmaps = getArguments().getStringArrayList("bitmapInfo");
+        ArrayList<PicInfo> bitmaps = getArguments().getParcelableArrayList("bitmapInfo");
         type = getArguments().getInt("type");
         if (type == 1) {
             //裁顶部
-            mEditTop.setImage(bitmaps.get(0));
+            mEditTop.setImage(bitmaps.get(0).path);
         } else if (type == 2) {
             //裁底部
             if (bitmaps.size() >= 2) {
-                mEditTop.setImage(bitmaps.get(1));
+                mEditTop.setImage(bitmaps.get(1).path);
             }
-            mEditBottom.setImage(bitmaps.get(0));
+            mEditBottom.setImage(bitmaps.get(0).path);
         }
         super.onLazyInitView(savedInstanceState);
     }

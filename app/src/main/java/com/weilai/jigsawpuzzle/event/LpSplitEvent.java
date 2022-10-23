@@ -1,5 +1,7 @@
 package com.weilai.jigsawpuzzle.event;
 
+import com.weilai.jigsawpuzzle.bean.PicInfo;
+
 import java.util.List;
 
 /**
@@ -10,7 +12,7 @@ import java.util.List;
 public class LpSplitEvent {
     public List<String> data;
     public int type;
-    public LpSplitEvent (List<String> data,int type){
+    public LpSplitEvent (List<String> data, int type){
         this.data = data;
         this.type = type;
     }

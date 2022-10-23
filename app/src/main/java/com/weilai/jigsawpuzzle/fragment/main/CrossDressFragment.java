@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.weilai.jigsawpuzzle.Constants;
+import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.CrossBannerEntity;
 import com.weilai.jigsawpuzzle.fragment.special.FilterActivity;
 import com.weilai.jigsawpuzzle.fragment.special.MagicCameraActivity;
@@ -59,7 +60,7 @@ import okhttp3.ResponseBody;
  * * Author:tangerine
  * * Description:首页
  **/
-public class CrossDressFragment extends Fragment implements View.OnClickListener {
+public class CrossDressFragment extends BaseFragment implements View.OnClickListener {
     private static final int FILTER_PUZZLE_QR_CODE = 1;
     private static final int FILTER_PUZZLE_LP_CODE = 2;
     private static final int FILTER_PUZZLE_9P_CODE = 3;
@@ -68,23 +69,22 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
     private static final int FILTER_PUZZLE_FITTER_CODE = 6;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_cross_dress, container, false);
-
-        initUi(view);
-        return view;
+    protected Object setLayout() {
+        return R.layout.fragment_cross_dress;
     }
-    private Disposable disposable;
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (disposable != null){
-            if (!disposable.isDisposed()){
-                disposable.dispose();
-            }
-        }
+    protected void initView(View view) {
+        initUi(view);
     }
+
+    @Override
+    protected void initListener(View view) {
+
+    }
+
+
+
 
     private void initUi(View view) {
         Banner<CrossBannerEntity, ImageBannerAdapter> banner = view.findViewById(R.id.banner);
@@ -103,7 +103,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
         NetConfig.getInstance().getINetService().getBanner().observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<List<CrossBannerEntity> >() {
             @Override
             public void onSubscribe(Disposable d) {
-                disposable = d;
+                mDisposable.add(d);
             }
 
             @Override
@@ -132,6 +132,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
         });
 
     }
+
 
     @Override
     public void onClick(View view) {

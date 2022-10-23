@@ -57,6 +57,7 @@ public class MainBaseActivity extends BaseSimpleActivity {
         fragments.add(new EditImageFragment());
         fragments.add(new MineFragment());
         mViewPager = view.findViewById(R.id.layout_content);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, fragments));
         mTabLayout.setupWithViewPager(mViewPager);
         initTabLayout();
@@ -73,10 +74,12 @@ public class MainBaseActivity extends BaseSimpleActivity {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void onBackPressedSupport() {
+        super.onBackPressedSupport();
         this.finish();
+
     }
 
     /**

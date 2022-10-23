@@ -56,6 +56,7 @@
         <activity android:name=".fragment.special.FilterActivity" android:exported="true"/>
         <activity android:name=".activity.special.AgreementContentActivity" android:exported="true"/>
         <activity android:name="com.xinlan.imageeditlibrary.editimage.EditImageActivity" android:exported="true"/>
+        <activity android:name=".activity.main.ClientReportBaseActivity" android:exported="true"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.weilai.jigsawpuzzle.fileprovider"
