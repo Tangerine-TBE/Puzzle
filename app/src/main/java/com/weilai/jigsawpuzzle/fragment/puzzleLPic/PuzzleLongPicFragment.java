@@ -26,6 +26,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -44,6 +45,7 @@ import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.L;
+import com.weilai.jigsawpuzzle.util.ToastUtil;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PaddingItemDecoration;
 import com.weilai.library.listener.CustomTabEntity;
@@ -203,7 +205,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                     relativeLayout.layout(0, 0, DimenUtil.getScreenWidth() * 5/7,
                             relativeLayout.getMeasuredHeight());
-                    ImageView itemView = relativeLayout.findViewById(R.id.iv_img);
+                    PhotoView itemView = relativeLayout.findViewById(R.id.iv_img);
 
                     int padding = paddingItemDecoration.getProcess();
                     if (i == 0) {
@@ -226,7 +228,6 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         }).observeOn(Schedulers.newThread()).flatMap(new Function<ArrayList<RecyclerView.ViewHolder>, ObservableSource<String>>() {
             @Override
             public ObservableSource<String> apply(ArrayList<RecyclerView.ViewHolder> viewHolders) throws Exception {
-                L.e("1");
                 Bitmap bigBitmap;
                 int height = 0;
                 Paint paint = new Paint();
@@ -237,16 +238,11 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                     L.e(i + "");
                     RecyclerView.ViewHolder holder = viewHolders.get(i);
                     RelativeLayout relativeLayout = holder.itemView.findViewById(R.id.item_adjust);
-                    relativeLayout.setDrawingCacheEnabled(true);
-                    relativeLayout.buildDrawingCache();
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Bitmap drawingCache =relativeLayout.getDrawingCache();
-                    if (drawingCache != null) {
-                        bitmaCache.put(String.valueOf(i), drawingCache);
+                    Bitmap bitmap  = Bitmap.createBitmap(relativeLayout.getWidth(),relativeLayout.getHeight(), Bitmap.Config.ARGB_8888);
+                    Canvas canvas  = new Canvas(bitmap);
+                    relativeLayout.draw(canvas);
+                    if (bitmap != null) {
+                        bitmaCache.put(String.valueOf(i), bitmap);
                     }
                     height += relativeLayout.getMeasuredHeight();
                 }
@@ -362,6 +358,10 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                     int size = list.size();
                     if (size > 0) {
                         for (LocalMedia localMedia : list) {
+                            if (localMedia.getSize() > 10368000 ){
+                                ToastUtil.showToast(localMedia.getFileName() + ",这个文件太大了");
+                                return;
+                            }
                             String path = localMedia.getAvailablePath();
                             bitmaps.add(path);
                             longPicItemAdapter.notifyItemInserted(bitmaps.size());

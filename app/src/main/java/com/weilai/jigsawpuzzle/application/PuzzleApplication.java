@@ -23,7 +23,7 @@ public class PuzzleApplication  extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         handler = new Handler(Looper.getMainLooper());
-        Config.init(this).withSp(this).withApplication(this).Configure();
+        Config.init(this).withSp(this).withDao(this).withApplication(this).Configure();
     }
 
 

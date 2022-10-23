@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android-extensions'
     id  'kotlin-android'
     id 'AndResGuard'
+    id 'org.greenrobot.greendao'
+
 
 }
 
@@ -52,6 +54,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    greendao {
+        schemaVersion 1 //??????
+        daoPackage 'com.weilai.jigsawpuzzle'// ??DaoMaster?DaoSession?Dao ??
+        targetGenDir 'src/main/java'//??DaoMaster?DaoSession?Dao??
     }
     productFlavors {
 
@@ -128,7 +135,11 @@ android {
     }
 
 }
-
+greendao {
+    schemaVersion 1 //??????
+    daoPackage 'com.weilai.jigsawpuzzle'// ??DaoMaster?DaoSession?Dao ??
+    targetGenDir 'src/main/java'//??DaoMaster?DaoSession?Dao??
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation fileTree(dir: 'libs', include: ['*.aar'])
@@ -192,4 +203,7 @@ dependencies {
     implementation  'com.umeng.umsdk:asms:1.6.3'// 必选
     implementation 'com.umeng.umsdk:apm:1.7.0' // 错误分析升级为独立产品U-APM可按需集成，可选
     implementation  'com.umeng.umsdk:abtest:1.0.0'//使用U-App中ABTest能力，可选
+
+    implementation 'org.greenrobot:greendao:3.2.2'
+
 }

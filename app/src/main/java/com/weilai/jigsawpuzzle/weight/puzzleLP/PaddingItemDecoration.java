@@ -70,21 +70,20 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < parent.getChildCount(); i++) {
             final View child = parent.getChildAt(i);
             RelativeLayout parentView = child.findViewById(R.id.item_adjust);
-            ImageView imageView = parentView.findViewById(R.id.iv_img);
+            ImageView ivImg = parentView.findViewById(R.id.iv_img);
             if (!TextUtils.isEmpty(color)) {
                 parentView.setBackgroundColor(Color.parseColor(color));
             }
             if (i == 0) {
                 if (parent.getChildCount() == 1) {
-                    imageView.setPadding(process, process, process, process);
-
+                    ivImg.setPadding(process, process, process, process);
                 } else {
-                    imageView.setPadding(process, process, process, 0);
+                    ivImg.setPadding(process, process, process, 0);
                 }
             } else if (i == parent.getChildCount() - 1) {
-                imageView.setPadding(process, process, process, process);
+                ivImg.setPadding(process, process, process, process);
             } else {
-                imageView.setPadding(process, process, process, 0);
+                ivImg.setPadding(process, process, process, 0);
             }
         }
 
@@ -96,12 +95,6 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
         } else {
             return color;
         }
-    }
-
-    @Override
-    public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-
-        super.onDraw(c, parent, state);
     }
 
 

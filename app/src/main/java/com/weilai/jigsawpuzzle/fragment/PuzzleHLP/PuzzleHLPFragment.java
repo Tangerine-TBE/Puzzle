@@ -185,10 +185,10 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                         adapter.onBindViewHolder(holder, i);
                         holder.itemView.measure(
                                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                                View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenHeight() / 3, View.MeasureSpec.EXACTLY)
+                                View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenHeight() / 2, View.MeasureSpec.EXACTLY)
                         );
                         holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
-                                DimenUtil.getScreenHeight() /3);
+                                DimenUtil.getScreenHeight() /2);
                         int padding = paddingItemDecoration.getProcess();
                         if (i ==  0){
                             holder.itemView.setPadding(padding,padding,0,padding);
@@ -230,7 +230,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                     }
                     width += holder.itemView.getMeasuredWidth();
                 }
-                bigBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight() / 3, Bitmap.Config.ARGB_8888);
+                bigBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight() / 2, Bitmap.Config.ARGB_8888);
                 Canvas bigCanvas = new Canvas(bigBitmap);
                 Drawable lBackground = view.getBackground();
                 if (lBackground instanceof ColorDrawable) {

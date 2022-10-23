@@ -98,18 +98,19 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth,viewHeight);
         ImageView image = holder.ivImage;
         image.setLayoutParams(relayout);
-        Glide.with(mContext).load(bitmap).into(image);
+        image.setImageBitmap(bitmap);
+//        Glide.with(mContext).load(bitmap).into(image);
 //        image.setImage(ImageSource.bitmap(bitmap));
 //        image.setImage(ImageSource.bitmap(bitmap));
 //        加载一个占位图
-//        ImageView place = holder.ivPlace;
-//        place.setLayoutParams(relayout);
+        ImageView place = holder.ivPlace;
+        place.setLayoutParams(relayout);
         if (mLastSelectedPosition == -1) {
-            holder. layoutContent.setSelected(false);
+            holder. ivPlace.setSelected(false);
         } else {
-            holder. layoutContent.setSelected(position == mLastSelectedPosition);
+            holder. ivPlace.setSelected(position == mLastSelectedPosition);
         }
-        holder. layoutContent.setOnClickListener(v -> {
+        holder. ivPlace.setOnClickListener(v -> {
             if (canSelected) {
                 if (mLastSelectedView != null) {
                     if (mLastSelectedView != v) {
@@ -166,11 +167,13 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivImage;
+        ImageView ivPlace;
         RelativeLayout layoutContent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.iv_img);
+            ivPlace = itemView.findViewById(R.id.iv_place);
             layoutContent = itemView.findViewById(R.id.item_adjust);
         }
     }

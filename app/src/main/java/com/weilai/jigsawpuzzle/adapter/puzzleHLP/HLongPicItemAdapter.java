@@ -10,12 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
@@ -73,19 +75,21 @@ public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapte
         }
         int bitMapHeight = bitmap.getHeight();
         BigDecimal bitMapHeightBig = new BigDecimal(bitMapHeight);
-        int viewHeight = DimenUtil.getScreenHeight()  / 3;
+        int viewHeight = DimenUtil.getScreenHeight()  / 2;
         BigDecimal viewHeightBig = new BigDecimal(viewHeight);
         float value = viewHeightBig.divide(bitMapHeightBig, 2, RoundingMode.HALF_DOWN).floatValue();
         BigDecimal valueBig = new BigDecimal(value);
         int bigMapWidth = bitmap.getWidth();
         int viewWidth = valueBig.multiply(new BigDecimal(bigMapWidth)).intValue();
-
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(viewWidth,viewHeight);
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         holder.layoutContent.setLayoutParams(layoutParams);
+        ViewGroup.LayoutParams layoutParams1 = new ViewGroup.LayoutParams(viewWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+        holder.itemView.setLayoutParams(layoutParams1);
         FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth,viewHeight);
-        SubsamplingScaleImageView image = holder.ivImage;
+        ImageView image = holder.ivImage;
         image.setLayoutParams(relayout);
-        image.setImage(ImageSource.bitmap(bitmap));
+        image.setImageBitmap(bitmap);
         //加载一个占位图
         AppCompatImageView place = holder.ivPlace;
         place.setLayoutParams(relayout);
@@ -148,15 +152,15 @@ public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        SubsamplingScaleImageView ivImage;
+        ImageView ivImage;
         AppCompatImageView ivPlace;
-        FrameLayout layoutContent;
+        RelativeLayout layoutContent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.iv_img);
             ivPlace = itemView.findViewById(R.id.iv_place);
-            layoutContent = itemView.findViewById(R.id.layout_content);
+            layoutContent = itemView.findViewById(R.id.item_adjust);
         }
     }
 }

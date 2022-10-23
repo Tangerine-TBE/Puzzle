@@ -23,11 +23,15 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.RecordInfoDao;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.db.RecordInfo;
 import com.weilai.jigsawpuzzle.dialog.save.BitmapInfoPopUp;
 import com.weilai.jigsawpuzzle.util.AppStoreUtil;
+import com.weilai.jigsawpuzzle.util.DateUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.UriUtil;
+import com.weilai.jigsawpuzzle.util.dao.DaoTool;
 import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 
 import java.io.File;
@@ -104,8 +108,12 @@ public class SaveFragment extends BaseFragment {
                 String path = (String) objects[1];
                 if (bitmap != null) {
                     tvSize.setText(String.format("%d*%d", bitmap.getWidth(), bitmap.getHeight()));
-                    tvDate.setText("2019/10/21 12:33:31");
+                    tvDate.setText(DateUtil.unixTimeToDateTimeString(System.currentTimeMillis() /1000));
                     tvPath.setText(path.trim());
+                    RecordInfo recordInfo = new RecordInfo();
+                    recordInfo.setTime(System.currentTimeMillis());
+                    recordInfo.setFilePath(path.trim());
+                    DaoTool.insertRecord(recordInfo);
                     Toast.makeText(_mActivity, "图片已经保存到相册", Toast.LENGTH_SHORT).show();
                     imageView.setImage(ImageSource.bitmap(bitmap));
 
@@ -142,7 +150,7 @@ public class SaveFragment extends BaseFragment {
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pop();
+                _mActivity.finish();
             }
         });
         AppCompatTextView tvSave = view.findViewById(R.id.tv_save);

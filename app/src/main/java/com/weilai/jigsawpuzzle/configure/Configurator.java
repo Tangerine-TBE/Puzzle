@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.util.ArrayMap;
 
 import com.weilai.jigsawpuzzle.util.SPUtil;
+import com.weilai.jigsawpuzzle.util.dao.DaoTool;
 
 /**
  ** DATE: 2022/10/10
@@ -39,6 +40,10 @@ public class Configurator {
     }
     public final Configurator withSp(Context context){
         SPUtil.init(context);
+        return this;
+    }
+    public final Configurator withDao(Context context){
+        DaoTool.init(context);
         return this;
     }
     public final Configurator withApplication(Application application){
