@@ -72,13 +72,12 @@ public class FileUtil {
     public static String saveScreenShot(Bitmap bitmap, String fileNameStr) throws Exception {
         FileOutputStream fos;
         File file;
-        File externalFileRootDir = getApplicationContext().getExternalFilesDir(null);
-        do {
-            externalFileRootDir = Objects.requireNonNull(externalFileRootDir).getParentFile();
-        } while (Objects.requireNonNull(externalFileRootDir).getAbsolutePath().contains("/Android"));
+        File externalFileRootDir = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+
 
         String saveDir = Objects.requireNonNull(externalFileRootDir).getAbsolutePath();
-        String filePath = saveDir + "/" + Environment.DIRECTORY_DCIM;
+        String filePath = saveDir + "/OutPut";
         file = new File(filePath);
         if (!file.exists()) {
             file.mkdir();
@@ -99,13 +98,11 @@ public class FileUtil {
     public static String saveScreenShot(Bitmap bitmap, String fileNameStr,int quality) throws Exception {
         FileOutputStream fos;
         File file;
-        File externalFileRootDir = getApplicationContext().getExternalFilesDir(null);
-        do {
-            externalFileRootDir = Objects.requireNonNull(externalFileRootDir).getParentFile();
-        } while (Objects.requireNonNull(externalFileRootDir).getAbsolutePath().contains("/Android"));
+        File externalFileRootDir = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
 
         String saveDir = Objects.requireNonNull(externalFileRootDir).getAbsolutePath();
-        String filePath = saveDir + "/" + Environment.DIRECTORY_DCIM;
+        String filePath = saveDir + "/OutPut";
         file = new File(filePath);
         if (!file.exists()) {
             file.mkdir();

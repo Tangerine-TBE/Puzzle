@@ -81,10 +81,13 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     private int picSize = 0;
     private static final int FILTER_CODE = 1;
     private PuzzleLpPopUp puzzleLpPopUp;
+    private PuzzleSizeAdapter puzzleSizeAdapter;
 
     private PuzzleEditFragment() {
 
     }
+
+
 
     public static PuzzleEditFragment getInstance(int size, int type, int theme, ArrayList<String> bitMapPaths) {
         Bundle bundle = new Bundle();
@@ -121,6 +124,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                puzzleLpPopUp.dismiss();
                 pop();
             }
         });
@@ -197,7 +201,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
                     mPuzzleView.addPieces(bitmaps);
                     List<PuzzleLayout> puzzleLayouts = new ArrayList<>();
                     loadAboutPuzzle(picSize, puzzleLayouts);
-                    PuzzleSizeAdapter puzzleSizeAdapter = new PuzzleSizeAdapter(getContext(), puzzleLayouts, PuzzleEditFragment.this, bitmaps, mPuzzleView.getPuzzleLayout());
+                     puzzleSizeAdapter = new PuzzleSizeAdapter(getContext(), puzzleLayouts, PuzzleEditFragment.this, bitmaps, mPuzzleView.getPuzzleLayout());
                     recyclerView.setAdapter(puzzleSizeAdapter);
                     hideProcessDialog();
                 }
@@ -471,7 +475,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
         } else if (mConnerSeekBar == seekBar) {
             mPuzzleView.setPieceRadian(progress);
         }
-
+        puzzleSizeAdapter.notifyDataSetChanged();
     }
 
 

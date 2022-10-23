@@ -38,7 +38,7 @@ public class PaddingHirItemDecoration  extends RecyclerView.ItemDecoration{
     public final void setBackground(String color) {
         this.color = color;
         if (parent != null) {
-            parent.postInvalidate();
+            parent.requestLayout();
         }
     }
 
@@ -62,14 +62,12 @@ public class PaddingHirItemDecoration  extends RecyclerView.ItemDecoration{
             if (!TextUtils.isEmpty(color)) {
                 child.setBackgroundColor(Color.parseColor(color));
             }
-            if (parent.getChildCount() > 1){
-                if (i == 0){
-                    child.setPadding(process,process,0,process);
-                }else{
-                    child.setPadding(0,process,process,process);
-                }
-            }else{
+            if (i ==  0){
+                child.setPadding(process,process,0,process);
+            }else if (i == parent.getChildCount()-1){
                 child.setPadding(process,process,process,process);
+            }else{
+                child.setPadding(process,process,0,process);
             }
             child.invalidate();
         }

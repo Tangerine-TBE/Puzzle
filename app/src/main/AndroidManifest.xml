@@ -15,11 +15,11 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
         android:label="${app_name_channel}"
 
         android:name=".application.PuzzleApplication"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
@@ -55,6 +55,7 @@
         <activity android:name=".fragment.special.StickerActivity" android:exported="true"/>
         <activity android:name=".fragment.special.FilterActivity" android:exported="true"/>
         <activity android:name=".activity.special.AgreementContentActivity" android:exported="true"/>
+        <activity android:name="com.xinlan.imageeditlibrary.editimage.EditImageActivity" android:exported="true"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.weilai.jigsawpuzzle.fileprovider"

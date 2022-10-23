@@ -1,5 +1,6 @@
 package com.weilai.jigsawpuzzle.adapter.main;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -7,7 +8,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.bean.CrossBannerEntity;
 import com.youth.banner.adapter.BannerAdapter;
 
 import java.util.List;
@@ -17,11 +20,12 @@ import java.util.List;
  ** Author:tangerine
  ** Description:
  **/
-public class ImageBannerAdapter extends BannerAdapter<String,ImageBannerAdapter.BannerViewHolder> {
+public class ImageBannerAdapter extends BannerAdapter<CrossBannerEntity,ImageBannerAdapter.BannerViewHolder> {
+    private Context context;
 
-
-    public ImageBannerAdapter(List<String> datas) {
+    public ImageBannerAdapter(List<CrossBannerEntity> datas, Context context) {
         super(datas);
+        this.context =context;
     }
 
     @Override
@@ -37,14 +41,8 @@ public class ImageBannerAdapter extends BannerAdapter<String,ImageBannerAdapter.
  ** Description: test three images .the pic might be from the service;
  **/
     @Override
-    public void onBindView(BannerViewHolder holder, String data, int position, int size) {
-        if (position == 0){
-            holder.imageView.setImageResource(R.mipmap.ic_home_tab1);
-        } else if (position == 1) {
-            holder.imageView.setImageResource(R.mipmap.ic_home_tab2);
-        }else if (position == 2){
-            holder.imageView.setImageResource(R.mipmap.ic_home_tab3);
-        }
+    public void onBindView(BannerViewHolder holder, CrossBannerEntity data, int position, int size) {
+            Glide.with(context).load(data.getBannerurl()).placeholder(R.mipmap.ic_home_tab1).into(holder.imageView);
     }
 
     public static class BannerViewHolder extends RecyclerView.ViewHolder {

@@ -3,6 +3,8 @@ package com.weilai.jigsawpuzzle.fragment.puzzle;
 import android.content.Intent;
 import android.view.View;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -37,6 +39,8 @@ public class PuzzleFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     protected void initView(View view) {
+        AppCompatTextView appCompatTextView = view.findViewById(R.id.tv_title);
+        appCompatTextView.setText("拼图");
         view.findViewById(R.id.tv_add).setOnClickListener(this);
         view.findViewById(R.id.tv_21).setOnClickListener(this);
         view.findViewById(R.id.tv_22).setOnClickListener(this);

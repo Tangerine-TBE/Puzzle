@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/aiv_image"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/bg_card_item_textview"
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"

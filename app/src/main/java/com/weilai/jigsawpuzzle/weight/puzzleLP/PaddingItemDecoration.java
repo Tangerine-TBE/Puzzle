@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.Image;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -11,12 +12,16 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.FontRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.util.L;
 
@@ -30,13 +35,18 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
     private int process;
     private String color;
     private RecyclerView parent;
-
+    public PaddingItemDecoration(RecyclerView recyclerView){
+        this.parent = recyclerView;
+    }
     public final void setProcess(int process) {
         this.process = process;
-        mOffsetWidth = process - mCurrentProcess;
-        mCurrentProcess = process;
         if (parent != null) {
-            parent.postInvalidate();
+            int size = parent.getItemDecorationCount();
+            if (size == 0) {
+                parent.addItemDecoration(this);
+            } else {
+                parent.invalidateItemDecorations();
+            }
         }
     }
 
@@ -47,52 +57,50 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
     public final void setBackground(String color) {
         this.color = color;
         if (parent != null) {
-            parent.postInvalidate();
+            parent.invalidateItemDecorations();
         }
     }
 
+    @Override
+    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        super.getItemOffsets(outRect, view, parent, state);
+        if (this.parent == null) {
+            this.parent = parent;
+        }
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            final View child = parent.getChildAt(i);
+            RelativeLayout parentView = child.findViewById(R.id.item_adjust);
+            ImageView imageView = parentView.findViewById(R.id.iv_img);
+            if (!TextUtils.isEmpty(color)) {
+                parentView.setBackgroundColor(Color.parseColor(color));
+            }
+            if (i == 0) {
+                if (parent.getChildCount() == 1) {
+                    imageView.setPadding(process, process, process, process);
+
+                } else {
+                    imageView.setPadding(process, process, process, 0);
+                }
+            } else if (i == parent.getChildCount() - 1) {
+                imageView.setPadding(process, process, process, process);
+            } else {
+                imageView.setPadding(process, process, process, 0);
+            }
+        }
+
+    }
+
     public final String getBackgroundColor() {
-        if (TextUtils.isEmpty(color)){
+        if (TextUtils.isEmpty(color)) {
             return "#FFFFFFFF";
-        }else{
+        } else {
             return color;
         }
     }
 
-    private int mCurrentProcess = 0;
-    private int mOffsetWidth = 0;
-
     @Override
     public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        if (this.parent == null) {
-            this.parent = parent;
-        }
 
-        for (int i = 0; i < parent.getChildCount(); i++) {
-            final View child = parent.getChildAt(i);
-            if (!TextUtils.isEmpty(color)) {
-                child.setBackgroundColor(Color.parseColor(color));
-            }
-            if (parent.getChildCount() > 1) {
-
-                if (i == 0) {
-                    child.setPadding(process, process, process, 0);
-                } else {
-                    child.setPadding(process, 0, process, process);
-                }
-            }else{
-                child.setPadding(process,process,process,process);
-            }
-//            ImageView ivImg = child.findViewById(R.id.iv_img);
-//            ImageView ivPlace = child.findViewById(R.id.iv_place);
-//            ViewGroup.LayoutParams ivImgLayoutParams = ivImg.getLayoutParams();
-//            ivImgLayoutParams.width = ivImgLayoutParams.width - Math.max(mOffsetWidth,0);
-//            ivImgLayoutParams.height = ivImgLayoutParams.height - Math.max(mOffsetWidth,0);
-//            ViewGroup.LayoutParams ivPlaceLayoutParams = ivPlace.getLayoutParams();
-//            ivPlaceLayoutParams.width = ivImgLayoutParams.width - Math.max(mOffsetWidth,0);
-//            ivPlaceLayoutParams.height = ivImgLayoutParams.height - Math.max(mOffsetWidth,0);
-            child.invalidate();
-        }
         super.onDraw(c, parent, state);
     }
 

@@ -11,6 +11,7 @@ import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.event.LpSplitEvent;
 import com.weilai.jigsawpuzzle.util.EvenUtil;
+import com.weilai.jigsawpuzzle.util.ToastUtil;
 import com.weilai.jigsawpuzzle.weight.puzzleLP.PuzzleLpEditView;
 
 import java.util.ArrayList;
@@ -121,6 +122,8 @@ public class PuzzleLpSplitFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        hideProcessDialog();
+                        ToastUtil.showToast("编辑失败!请重新编辑");
                         e.printStackTrace();
                     }
 

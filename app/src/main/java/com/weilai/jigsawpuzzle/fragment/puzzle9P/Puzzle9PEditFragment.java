@@ -10,6 +10,7 @@ import android.util.ArrayMap;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -61,6 +62,8 @@ public class Puzzle9PEditFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         assert getArguments() != null;
+        AppCompatTextView textView = view.findViewById(R.id.tv_title);
+        textView.setText("九宫格");
         mRv9Pic = view.findViewById(R.id.rv_9pc);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(_mActivity, 3);
         mRv9Pic.setLayoutManager(gridLayoutManager);

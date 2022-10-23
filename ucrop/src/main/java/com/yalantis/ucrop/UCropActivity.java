@@ -35,6 +35,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.BlendModeColorFilterCompat;
@@ -359,7 +360,8 @@ public class UCropActivity extends AppCompatActivity {
     private void setupAppBar() {
         StatusBarUtil.setTranslucentForImageViewInFragment(this,0,null);
         StatusBarUtil.setLightMode(this);
-
+        AppCompatTextView title = findViewById(R.id.tv_title);
+        title.setText("裁剪");
 
         findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override

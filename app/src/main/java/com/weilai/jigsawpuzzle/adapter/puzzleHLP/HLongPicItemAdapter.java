@@ -3,6 +3,7 @@ package com.weilai.jigsawpuzzle.adapter.puzzleHLP;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -72,12 +73,13 @@ public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapte
         }
         int bitMapHeight = bitmap.getHeight();
         BigDecimal bitMapHeightBig = new BigDecimal(bitMapHeight);
-        int viewHeight = DimenUtil.getScreenHeight()  / 2;
+        int viewHeight = DimenUtil.getScreenHeight()  / 3;
         BigDecimal viewHeightBig = new BigDecimal(viewHeight);
-        double value = viewHeightBig.divide(bitMapHeightBig, 2, RoundingMode.HALF_UP).doubleValue();
+        float value = viewHeightBig.divide(bitMapHeightBig, 2, RoundingMode.HALF_DOWN).floatValue();
         BigDecimal valueBig = new BigDecimal(value);
         int bigMapWidth = bitmap.getWidth();
         int viewWidth = valueBig.multiply(new BigDecimal(bigMapWidth)).intValue();
+
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(viewWidth,viewHeight);
         holder.layoutContent.setLayoutParams(layoutParams);
         FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth,viewHeight);

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.weilai.jigsawpuzzle.Constants;
+import com.weilai.jigsawpuzzle.bean.CrossBannerEntity;
 import com.weilai.jigsawpuzzle.fragment.special.FilterActivity;
 import com.weilai.jigsawpuzzle.fragment.special.MagicCameraActivity;
 import com.weilai.jigsawpuzzle.fragment.special.OldActivity2;
@@ -33,8 +34,10 @@ import com.weilai.jigsawpuzzle.activity.puzzleQr.PuzzleQrBaseActivity;
 import com.weilai.jigsawpuzzle.activity.puzzleSS.PuzzleSShotBaseActivity;
 import com.weilai.jigsawpuzzle.activity.template.TemplateBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.main.ImageBannerAdapter;
+import com.weilai.jigsawpuzzle.net.base.NetConfig;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.ImageCropEngine;
+import com.weilai.jigsawpuzzle.util.L;
 import com.weilai.jigsawpuzzle.util.ToastUtil;
 import com.youth.banner.Banner;
 import com.youth.banner.config.IndicatorConfig;
@@ -43,6 +46,13 @@ import com.youth.banner.indicator.RectangleIndicator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 
 /**
  * * DATE: 2022/9/13
@@ -64,18 +74,21 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
         initUi(view);
         return view;
     }
+    private Disposable disposable;
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (disposable != null){
+            if (!disposable.isDisposed()){
+                disposable.dispose();
+            }
+        }
+    }
 
     private void initUi(View view) {
-        Banner<String, ImageBannerAdapter> banner = view.findViewById(R.id.banner);
-        String[] strings = new String[]{"1", "2", "3"};//just
-        banner.setAdapter(new ImageBannerAdapter(Arrays.asList(strings.clone())))
-                .setIndicator(new RectangleIndicator(getContext()))
-                .setIndicatorNormalWidth(15)
-                .setIndicatorRadius(100)
-                .setIndicatorHeight(15)
-                .setIndicatorNormalColor(getResources().getColor(R.color.bg_cross_gray))
-                .setIndicatorSelectedWidth(50)
-                .setIndicatorMargins(new IndicatorConfig.Margins(0, 0, 0, 150));
+        Banner<CrossBannerEntity, ImageBannerAdapter> banner = view.findViewById(R.id.banner);
+
         view.findViewById(R.id.tv_template).setOnClickListener(this);
         view.findViewById(R.id.tv_pic).setOnClickListener(this);
         view.findViewById(R.id.tv_splic_health).setOnClickListener(this);
@@ -87,7 +100,36 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
         view.findViewById(R.id.iv_ai).setOnClickListener(this);
         view.findViewById(R.id.iv_comis).setOnClickListener(this);
         view.findViewById(R.id.iv_toning).setOnClickListener(this);
+        NetConfig.getInstance().getINetService().getBanner().observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<List<CrossBannerEntity> >() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
 
+            @Override
+            public void onNext(List<CrossBannerEntity> responseBody) {
+                L.e(responseBody.toString());
+                banner.setAdapter(new ImageBannerAdapter(responseBody,getContext()))
+                        .setIndicator(new RectangleIndicator(getContext()))
+                        .setIndicatorNormalWidth(15)
+                        .setIndicatorRadius(100)
+                        .setIndicatorHeight(15)
+                        .setIndicatorNormalColor(getResources().getColor(R.color.bg_cross_gray))
+                        .setIndicatorSelectedWidth(50)
+                        .setIndicatorMargins(new IndicatorConfig.Margins(0, 0, 0, 150));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                ToastUtil.showToast(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
 
     }
 
@@ -101,6 +143,7 @@ public class CrossDressFragment extends Fragment implements View.OnClickListener
             PictureSelector.create(this)
                     .openGallery(SelectMimeType.ofImage())
                     .isDisplayCamera(true)
+                    .setMinSelectNum(4)
                     .setMaxSelectNum(4)
                     .setImageEngine(GlideEngine.createGlideEngine())
                     .isPreviewImage(true)

@@ -12,12 +12,17 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.ArrayMap;
 import android.util.LruCache;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -129,8 +134,8 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         bitmaps = getArguments().getStringArrayList("data");
         longPicItemAdapter = new LongPicItemAdapter(_mActivity, bitmaps);
         mRvLP.setAdapter(longPicItemAdapter);
-        paddingItemDecoration = new PaddingItemDecoration();
-        mRvLP.addItemDecoration(paddingItemDecoration);
+        paddingItemDecoration = new PaddingItemDecoration(mRvLP);
+//        mRvLP.addItemDecoration(paddingItemDecoration);
         TypedArray actionbarSizeTypedArray = _mActivity.obtainStyledAttributes(new int[]{
                 android.R.attr.actionBarSize
         });
@@ -192,18 +197,27 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 for (int i = 0; i < size; i++) {
                     RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
                     adapter.onBindViewHolder(holder, i);
-                    holder.itemView.measure(
-                            View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenWidth() * 3 / 4, View.MeasureSpec.EXACTLY),
+                    RelativeLayout relativeLayout = holder.itemView.findViewById(R.id.item_adjust);
+                    relativeLayout.measure(
+                            View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenWidth() * 5/7, View.MeasureSpec.EXACTLY),
                             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                    holder.itemView.layout(0, 0, DimenUtil.getScreenWidth() * 3 / 4,
-                            holder.itemView.getMeasuredHeight());
+                    relativeLayout.layout(0, 0, DimenUtil.getScreenWidth() * 5/7,
+                            relativeLayout.getMeasuredHeight());
+                    ImageView itemView = relativeLayout.findViewById(R.id.iv_img);
+
                     int padding = paddingItemDecoration.getProcess();
                     if (i == 0) {
-                        holder.itemView.setPadding(padding, padding, padding, padding);
+                        if (size == 1) {
+                            itemView.setPadding(padding, padding, padding, padding);
+                        } else {
+                            itemView.setPadding(padding, padding, padding, 0);
+                        }
+                    } else if (i == size - 1) {
+                        itemView.setPadding(padding, padding, padding, padding);
                     } else {
-                        holder.itemView.setPadding(padding, 0, padding, padding);
+                        itemView.setPadding(padding, padding, padding, 0);
                     }
-                    holder.itemView.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
+                    relativeLayout.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
                     arrayList.add(holder);
                 }
 
@@ -222,20 +236,21 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                 for (int i = 0; i < viewHolders.size(); i++) {
                     L.e(i + "");
                     RecyclerView.ViewHolder holder = viewHolders.get(i);
-                    holder.itemView.setDrawingCacheEnabled(true);
-                    holder.itemView.buildDrawingCache();
+                    RelativeLayout relativeLayout = holder.itemView.findViewById(R.id.item_adjust);
+                    relativeLayout.setDrawingCacheEnabled(true);
+                    relativeLayout.buildDrawingCache();
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Bitmap drawingCache = holder.itemView.getDrawingCache();
+                    Bitmap drawingCache =relativeLayout.getDrawingCache();
                     if (drawingCache != null) {
                         bitmaCache.put(String.valueOf(i), drawingCache);
                     }
-                    height += holder.itemView.getMeasuredHeight();
+                    height += relativeLayout.getMeasuredHeight();
                 }
-                bigBitmap = Bitmap.createBitmap(DimenUtil.getScreenWidth() * 3 / 4, height, Bitmap.Config.ARGB_8888);
+                bigBitmap = Bitmap.createBitmap(DimenUtil.getScreenWidth() * 5/7, height, Bitmap.Config.ARGB_8888);
                 Canvas bigCanvas = new Canvas(bigBitmap);
                 Drawable lBackground = view.getBackground();
                 if (lBackground instanceof ColorDrawable) {
@@ -340,46 +355,42 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == FILTER_PUZZLE_LP_CODE) {
-            if (data != null) {
-                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+        if (data != null) {
+            ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
+            if (requestCode == FILTER_PUZZLE_LP_CODE) {
                 if (list != null) {
                     int size = list.size();
                     if (size > 0) {
                         for (LocalMedia localMedia : list) {
-                            String path = localMedia.getRealPath();
+                            String path = localMedia.getAvailablePath();
                             bitmaps.add(path);
                             longPicItemAdapter.notifyItemInserted(bitmaps.size());
                         }
                     }
                 }
-            }
-        } else if (requestCode == FILTER_PUZZLE_LP_SINGLE) {
-            if (data != null) {
-                ArrayList<LocalMedia> list = data.getParcelableArrayListExtra(PictureConfig.EXTRA_RESULT_SELECTION);
-                if (list != null) {
-                    int size = list.size();
-                    if (size > 0) {
-                        String path = list.get(0).getRealPath();
-                        bitmaps.remove(selectedPosition);
-                        bitmaps.add(selectedPosition, path);
-                        longPicItemAdapter.notifyItemChanged(selectedPosition);
+            } else if (requestCode == FILTER_PUZZLE_LP_SINGLE) {
+                    if (list != null) {
+                        int size = list.size();
+                        if (size > 0) {
+                            String path = list.get(0).getAvailablePath();
+                            bitmaps.remove(selectedPosition);
+                            bitmaps.add(selectedPosition, path);
+                            longPicItemAdapter.notifyItemChanged(selectedPosition);
+                        }
                     }
-                }
-            }
-        } else if (requestCode == FILTER_PUZZLE_LP_EDIT) {
-            if (data != null) {
-                String filePath = data.getStringExtra("extra_output");
-                if (selectedPosition != -1) {
-                    boolean isEdit = data.getBooleanExtra("image_is_edit", false);
-                    if (isEdit) {
-                        bitmaps.remove(selectedPosition);
-                        bitmaps.add(selectedPosition, filePath);
-                        longPicItemAdapter.notifyItemChanged(selectedPosition);
+            } else if (requestCode == FILTER_PUZZLE_LP_EDIT) {
+                    String filePath = data.getStringExtra("extra_output");
+                    if (selectedPosition != -1) {
+                        boolean isEdit = data.getBooleanExtra("image_is_edit", false);
+                        if (isEdit) {
+                            bitmaps.remove(selectedPosition);
+                            bitmaps.add(selectedPosition, filePath);
+                            longPicItemAdapter.notifyItemChanged(selectedPosition);
+                        }
                     }
-                }
             }
         }
+
     }
 
     @Override

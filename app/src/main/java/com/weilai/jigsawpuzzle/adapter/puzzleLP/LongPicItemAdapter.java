@@ -3,6 +3,7 @@ package com.weilai.jigsawpuzzle.adapter.puzzleLP;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,8 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
@@ -37,7 +40,8 @@ import java.util.List;
 public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.ViewHolder> {
     private Context mContext;
     private List<String> bitmaps;
-
+    private int viewWidth;
+    private int viewHeight;
     public LongPicItemAdapter(Context context, List<String> bitmaps) {
         this.mContext = context;
         this.bitmaps = bitmaps;
@@ -80,27 +84,32 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         }
         int bitMapWidth = bitmap.getWidth();
         BigDecimal bitMapWidthBig = new BigDecimal(bitMapWidth);
-        int viewWidth = DimenUtil.getScreenWidth() * 3 / 4;
+        int viewWidth = DimenUtil.getScreenWidth() * 5/7;
         BigDecimal viewWidthBig = new BigDecimal(viewWidth);
-        double value = viewWidthBig.divide(bitMapWidthBig, 2, RoundingMode.HALF_UP).doubleValue();
+        float value = viewWidthBig.divide(bitMapWidthBig, 2, RoundingMode.HALF_DOWN).floatValue();
         BigDecimal valueBig = new BigDecimal(value);
         int bigMapHeight = bitmap.getHeight();
         int viewHeight = valueBig.multiply(new BigDecimal(bigMapHeight)).intValue();
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(viewWidth,viewHeight);
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         holder.layoutContent.setLayoutParams(layoutParams);
+        ViewGroup.LayoutParams layoutParams1 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, viewHeight);
+        holder.itemView.setLayoutParams(layoutParams1);
         FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth,viewHeight);
-        SubsamplingScaleImageView image = holder.ivImage;
+        ImageView image = holder.ivImage;
         image.setLayoutParams(relayout);
-        image.setImage(ImageSource.bitmap(bitmap));
-        //加载一个占位图
-        ImageView place = holder.ivPlace;
-        place.setLayoutParams(relayout);
+        Glide.with(mContext).load(bitmap).into(image);
+//        image.setImage(ImageSource.bitmap(bitmap));
+//        image.setImage(ImageSource.bitmap(bitmap));
+//        加载一个占位图
+//        ImageView place = holder.ivPlace;
+//        place.setLayoutParams(relayout);
         if (mLastSelectedPosition == -1) {
-            place.setSelected(false);
+            holder. layoutContent.setSelected(false);
         } else {
-            place.setSelected(position == mLastSelectedPosition);
+            holder. layoutContent.setSelected(position == mLastSelectedPosition);
         }
-        place.setOnClickListener(v -> {
+        holder. layoutContent.setOnClickListener(v -> {
             if (canSelected) {
                 if (mLastSelectedView != null) {
                     if (mLastSelectedView != v) {
@@ -156,15 +165,13 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        SubsamplingScaleImageView ivImage;
-        ImageView ivPlace;
-        FrameLayout layoutContent;
+        ImageView ivImage;
+        RelativeLayout layoutContent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivImage = itemView.findViewById(R.id.iv_img);
-            ivPlace = itemView.findViewById(R.id.iv_place);
-            layoutContent = itemView.findViewById(R.id.layout_content);
+            layoutContent = itemView.findViewById(R.id.item_adjust);
         }
     }
 }

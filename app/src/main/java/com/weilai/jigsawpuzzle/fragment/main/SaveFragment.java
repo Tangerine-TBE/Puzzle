@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.dialog.save.BitmapInfoPopUp;
 import com.weilai.jigsawpuzzle.util.AppStoreUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.UriUtil;
@@ -46,6 +48,10 @@ import io.reactivex.schedulers.Schedulers;
  * * Description:
  **/
 public class SaveFragment extends BaseFragment {
+    private TextView tvSize;
+    private TextView tvDate;
+    private TextView tvPath;
+    private boolean isOpen;
     private SaveFragment() {
 
     }
@@ -60,9 +66,9 @@ public class SaveFragment extends BaseFragment {
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        Observable.create(new ObservableOnSubscribe<Bitmap>() {
+        Observable.create(new ObservableOnSubscribe<Object[]>() {
             @Override
-            public void subscribe(ObservableEmitter<Bitmap> emitter) throws Exception {
+            public void subscribe(ObservableEmitter<Object[]> emitter) throws Exception {
                 if (!TextUtils.isEmpty(path)) {
                     Uri srcUri;
                     if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
@@ -78,23 +84,31 @@ public class SaveFragment extends BaseFragment {
                             e.printStackTrace();
                         }
                         Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                        emitter.onNext(bitmap);
+                        Object [] objects = new Object[2];
+                        objects[0] = bitmap;
+                        objects[1] = path;
+                        emitter.onNext(objects);
                     }
                 }
 
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<Bitmap>() {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<Object []>() {
             @Override
             public void onSubscribe(Disposable d) {
                 mDisposable.add(d);
             }
 
             @Override
-            public void onNext(Bitmap bitmap) {
+            public void onNext(Object [] objects) {
+                Bitmap bitmap = (Bitmap) objects[0];
+                String path = (String) objects[1];
                 if (bitmap != null) {
+                    tvSize.setText(String.format("%d*%d", bitmap.getWidth(), bitmap.getHeight()));
+                    tvDate.setText("2019/10/21 12:33:31");
+                    tvPath.setText(path.trim());
                     Toast.makeText(_mActivity, "图片已经保存到相册", Toast.LENGTH_SHORT).show();
-                    textView.setText(String.format("图片尺寸:%d*%d", bitmap.getWidth(), bitmap.getHeight()));
                     imageView.setImage(ImageSource.bitmap(bitmap));
+
                 }
             }
 
@@ -119,6 +133,10 @@ public class SaveFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        tvSize = view.findViewById(R.id.tv_size);
+        tvDate = view.findViewById(R.id.tv_date);
+        tvPath = view.findViewById(R.id.tv_path);
+
         AppCompatTextView appCompatTextView = view.findViewById(R.id.tv_title);
         appCompatTextView.setText(R.string.bitmap_info);
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
@@ -144,14 +162,11 @@ public class SaveFragment extends BaseFragment {
         view.findViewById(R.id.visible);//是否显示详细信息
         path = getArguments().getString("filePath");
         imageView = view.findViewById(R.id.iv_img);
-        textView = view.findViewById(R.id.tv_mapInfo);//本地路径
-
     }
 
 
     private String path;
     private SubsamplingScaleImageView imageView;
-    private TextView textView;
 
 
     @Override
@@ -172,6 +187,20 @@ public class SaveFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+       view.findViewById(R.id.iv_open) .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isOpen) {
+                    isOpen = false;
+                    view.findViewById(R.id.ll_path).setVisibility(View.GONE);
+                    view.findViewById(R.id.ll_date).setVisibility(View.GONE);
+                } else {
+                    isOpen = true;
+                    view.findViewById(R.id.ll_path).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.ll_date).setVisibility(View.VISIBLE);
+                }
             }
         });
     }

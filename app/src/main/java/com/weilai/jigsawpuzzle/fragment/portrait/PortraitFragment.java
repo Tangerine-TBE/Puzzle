@@ -796,11 +796,17 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
             new EditTextDialog(_mActivity, new EditTextDialog.EditTextCallback() {
                 @Override
                 public void editText(String str, Sticker sticker) {
-                    ((TextSticker) sticker).setText(str);
-                    ((TextSticker) sticker).resizeText();
-                    stickerView.invalidate();
+                    if (sticker != null){
+                        if (!TextUtils.isEmpty(str)){
+                            ((TextSticker) sticker).setText(str);
+                            ((TextSticker) sticker).resizeText();
+                            stickerView.invalidate();
+                        }
+                    }
+
+
                 }
-            }).show();
+            }).setSticker(sticker).show();
         }
     }
 

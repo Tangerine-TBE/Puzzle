@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
-            android:text="裁剪"
+            android:text="@string/ucrop_label_edit_photo"
             android:textColor="@color/ucrop_color_black"
             android:textSize="18sp"
             android:textStyle="bold" />

@@ -1,5 +1,9 @@
 package com.weilai.jigsawpuzzle.net.base;
 
+import com.weilai.jigsawpuzzle.bean.CrossBannerEntity;
+
+import java.util.List;
+
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -13,4 +17,6 @@ public interface INetService {
     Call<ResponseBody> getPhoto(@Url String url);
     @GET
     Observable<ResponseBody> getPhoto1(@Url String url );
+    @GET("anTemplateBanner")
+    Observable<List<CrossBannerEntity>> getBanner();
 }

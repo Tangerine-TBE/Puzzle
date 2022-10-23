@@ -81,7 +81,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
     private PuzzleLpPopUp mPuzzleLpPopUp;
     private FlyTabLayout mFlyTabLayout;
     private PuzzleLpColorPopUp mPuzzleLpColor;
-    private final int[] integers = new int[]{R.mipmap.icon_split_top, R.mipmap.icon_split_bottom, R.mipmap.icon_edit, R.mipmap.icon_replace, R.mipmap.icon_delete};
+    private final int[] integers = new int[]{R.mipmap.split_left, R.mipmap.split_right, R.mipmap.icon_edit, R.mipmap.icon_replace, R.mipmap.icon_delete};
 
     private PuzzleHLPFragment() {
 
@@ -115,7 +115,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         picHriManager.setOrientation(RecyclerView.HORIZONTAL);
         mRvLP.setLayoutManager(picHriManager);
         AppCompatTextView tvTitle = view.findViewById(R.id.tv_title);
-        tvTitle.setText("拼长图");
+        tvTitle.setText("拼横图");
         ArrayList<CustomTabEntity> entities = new ArrayList<>();
         for (int i = 0; i < titles.length; i++) {
             TabEntity tabEntity = new TabEntity(titles[i], titlesIcon[i], titlesIcon[i]);
@@ -185,19 +185,17 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                         adapter.onBindViewHolder(holder, i);
                         holder.itemView.measure(
                                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                                View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenHeight() / 2, View.MeasureSpec.EXACTLY)
+                                View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenHeight() / 3, View.MeasureSpec.EXACTLY)
                         );
                         holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
-                                DimenUtil.getScreenHeight() / 2);
+                                DimenUtil.getScreenHeight() /3);
                         int padding = paddingItemDecoration.getProcess();
-                        if (size > 1) {
-                            if (i == 0) {
-                                holder.itemView.setPadding(padding, padding, 0, padding);
-                            } else {
-                                holder.itemView.setPadding(0, padding, padding, padding);
-                            }
-                        } else {
-                            holder.itemView.setPadding(padding, padding, padding, padding);
+                        if (i ==  0){
+                            holder.itemView.setPadding(padding,padding,0,padding);
+                        }else if (i == size-1){
+                            holder.itemView.setPadding(padding,padding,padding,padding);
+                        }else{
+                            holder.itemView .setPadding(padding,padding,0,padding);
                         }
                         holder.itemView.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
                         arrayList.add(holder);
@@ -232,7 +230,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
                     }
                     width += holder.itemView.getMeasuredWidth();
                 }
-                bigBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight() / 2, Bitmap.Config.ARGB_8888);
+                bigBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight() / 3, Bitmap.Config.ARGB_8888);
                 Canvas bigCanvas = new Canvas(bigBitmap);
                 Drawable lBackground = view.getBackground();
                 if (lBackground instanceof ColorDrawable) {

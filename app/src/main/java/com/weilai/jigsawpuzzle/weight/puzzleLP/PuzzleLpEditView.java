@@ -153,7 +153,6 @@ public class PuzzleLpEditView extends View {
                 } else {
                     srcUri = Uri.fromFile(new File(mPath));
                 }
-                try {
                     InputStream stream = getContext().getContentResolver().openInputStream(srcUri);
                     mDecoder = BitmapRegionDecoder.newInstance(stream, false);
                     Bitmap bitmap = null;
@@ -179,9 +178,6 @@ public class PuzzleLpEditView extends View {
                         }
                     }
                     emitter.onNext(FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + ""));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
             }
         });
