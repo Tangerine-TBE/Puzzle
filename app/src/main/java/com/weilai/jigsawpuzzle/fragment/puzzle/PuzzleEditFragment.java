@@ -368,7 +368,7 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             @Override
             public void onNext(String s) {
                 hideProcessDialog();
-                SaveFragment saveFragment = SaveFragment.getInstance(s);
+                SaveFragment saveFragment = SaveFragment.getInstance(s,"拼图");
                 start(saveFragment);
             }
 

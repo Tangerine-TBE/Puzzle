@@ -25,9 +25,11 @@ public class RecordInfoDao extends AbstractDao<RecordInfo, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property FileName = new Property(1, String.class, "fileName", false, "FILE_NAME");
-        public final static Property FilePath = new Property(2, String.class, "filePath", false, "FILE_PATH");
-        public final static Property Time = new Property(3, long.class, "time", false, "TIME");
+        public final static Property Position = new Property(1, int.class, "position", false, "POSITION");
+        public final static Property FileName = new Property(2, String.class, "fileName", false, "FILE_NAME");
+        public final static Property FilePath = new Property(3, String.class, "filePath", false, "FILE_PATH");
+        public final static Property Time = new Property(4, long.class, "time", false, "TIME");
+        public final static Property IsSelected = new Property(5, boolean.class, "isSelected", false, "IS_SELECTED");
     }
 
 
@@ -44,9 +46,11 @@ public class RecordInfoDao extends AbstractDao<RecordInfo, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"RECORD_INFO\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
-                "\"FILE_NAME\" TEXT," + // 1: fileName
-                "\"FILE_PATH\" TEXT," + // 2: filePath
-                "\"TIME\" INTEGER NOT NULL );"); // 3: time
+                "\"POSITION\" INTEGER NOT NULL ," + // 1: position
+                "\"FILE_NAME\" TEXT," + // 2: fileName
+                "\"FILE_PATH\" TEXT," + // 3: filePath
+                "\"TIME\" INTEGER NOT NULL ," + // 4: time
+                "\"IS_SELECTED\" INTEGER NOT NULL );"); // 5: isSelected
     }
 
     /** Drops the underlying database table. */
@@ -63,17 +67,19 @@ public class RecordInfoDao extends AbstractDao<RecordInfo, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
+        stmt.bindLong(2, entity.getPosition());
  
         String fileName = entity.getFileName();
         if (fileName != null) {
-            stmt.bindString(2, fileName);
+            stmt.bindString(3, fileName);
         }
  
         String filePath = entity.getFilePath();
         if (filePath != null) {
-            stmt.bindString(3, filePath);
+            stmt.bindString(4, filePath);
         }
-        stmt.bindLong(4, entity.getTime());
+        stmt.bindLong(5, entity.getTime());
+        stmt.bindLong(6, entity.getIsSelected() ? 1L: 0L);
     }
 
     @Override
@@ -84,17 +90,19 @@ public class RecordInfoDao extends AbstractDao<RecordInfo, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
+        stmt.bindLong(2, entity.getPosition());
  
         String fileName = entity.getFileName();
         if (fileName != null) {
-            stmt.bindString(2, fileName);
+            stmt.bindString(3, fileName);
         }
  
         String filePath = entity.getFilePath();
         if (filePath != null) {
-            stmt.bindString(3, filePath);
+            stmt.bindString(4, filePath);
         }
-        stmt.bindLong(4, entity.getTime());
+        stmt.bindLong(5, entity.getTime());
+        stmt.bindLong(6, entity.getIsSelected() ? 1L: 0L);
     }
 
     @Override
@@ -106,9 +114,11 @@ public class RecordInfoDao extends AbstractDao<RecordInfo, Long> {
     public RecordInfo readEntity(Cursor cursor, int offset) {
         RecordInfo entity = new RecordInfo( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // fileName
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // filePath
-            cursor.getLong(offset + 3) // time
+            cursor.getInt(offset + 1), // position
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // fileName
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // filePath
+            cursor.getLong(offset + 4), // time
+            cursor.getShort(offset + 5) != 0 // isSelected
         );
         return entity;
     }
@@ -116,9 +126,11 @@ public class RecordInfoDao extends AbstractDao<RecordInfo, Long> {
     @Override
     public void readEntity(Cursor cursor, RecordInfo entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setFileName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setFilePath(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setTime(cursor.getLong(offset + 3));
+        entity.setPosition(cursor.getInt(offset + 1));
+        entity.setFileName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setFilePath(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setTime(cursor.getLong(offset + 4));
+        entity.setIsSelected(cursor.getShort(offset + 5) != 0);
      }
     
     @Override

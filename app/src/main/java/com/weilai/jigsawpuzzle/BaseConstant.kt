@@ -26,7 +26,7 @@ object BaseConstant {
         return SPUtil.getInstance().getBoolean(AgreementActivity.key)
     }
 
-    val savePath = Config.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.absolutePath + "/CutOut"
+    val savePath = Config.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.absolutePath + "/Output"
 //    val cachePath = BaseApplication.application.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.absolutePath + "/cache"
     val cachePath = Config.getApplicationContext().cacheDir.absolutePath+ "/cache"
 

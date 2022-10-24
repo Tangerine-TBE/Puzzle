@@ -11,7 +11,9 @@ import com.abc.matting.utils.camera.doOnLayout
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType.ofImage
 import com.luck.picture.lib.config.SelectModeConfig.SINGLE
+import com.weilai.jigsawpuzzle.BaseConstant
 import com.weilai.jigsawpuzzle.R
+import com.weilai.jigsawpuzzle.activity.main.SaveBaseActivity
 import com.weilai.jigsawpuzzle.application.PuzzleApplication
 import com.weilai.jigsawpuzzle.base.BaseActivity
 import com.weilai.jigsawpuzzle.util.*
@@ -50,8 +52,8 @@ class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
     override fun initView() {
         mImmersionBar.statusBarColor(android.R.color.transparent).statusBarDarkFont(true).init()
 
-        type = intent.getStringExtra(typeKey)?: TYPE_OLD
-        barTitle.text = when(type){
+        type = intent.getStringExtra(typeKey) ?: TYPE_OLD
+        barTitle.text = when (type) {
             TYPE_OLD -> "变老相机"
             TYPE_YOUNG -> "童颜相机"
             TYPE_SEX -> "性别转换"
@@ -73,54 +75,54 @@ class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
         initClick()
     }
 
-    private fun initClick(){
+    private fun initClick() {
 
         barBack.setOnClickListener {
             finish()
         }
 
         shutter.setOnClickListener {
-                bitmap = gpuImageView.capture()
-                cameraLoader.onPause()
-                img.setImageBitmap(bitmap)
-                invisible(shutter,album,transition)
-                visible(img,over,remake)
+            bitmap = gpuImageView.capture()
+            cameraLoader.onPause()
+            img.setImageBitmap(bitmap)
+            invisible(shutter, album, transition)
+            visible(img, over, remake)
         }
 
         remake.setOnClickListener {
-            visible(shutter,album,transition)
-            invisible(img,over,remake)
+            visible(shutter, album, transition)
+            invisible(img, over, remake)
             gpuImageView.doOnLayout {
                 cameraLoader.onResume(it.width, it.height)
             }
         }
 
         transition.setOnClickListener {
-                cameraLoader.switchCamera()
-                gpuImageView.setRotation(getRotation(cameraLoader.getCameraOrientation()))
-                if (cameraLoader.getCameraFacing() != CameraCharacteristics.LENS_FACING_BACK)
-                    gpuImageView.scaleX = -1f
-                else
-                    gpuImageView.scaleX = 1f
+            cameraLoader.switchCamera()
+            gpuImageView.setRotation(getRotation(cameraLoader.getCameraOrientation()))
+            if (cameraLoader.getCameraFacing() != CameraCharacteristics.LENS_FACING_BACK)
+                gpuImageView.scaleX = -1f
+            else
+                gpuImageView.scaleX = 1f
 
         }
 
         album.setOnClickListener {
-                needCamera = false
-                PermissionUtils.askStorageAndCameraPermission(this){
-                    cameraLoader.onPause()
-                    PictureSelector.create(this)
-                        .openGallery(ofImage())
-                        .setImageEngine(GlideEngine.createGlideEngine())
-                        .isPreviewImage(true)
+            needCamera = false
+            PermissionUtils.askStorageAndCameraPermission(this) {
+                cameraLoader.onPause()
+                PictureSelector.create(this)
+                    .openGallery(ofImage())
+                    .setImageEngine(GlideEngine.createGlideEngine())
+                    .isPreviewImage(true)
 //                    .freeStyleCropEnabled(true)
-                        .setSelectionMode(SINGLE)
-                        .forResult(ALBUM_CODE)
-                }
+                    .setSelectionMode(SINGLE)
+                    .forResult(ALBUM_CODE)
+            }
         }
 
         over.setOnClickListener {
-            when(type){
+            when (type) {
                 TYPE_OLD, TYPE_YOUNG -> ageDialog.show()
                 TYPE_COMIC -> comic()
                 TYPE_SEX -> sexDialog.show()
@@ -139,13 +141,13 @@ class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
 
     override fun onResume() {
         super.onResume()
-        if (needCamera){
+        if (needCamera) {
             gpuImageView.doOnLayout {
                 try {
                     PuzzleApplication.handler.postDelayed({
                         cameraLoader.onResume(it.width, it.height)
-                    },500)
-                }catch (e: Exception){
+                    }, 500)
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
@@ -159,101 +161,173 @@ class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
+        when (requestCode) {
             ALBUM_CODE -> {
                 val path = Utils.getReal(PictureSelector.obtainSelectorList(data))
-                if (path == ""){
-                    visible(shutter,album,transition)
-                    invisible(img,over,remake)
+                if (path == "") {
+                    visible(shutter, album, transition)
+                    invisible(img, over, remake)
                     needCamera = true
                     gpuImageView.doOnLayout {
-                        cameraLoader.onResume(it.width,it.height)
+                        cameraLoader.onResume(it.width, it.height)
                     }
                     return
                 }
                 bitmap = BitmapFactory.decodeFile(path)
-                invisible(shutter,album,transition)
-                visible(img,over,remake)
+                invisible(shutter, album, transition)
+                visible(img, over, remake)
                 img.setImageBitmap(bitmap)
             }
         }
     }
 
+    private fun saveBitmap(url: String, fileName: String, callBack: DownloadUtils.RequestCallback) {
+        loadingDialog.show()
+        DownloadUtils.downloadFile(
+            url,
+            fileName,
+            callBack
+        )
+    }
+
     override fun startToAge(age: Int) {
         loadingDialog.show()
-        Thread{
+        Thread {
             var url = ""
             try {
                 val response = EffectUtils.toOld(age.toLong(), Base64Utils.bitmapToBase64(bitmap))
                 val obj = JSONObject(response)
                 url = obj.getString("ResultUrl")
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
             runOnUiThread {
                 loadingDialog.dismiss()
-                if (url.isEmpty()){
+                if (url.isEmpty()) {
 
                     return@runOnUiThread
                 }
-                val title = if (type == TYPE_OLD) "变老相机" else "童颜相机"
-                val intent = Intent(this, EffectEndActivity::class.java)
-                intent.putExtra(EffectEndActivity.titleKey,title)
-                intent.putExtra(EffectEndActivity.imgUrlKey,url)
-                startActivity(intent)
-                finish()
+                val intent = Intent(this, SaveBaseActivity::class.java)
+                val fileName = "${BaseConstant.savePath}/${System.currentTimeMillis()}.jpg";
+                saveBitmap(url, fileName, object : DownloadUtils.RequestCallback {
+                    override fun onSuccess(response: String?) {
+                        runOnUiThread {
+                            val bitmap = BitmapFactory.decodeFile(fileName)
+                            if (bitmap != null) {
+                                val path =  FileUtil.saveScreenShot(bitmap, "${System.currentTimeMillis()}")
+                                loadingDialog.dismiss()
+                                val title = if (type == TYPE_OLD) "变老相机" else "童颜相机"
+                                intent.putExtra("type", title)
+                                intent.putExtra("data", path)
+                                startActivity(intent)
+                                finish()
+                                ToastUtil.showCenterToast("保存成功")
+                            }
+                        }
+                    }
+
+                    override fun onFailure(msg: String?, e: java.lang.Exception?) {
+                        runOnUiThread {
+                            loadingDialog.dismiss()
+                            ToastUtil.showCenterToast("保存失败")
+                        }
+                    }
+
+                })
+
             }
         }.start()
     }
 
-    private fun comic(){
+    private fun comic() {
         loadingDialog.show()
-        Thread{
+        Thread {
             var url = ""
             try {
                 val response = EffectUtilss.toComic(Base64Utils.bitmapToBase64(bitmap))
                 val obj = JSONObject(response)
                 url = obj.getString("ResultUrl")
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
             runOnUiThread {
                 loadingDialog.dismiss()
-                if (url.isEmpty()){
+                if (url.isEmpty()) {
                     return@runOnUiThread
                 }
-                val title = "一键漫画脸"
-                val intent = Intent(this, EffectEndActivity::class.java)
-                intent.putExtra(EffectEndActivity.titleKey,title)
-                intent.putExtra(EffectEndActivity.imgUrlKey,url)
-                startActivity(intent)
-                finish()
+                val fileName = "${BaseConstant.savePath}/${System.currentTimeMillis()}.jpg";
+                val intent = Intent(this, SaveBaseActivity::class.java)
+                saveBitmap(url, fileName, object : DownloadUtils.RequestCallback {
+                    override fun onSuccess(response: String?) {
+                        runOnUiThread {
+                            val bitmap = BitmapFactory.decodeFile(fileName)
+                            if (bitmap != null) {
+                               val path =  FileUtil.saveScreenShot(bitmap, "${System.currentTimeMillis()}")
+                                loadingDialog.dismiss()
+                                intent.putExtra("type", "一键漫画脸")
+                                intent.putExtra("data", path)
+                                startActivity(intent)
+                                finish()
+                                ToastUtil.showCenterToast("保存成功")
+                            }
+                        }
+                    }
+
+                    override fun onFailure(msg: String?, e: java.lang.Exception?) {
+                        runOnUiThread {
+                            loadingDialog.dismiss()
+                            ToastUtil.showCenterToast("保存失败")
+                        }
+                    }
+
+                })
             }
         }.start()
     }
 
     override fun selectSex(type: Long) {
         loadingDialog.show()
-        Thread{
+        Thread {
             var url = ""
             try {
-                val response = EffectUtilss.toSex(type,Base64Utils.bitmapToBase64(bitmap))
+                val response = EffectUtilss.toSex(type, Base64Utils.bitmapToBase64(bitmap))
                 val obj = JSONObject(response)
                 url = obj.getString("ResultUrl")
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
             runOnUiThread {
                 loadingDialog.dismiss()
-                if (url.isEmpty()){
+                if (url.isEmpty()) {
                     ToastUtil.showCenterToast("转换出错")
                     return@runOnUiThread
                 }
-                val intent = Intent(this, EffectEndActivity::class.java)
-                intent.putExtra(EffectEndActivity.titleKey,"性别转换")
-                intent.putExtra(EffectEndActivity.imgUrlKey,url)
-                startActivity(intent)
-                finish()
+                val intent = Intent(this, SaveBaseActivity::class.java)
+                val fileName = "${BaseConstant.savePath}/${System.currentTimeMillis()}.jpg";
+                saveBitmap(url, fileName, object : DownloadUtils.RequestCallback {
+                    override fun onSuccess(response: String?) {
+                        runOnUiThread {
+                            val bitmap = BitmapFactory.decodeFile(fileName)
+                            if (bitmap != null) {
+                                val path =  FileUtil.saveScreenShot(bitmap, "${System.currentTimeMillis()}")
+                                loadingDialog.dismiss()
+                                intent.putExtra("type", "性别转换")
+                                intent.putExtra("data", path)
+                                startActivity(intent)
+                                finish()
+                                ToastUtil.showCenterToast("保存成功")
+                            }
+                        }
+                    }
+
+                    override fun onFailure(msg: String?, e: java.lang.Exception?) {
+                        runOnUiThread {
+                            loadingDialog.dismiss()
+                            ToastUtil.showCenterToast("保存失败")
+                        }
+                    }
+
+                })
             }
         }.start()
     }

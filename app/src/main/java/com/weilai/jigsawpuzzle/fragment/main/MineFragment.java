@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.activity.main.ClientReportBaseActivity;
+import com.weilai.jigsawpuzzle.activity.main.DataBaseActivity;
 import com.weilai.jigsawpuzzle.activity.special.AgreementContentActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.util.AppStoreUtil;
@@ -52,6 +53,7 @@ public class MineFragment  extends BaseFragment {
         view.findViewById(R.id.ll_record).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+             startActivity(new Intent(_mActivity, DataBaseActivity.class));
                 //数据库连接
             }
         });

@@ -18,7 +18,8 @@ public class SaveBaseActivity extends BaseFragmentActivity {
     public BaseFragment setRootFragment() {
         Intent intent = getIntent();
        String path =  intent.getStringExtra("data");
-        return SaveFragment.getInstance(path);
+       String type = intent.getStringExtra("type");
+        return SaveFragment.getInstance(path,type);
     }
 
     @Override

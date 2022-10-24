@@ -14,6 +14,7 @@ import com.weilai.jigsawpuzzle.adapter.special.FilterAdapter
 import com.weilai.jigsawpuzzle.base.BaseActivity
 import com.weilai.jigsawpuzzle.bean.FilterBean
 import com.weilai.jigsawpuzzle.util.BitmapUtils
+import com.weilai.jigsawpuzzle.util.FileUtil
 import com.weilai.jigsawpuzzle.util.PermissionUtils
 import com.weilai.jigsawpuzzle.util.ToastUtil
 import jp.co.cyberagent.android.gpuimage.GPUImage
@@ -75,10 +76,8 @@ class FilterActivity : BaseActivity(), FilterAdapter.FilterCallback {
                     loadingDialog.setTitleText("更改中...")
                     loadingDialog.show()
                     Thread {
-                        BitmapUtils.saveImageToGallery(
-                            gpuImageView.gpuImage.bitmapWithFilterApplied,
-                            BaseConstant.cachePath, cacheFileName, false
-                        )
+                        FileUtil.saveScreenShot( gpuImageView.gpuImage.bitmapWithFilterApplied,"${System.currentTimeMillis()}")
+
                         runOnUiThread {
                             loadingDialog.dismiss()
                             val intent = Intent()
@@ -96,14 +95,12 @@ class FilterActivity : BaseActivity(), FilterAdapter.FilterCallback {
                     loadingDialog.setTitleText("保存中...")
                     loadingDialog.show()
                     Thread {
-                        BitmapUtils.saveImageToGallery(
-                            gpuImageView.gpuImage.bitmapWithFilterApplied,
-                            BaseConstant.savePath, fileName, true
-                        )
+                       val filePath =  FileUtil.saveScreenShot( gpuImageView.gpuImage.bitmapWithFilterApplied,"${System.currentTimeMillis()}")
                         runOnUiThread {
                             loadingDialog.dismiss()
                             val intent = Intent(this, SaveBaseActivity::class.java)
-                            intent.putExtra("data", path)
+                            intent.putExtra("data", filePath)
+                            intent.putExtra("type","滤镜")
                             startActivity(intent)
                             finish()
                         }

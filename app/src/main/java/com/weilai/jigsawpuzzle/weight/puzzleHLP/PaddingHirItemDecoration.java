@@ -26,11 +26,19 @@ import com.weilai.jigsawpuzzle.util.L;
 public class PaddingHirItemDecoration  extends RecyclerView.ItemDecoration{
     private int process;
     private String color;
-    private RecyclerView parent;
+    private final RecyclerView parent;
+    public PaddingHirItemDecoration(RecyclerView recyclerView){
+        this.parent = recyclerView;
+    }
     public final void setProcess(int process) {
         this.process = process;
         if (parent != null) {
-            parent.invalidateItemDecorations();
+            int size = parent.getItemDecorationCount();
+            if (size == 0) {
+                parent.addItemDecoration(this);
+            } else {
+                parent.invalidate();
+            }
         }
     }
 
@@ -41,7 +49,7 @@ public class PaddingHirItemDecoration  extends RecyclerView.ItemDecoration{
     public final void setBackground(String color) {
         this.color = color;
         if (parent != null) {
-            parent.invalidateItemDecorations();
+            parent.invalidate();
         }
     }
 
@@ -53,12 +61,10 @@ public class PaddingHirItemDecoration  extends RecyclerView.ItemDecoration{
         }
     }
 
+
     @Override
-    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        super.getItemOffsets(outRect, view, parent, state);
-        if (this.parent == null) {
-            this.parent = parent;
-        }
+    public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        super.onDraw(c, parent, state);
         for (int i = 0; i < parent.getChildCount(); i++) {
             final View child = parent.getChildAt(i);
             RelativeLayout parentView = child.findViewById(R.id.item_adjust);
@@ -66,16 +72,16 @@ public class PaddingHirItemDecoration  extends RecyclerView.ItemDecoration{
             if (!TextUtils.isEmpty(color)) {
                 parentView.setBackgroundColor(Color.parseColor(color));
             }
-            if (i ==  0){
+            if (i == 0) {
                 if (parent.getChildCount() == 1) {
                     ivImg.setPadding(process, process, process, process);
                 } else {
-                    ivImg.setPadding(process, process, 0, process);
+                    ivImg.setPadding(process, process, process, 0);
                 }
-            }else if (i == parent.getChildCount()-1){
-                ivImg.setPadding(process,process,process,process);
-            }else{
-                ivImg.setPadding(process,process,0,process);
+            } else if (i == parent.getChildCount() - 1) {
+                ivImg.setPadding(process, process, process, process);
+            } else {
+                ivImg.setPadding(process, process, process, 0);
             }
         }
     }

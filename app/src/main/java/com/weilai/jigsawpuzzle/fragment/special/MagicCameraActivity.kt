@@ -73,6 +73,7 @@ class MagicCameraActivity : BaseActivity(), MagicCameraAdapter.MagicCameraCallba
                     loadingDialog.dismiss()
                     val intent = Intent(this, SaveBaseActivity::class.java)
                     intent.putExtra("data", path)
+                    intent.putExtra("type","魔法相机")
                     startActivity(intent)
                     finish()
                 }

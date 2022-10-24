@@ -34,7 +34,7 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
 
     private int process;
     private String color;
-    private RecyclerView parent;
+    private final RecyclerView parent;
     public PaddingItemDecoration(RecyclerView recyclerView){
         this.parent = recyclerView;
     }
@@ -45,7 +45,7 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
             if (size == 0) {
                 parent.addItemDecoration(this);
             } else {
-                parent.invalidateItemDecorations();
+                parent.invalidate();
             }
         }
     }
@@ -57,16 +57,14 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
     public final void setBackground(String color) {
         this.color = color;
         if (parent != null) {
-            parent.invalidateItemDecorations();
+            parent.invalidate();
         }
     }
 
+
     @Override
-    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        super.getItemOffsets(outRect, view, parent, state);
-        if (this.parent == null) {
-            this.parent = parent;
-        }
+    public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+        super.onDraw(c, parent, state);
         for (int i = 0; i < parent.getChildCount(); i++) {
             final View child = parent.getChildAt(i);
             RelativeLayout parentView = child.findViewById(R.id.item_adjust);
@@ -86,7 +84,6 @@ public class PaddingItemDecoration extends RecyclerView.ItemDecoration {
                 ivImg.setPadding(process, process, process, 0);
             }
         }
-
     }
 
     public final String getBackgroundColor() {

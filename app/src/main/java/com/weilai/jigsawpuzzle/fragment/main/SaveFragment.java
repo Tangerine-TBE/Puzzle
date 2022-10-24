@@ -61,10 +61,11 @@ public class SaveFragment extends BaseFragment {
 
     }
 
-    public static SaveFragment getInstance(String s) {
+    public static SaveFragment getInstance(String s,String type) {
         SaveFragment saveFragment = new SaveFragment();
         Bundle bundle = new Bundle();
         bundle.putString("filePath", s);
+        bundle.putString("type",type);
         saveFragment.setArguments(bundle);
         return saveFragment;
     }
@@ -114,6 +115,7 @@ public class SaveFragment extends BaseFragment {
                     RecordInfo recordInfo = new RecordInfo();
                     recordInfo.setTime(System.currentTimeMillis());
                     recordInfo.setFilePath(path.trim());
+                    recordInfo.setFileName(getArguments().getString("type"));
                     DaoTool.insertRecord(recordInfo);
                     Toast.makeText(_mActivity, "图片已经保存到相册", Toast.LENGTH_SHORT).show();
                     imageView.setImage(ImageSource.bitmap(bitmap));
@@ -145,7 +147,6 @@ public class SaveFragment extends BaseFragment {
         tvSize = view.findViewById(R.id.tv_size);
         tvDate = view.findViewById(R.id.tv_date);
         tvPath = view.findViewById(R.id.tv_path);
-
         AppCompatTextView appCompatTextView = view.findViewById(R.id.tv_title);
         appCompatTextView.setText(R.string.bitmap_info);
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {

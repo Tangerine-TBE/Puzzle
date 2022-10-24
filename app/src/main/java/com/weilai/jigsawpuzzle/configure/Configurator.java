@@ -8,6 +8,10 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.util.ArrayMap;
 
+import com.umeng.commonsdk.UMConfigure;
+import com.weilai.jigsawpuzzle.BaseConstant;
+import com.weilai.jigsawpuzzle.BuildConfig;
+import com.weilai.jigsawpuzzle.util.PackageUtils;
 import com.weilai.jigsawpuzzle.util.SPUtil;
 import com.weilai.jigsawpuzzle.util.dao.DaoTool;
 
@@ -37,6 +41,11 @@ public class Configurator {
             throw  new RuntimeException("Configuration is not ready yet!");
         }
 
+    }
+    public final Configurator withUMeng(Context context){
+            UMConfigure.init(Config.getApplicationContext(), "6347dfe288ccdf4b7e4876e9",
+                    PackageUtils.getAppMetaData(context, "CHANNEL"), UMConfigure.DEVICE_TYPE_PHONE, null);
+        return this;
     }
     public final Configurator withSp(Context context){
         SPUtil.init(context);

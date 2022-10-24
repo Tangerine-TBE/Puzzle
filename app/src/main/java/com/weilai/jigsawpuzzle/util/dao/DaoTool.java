@@ -32,6 +32,9 @@ public class DaoTool {
     public static void insertRecord(RecordInfo recordInfo) {
         sDaoSession.getRecordInfoDao().insert(recordInfo);
     }
+    public static void deleteRecord(RecordInfo recordInfo){
+        sDaoSession.getRecordInfoDao().delete(recordInfo);
+    }
 
     public static void clearDataBase() {
         DaoMaster.dropAllTables(daoMaster.getDatabase(), true);
@@ -39,7 +42,7 @@ public class DaoTool {
     }
 
     public static Observable<List<RecordInfo>> obtainAllRecordInfo() {
-        String sql = "select r.FILEPATH r.FILE_NAME r.TIME from RecordInfo r order by time desc";
+        String sql = "select r._id, r.FILE_PATH, r.FILE_NAME ,r.TIME from RECORD_INFO r order by time desc";
         return Observable.create(new ObservableOnSubscribe<List<RecordInfo>>() {
             @Override
             public void subscribe(ObservableEmitter<List<RecordInfo>> emitter) throws Exception {
@@ -49,11 +52,12 @@ public class DaoTool {
                     if (cursor.moveToFirst()) {
                         do {
                             RecordInfo recordInfo = new RecordInfo();
-                            recordInfo.setFilePath(cursor.getString(0));
-                            recordInfo.setFileName(cursor.getString(1));
-                            recordInfo.setTime(cursor.getLong(2));
+                            recordInfo.setId(cursor.getLong(0));
+                            recordInfo.setFilePath(cursor.getString(1));
+                            recordInfo.setFileName(cursor.getString(2));
+                            recordInfo.setTime(cursor.getLong(3));
                             recordInfos.add(recordInfo);
-                        } while (cursor.moveToFirst());
+                        } while (cursor.moveToNext());
                     }
                 }
                 emitter.onNext(recordInfos);

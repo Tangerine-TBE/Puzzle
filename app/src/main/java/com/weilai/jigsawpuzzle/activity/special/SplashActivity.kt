@@ -59,10 +59,7 @@ class SplashActivity : AppCompatActivity() {
                     SPUtil.getInstance().putBoolean(AgreementActivity.key, true)  //是否展示用户服务协议和隐私政策弹窗
                             .putLong("time", System.currentTimeMillis())
                     //友盟初始化配置
-                    if (!BuildConfig.DEBUG) {
-                        UMConfigure.init(Config.getApplicationContext(), "6347dfe288ccdf4b7e4876e9",
-                            BaseConstant.channel, UMConfigure.DEVICE_TYPE_PHONE, null)
-                    }
+
                     dialog.dismiss()
                     checkIn()
 //                    askPermissions()

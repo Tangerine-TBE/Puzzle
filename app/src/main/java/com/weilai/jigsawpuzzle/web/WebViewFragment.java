@@ -107,7 +107,7 @@ public class WebViewFragment extends WebBaseFragment {
             @Override
             public void onNext(String o) {
                 hideProcessDialog();
-                startWithPop(SaveFragment.getInstance(o));
+                startWithPop(SaveFragment.getInstance(o,"网址截图"));
             }
 
             @Override

@@ -68,22 +68,16 @@ public class FileUtil {
         }
         return bitmap;
     }
-
+    public static final String filePath = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/Output";
     public static String saveScreenShot(Bitmap bitmap, String fileNameStr) throws Exception {
         FileOutputStream fos;
         File file;
-        File externalFileRootDir = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
-
-
-        String saveDir = Objects.requireNonNull(externalFileRootDir).getAbsolutePath();
-        String filePath = saveDir + "/OutPut";
         file = new File(filePath);
         if (!file.exists()) {
             file.mkdir();
         }
-        filePath = filePath + "/" + fileNameStr + ".jpeg";
-        fos = new FileOutputStream(filePath);
+        String path = filePath+"/" + fileNameStr + ".jpeg";
+        fos = new FileOutputStream(path);
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
         try {
             fos.flush();
@@ -92,9 +86,10 @@ public class FileUtil {
         } finally {
             fos.close();
         }
-        savePhotoAlbum(bitmap, new File(filePath));
-        return filePath;
+        savePhotoAlbum(bitmap, new File(path));
+        return path;
     }
+    @Deprecated
     public static String saveScreenShot(Bitmap bitmap, String fileNameStr,int quality) throws Exception {
         FileOutputStream fos;
         File file;

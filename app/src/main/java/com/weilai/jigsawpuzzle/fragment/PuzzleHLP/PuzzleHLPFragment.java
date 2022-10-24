@@ -134,7 +134,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         initData(bitmaps);
         hLongPicItemAdapter = new HLongPicItemAdapter(_mActivity, picInfos);
         mRvLP.setAdapter(hLongPicItemAdapter);
-        paddingItemDecoration = new PaddingHirItemDecoration();
+        paddingItemDecoration = new PaddingHirItemDecoration(mRvLP);
         mRvLP.addItemDecoration(paddingItemDecoration);
         TypedArray actionbarSizeTypedArray = _mActivity.obtainStyledAttributes(new int[]{
                 android.R.attr.actionBarSize
@@ -270,7 +270,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
             @Override
             public void onNext(String s) {
                 hideProcessDialog();
-                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(s);
+                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(s,"横拼");
                 start(puzzleLpAdjustFragment);
             }
 

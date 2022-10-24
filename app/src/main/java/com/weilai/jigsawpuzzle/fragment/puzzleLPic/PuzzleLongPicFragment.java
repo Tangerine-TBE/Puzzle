@@ -286,7 +286,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             @Override
             public void onNext(String s) {
                 hideProcessDialog();
-                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(s);
+                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(s,"长拼");
                 start(puzzleLpAdjustFragment);
             }
 

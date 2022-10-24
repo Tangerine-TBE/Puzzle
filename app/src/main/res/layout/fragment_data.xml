@@ -4,8 +4,50 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
     <include layout="@layout/layout_title_back"/>
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/gray"
+        android:layout_height="1dp"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"/>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:id="@+id/layout_edit"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_height="?attr/actionBarSize">
+        <CheckBox
+            style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+            android:theme="@style/MyCheckBox"
+            android:layout_width="wrap_content"
+            android:text="全选"
+            android:layout_marginStart="16dp"
+            android:id="@+id/checkbox"
+            android:layout_height="wrap_content"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_button_template"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="4dp"
+            android:text="@string/delete"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+             />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </LinearLayout>

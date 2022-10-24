@@ -252,7 +252,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
             @Override
             public void onNext(@NonNull String s) {
                 hideProcessDialog();
-                SaveFragment saveFragment = SaveFragment.getInstance(s);
+                SaveFragment saveFragment = SaveFragment.getInstance(s,"拼健康码");
                 start(saveFragment);
             }
 

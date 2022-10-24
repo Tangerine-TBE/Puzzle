@@ -149,7 +149,7 @@ public class Puzzle9PEditFragment extends BaseFragment {
             @Override
             public void onNext(@NonNull String s) {
                 hideProcessDialog();
-                SaveFragment saveFragment = SaveFragment.getInstance(s);
+                SaveFragment saveFragment = SaveFragment.getInstance(s,"九宫格");
                 start(saveFragment);
             }
 

@@ -28,6 +28,7 @@ import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.activity.main.SaveBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.portrait.PortraitBackgroundAdapter;
 import com.weilai.jigsawpuzzle.adapter.portrait.PortraitBackgroundGroupAdapter;
 import com.weilai.jigsawpuzzle.adapter.portrait.TextColorAdapter;
@@ -718,7 +719,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
 
                     @Override
                     public void onNext(String s) {
-                        start(SaveFragment.getInstance(s));
+                        start(SaveFragment.getInstance(s,"抠图"));
                     }
 
                     @Override
@@ -736,7 +737,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                _mActivity.finish();
             }
         });
     }

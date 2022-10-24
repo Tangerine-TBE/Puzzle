@@ -11,10 +11,7 @@ import com.weilai.jigsawpuzzle.activity.main.SaveBaseActivity
 import com.weilai.jigsawpuzzle.adapter.special.AdjustAdapter
 import com.weilai.jigsawpuzzle.base.BaseActivity
 import com.weilai.jigsawpuzzle.bean.AdjustBean
-import com.weilai.jigsawpuzzle.util.BitmapUtils
-import com.weilai.jigsawpuzzle.util.GPUImageFilterTools
-import com.weilai.jigsawpuzzle.util.PermissionUtils
-import com.weilai.jigsawpuzzle.util.ToastUtil
+import com.weilai.jigsawpuzzle.util.*
 import com.weilai.jigsawpuzzle.weight.MySeekBar
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.*
@@ -127,11 +124,12 @@ class AdjustActivity : BaseActivity(), AdjustAdapter.AdjustAdapterCallback,
                     loadingDialog.setTitleText("保存中...")
                     loadingDialog.show()
                     Thread{
-                        BitmapUtils.saveImageToGallery(gpuImageView.gpuImage.bitmapWithFilterApplied,BaseConstant.savePath,fileName,true)
+                        FileUtil.saveScreenShot(gpuImageView.gpuImage.bitmapWithFilterApplied,"${System.currentTimeMillis()}")
                         runOnUiThread {
                             loadingDialog.dismiss()
                             val intent = Intent(this, SaveBaseActivity::class.java)
                             intent.putExtra("data", path)
+                            intent.putExtra("type","滤镜")
                             startActivity(intent)
                             finish()
                         }

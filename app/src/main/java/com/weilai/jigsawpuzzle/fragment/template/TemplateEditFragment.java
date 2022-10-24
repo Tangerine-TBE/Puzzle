@@ -315,7 +315,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             @Override
             public void onNext(String s) {
                 hideProcessDialog();
-                SaveFragment saveFragment = SaveFragment.getInstance(s);
+                SaveFragment saveFragment = SaveFragment.getInstance(s,"模板");
                 start(saveFragment);
             }
 

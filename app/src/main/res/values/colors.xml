@@ -13,4 +13,5 @@
     <color name="unl_text_main_color">#86909C</color>
     <color name="card_view_color">#F5F9FF</color>
     <color name="puzzle_bg_color">#F8F8F8</color>
+    <color name="gray">#C4C4C4</color>
 </resources>
