@@ -16,53 +16,66 @@ import com.weilai.jigsawpuzzle.util.SPUtil;
 import com.weilai.jigsawpuzzle.util.dao.DaoTool;
 
 /**
- ** DATE: 2022/10/10
- ** Author:tangerine
- ** Description:
+ * * DATE: 2022/10/10
+ * * Author:tangerine
+ * * Description:
  **/
 public class Configurator {
-    private static final ArrayMap<String ,Object> CONFIGS = new ArrayMap<>();
-    private static class Holder{
+    private static final ArrayMap<String, Object> CONFIGS = new ArrayMap<>();
+
+    private static class Holder {
         private static final Configurator INSTANCE = new Configurator();
     }
-    static Configurator getInstance(){
-        return  Holder.INSTANCE;
+
+    static Configurator getInstance() {
+        return Holder.INSTANCE;
     }
-    private Configurator(){
-        CONFIGS.put(CONFIGURE_READ.name(),false);
+
+    private Configurator() {
+        CONFIGS.put(CONFIGURE_READ.name(), false);
     }
-    final <A>A getConfiguration(Enum<ConfigureType> key){
-            checkConfiguration();
+
+    final <A> A getConfiguration(Enum<ConfigureType> key) {
+        checkConfiguration();
         return (A) CONFIGS.get(key.name());
     }
-    private void checkConfiguration(){
-        final  boolean isReady = Boolean.TRUE.equals(CONFIGS.get(CONFIGURE_READ.name()));
+
+    private void checkConfiguration() {
+        final boolean isReady = Boolean.TRUE.equals(CONFIGS.get(CONFIGURE_READ.name()));
         if (!isReady) {
-            throw  new RuntimeException("Configuration is not ready yet!");
+            throw new RuntimeException("Configuration is not ready yet!");
         }
 
     }
-    public final Configurator withUMeng(Context context){
+
+    public final Configurator withUMeng(Context context) {
+        if (!BuildConfig.DEBUG) {
             UMConfigure.init(Config.getApplicationContext(), "6347dfe288ccdf4b7e4876e9",
                     PackageUtils.getAppMetaData(context, "CHANNEL"), UMConfigure.DEVICE_TYPE_PHONE, null);
+        }
         return this;
     }
-    public final Configurator withSp(Context context){
+
+    public final Configurator withSp(Context context) {
         SPUtil.init(context);
         return this;
     }
-    public final Configurator withDao(Context context){
+
+    public final Configurator withDao(Context context) {
         DaoTool.init(context);
         return this;
     }
-    public final Configurator withApplication(Application application){
-        CONFIGS.put(APPLICATION.name(),application);
+
+    public final Configurator withApplication(Application application) {
+        CONFIGS.put(APPLICATION.name(), application);
         return this;
     }
-    final ArrayMap<String,Object> getConfigs(){
+
+    final ArrayMap<String, Object> getConfigs() {
         return CONFIGS;
     }
-    public final void Configure(){
-        CONFIGS.put(CONFIGURE_READ.name(),true);
+
+    public final void Configure() {
+        CONFIGS.put(CONFIGURE_READ.name(), true);
     }
 }

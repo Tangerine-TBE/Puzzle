@@ -6,10 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.weilai.jigsawpuzzle.DaoMaster;
 import com.weilai.jigsawpuzzle.DaoSession;
-import com.weilai.jigsawpuzzle.RecordInfoDao;
 import com.weilai.jigsawpuzzle.db.RecordInfo;
-
-import org.greenrobot.greendao.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,33 +7,29 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BaseTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.luck.picture.lib.config.PictureMimeType;
-import com.luck.picture.lib.photoview.PhotoView;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.RecordInfoDao;
 import com.weilai.jigsawpuzzle.activity.main.ClientReportBaseActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.db.RecordInfo;
-import com.weilai.jigsawpuzzle.dialog.save.BitmapInfoPopUp;
 import com.weilai.jigsawpuzzle.util.AppStoreUtil;
 import com.weilai.jigsawpuzzle.util.DateUtil;
-import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.UriUtil;
 import com.weilai.jigsawpuzzle.util.dao.DaoTool;
-import com.xinlan.imageeditlibrary.editimage.view.imagezoom.ImageViewTouch;
 
 import java.io.File;
 import java.io.FileNotFoundException;

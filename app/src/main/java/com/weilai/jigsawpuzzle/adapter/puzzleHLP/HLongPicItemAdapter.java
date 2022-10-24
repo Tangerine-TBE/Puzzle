@@ -56,17 +56,21 @@ public class HLongPicItemAdapter extends RecyclerView.Adapter<HLongPicItemAdapte
     public void onBindViewHolder(@NonNull HLongPicItemAdapter.ViewHolder holder, int position) {
         Bitmap bitmap = null;
         String path = bitmaps.get(position).path;
-        if (!TextUtils.isEmpty(path)) {
-            Uri srcUri = BitmapUtils.pathToUri(path);
-            if (srcUri != null) {
-                InputStream stream = null;
-                try {
-                    stream = mContext.getContentResolver().openInputStream(srcUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+        if (bitmaps.get(position).shouldLoad) {
+            if (!TextUtils.isEmpty(path)) {
+                Uri srcUri = BitmapUtils.pathToUri(path);
+                if (srcUri != null) {
+                    InputStream stream = null;
+                    try {
+                        stream = mContext.getContentResolver().openInputStream(srcUri);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    bitmap = BitmapFactory.decodeStream(stream);
                 }
-                bitmap = BitmapFactory.decodeStream(stream);
             }
+        } else {
+            bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.icon_long_replace);
         }
         if (bitmap == null) {
             return;

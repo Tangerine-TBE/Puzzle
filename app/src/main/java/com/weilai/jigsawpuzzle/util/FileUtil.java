@@ -138,9 +138,7 @@ public class FileUtil {
         try {
             outputStream = new BufferedOutputStream(new FileOutputStream(file));
             src.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            if (!src.isRecycled()) {
-                src.recycle();
-            }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -149,7 +147,8 @@ public class FileUtil {
             ContentValues values = new ContentValues();
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, file.getName());
             values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-            values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM);
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, "Pictures/拼图抠图");
+            values.put(MediaStore.MediaColumns.IS_PENDING, false);
             ContentResolver contentResolver = getApplicationContext().getContentResolver();
             Uri uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             if (uri == null) {
@@ -157,9 +156,10 @@ public class FileUtil {
             }
             try {
                 outputStream = contentResolver.openOutputStream(uri);
-                FileInputStream fileInputStream = new FileInputStream(file);
-                FileUtils.copy(fileInputStream, outputStream);
-                fileInputStream.close();
+                src.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+//                FileInputStream fileInputStream = new FileInputStream(file);
+//                FileUtils.copy(fileInputStream, outputStream);
+//                fileInputStream.close();
                 outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -172,6 +172,9 @@ public class FileUtil {
                     (path, uri) -> {
                         // Scan Completed
                     });
+        }
+        if (!src.isRecycled()) {
+            src.recycle();
         }
     }
 }

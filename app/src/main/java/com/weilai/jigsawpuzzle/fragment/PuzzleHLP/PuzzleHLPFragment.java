@@ -3,14 +3,18 @@ package com.weilai.jigsawpuzzle.fragment.PuzzleHLP;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.LruCache;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,7 +58,10 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -184,93 +191,81 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         });
     }
 
-    private void shotScrollView(RecyclerView view) {
-        Observable.create(new ObservableOnSubscribe<ArrayList<RecyclerView.ViewHolder>>() {
+    private void shotScrollView(List<PicInfo> picInfos) {
+        showProcessDialog();
+        Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void subscribe(ObservableEmitter<ArrayList<RecyclerView.ViewHolder>> emitter) throws Exception {
-                showProcessDialog();
-                RecyclerView.Adapter adapter = view.getAdapter();
-                ArrayList<RecyclerView.ViewHolder> arrayList = new ArrayList<>();
-                if (adapter != null) {
-                    int size = adapter.getItemCount();
-                    // Use 1/8th of the available memory for this memory cache.
-                    for (int i = 0; i < size; i++) {
-                        RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
-                        adapter.onBindViewHolder(holder, i);
-                        holder.itemView.measure(
-                                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                                View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenHeight() / 2, View.MeasureSpec.EXACTLY)
-                        );
-                        holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
-                                DimenUtil.getScreenHeight() / 2);
-                        int padding = paddingItemDecoration.getProcess();
-                        if (i == 0) {
-                            holder.itemView.setPadding(padding, padding, 0, padding);
-                        } else if (i == size - 1) {
-                            holder.itemView.setPadding(padding, padding, padding, padding);
-                        } else {
-                            holder.itemView.setPadding(padding, padding, 0, padding);
-                        }
-                        holder.itemView.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
-                        arrayList.add(holder);
-                    }
-
-                }
-                emitter.onNext(arrayList);
-            }
-        }).observeOn(Schedulers.newThread()).flatMap(new Function<ArrayList<RecyclerView.ViewHolder>, ObservableSource<String>>() {
-            @Override
-            public ObservableSource<String> apply(ArrayList<RecyclerView.ViewHolder> viewHolders) throws Exception {
-                Bitmap bigBitmap = null;
-                int width = 0;
-                Paint paint = new Paint();
-                int iWidth = 0;
+            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
                 final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-                // Use 1/8th of the available memory for this memory cache.
-                final int cacheSize = maxMemory / 8;
-                LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
-                for (int i = 0; i < viewHolders.size(); i++) {
-                    RecyclerView.ViewHolder holder = viewHolders.get(i);
-                    holder.itemView.setDrawingCacheEnabled(true);
-                    holder.itemView.buildDrawingCache();
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                LruCache<String, Bitmap> bitmapCache = new LruCache<>(maxMemory);
+                Bitmap finallyBitmap;
+                int width = 0;
+                int iWidth = 0;
+                for (int i = 0; i < picInfos.size(); i++) {
+                    Bitmap picBitmap = BitmapFactory.decodeStream(_mActivity.getContentResolver().openInputStream(BitmapUtils.pathToUri(picInfos.get(i).path)));
+                    int bitMapHeight = picBitmap.getHeight();
+                    BigDecimal bitMapHeightBig = new BigDecimal(bitMapHeight);
+                    int viewHeight = DimenUtil.getScreenHeight() / 2;
+                    BigDecimal viewHeightBig = new BigDecimal(viewHeight);
+                    float value = viewHeightBig.divide(bitMapHeightBig, 2, RoundingMode.HALF_DOWN).floatValue();
+                    BigDecimal valueBig = new BigDecimal(value);
+                    int bigMapWidth = picBitmap.getWidth();
+                    int viewWidth = valueBig.multiply(new BigDecimal(bigMapWidth)).intValue();
+                    Bitmap bitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
+                    Canvas canvas = new Canvas(bitmap);
+                    canvas.drawColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
+                    int finallyLeft;
+                    int finallyTop;
+                    int finallyRight = canvas.getWidth();
+                    int finallyBottom;
+                    if (i == 0) {
+                        finallyTop = paddingItemDecoration.getProcess();
+                        finallyLeft = paddingItemDecoration.getProcess();
+                        finallyBottom = canvas.getHeight() - paddingItemDecoration.getProcess();
+                        if (picInfos.size() == 1) {
+                            finallyRight = canvas.getWidth() - paddingItemDecoration.getProcess();
+                        }
+                    } else if (i == picInfos.size() - 1) {
+                        finallyTop = paddingItemDecoration.getProcess();
+                        finallyLeft = paddingItemDecoration.getProcess();
+                        finallyRight = canvas.getWidth() - paddingItemDecoration.getProcess();
+                        finallyBottom = canvas.getHeight() - paddingItemDecoration.getProcess();
+                    } else {
+                        finallyTop = paddingItemDecoration.getProcess();
+                        finallyLeft = paddingItemDecoration.getProcess();
+                        finallyBottom = canvas.getHeight() - paddingItemDecoration.getProcess();
                     }
-                    Bitmap drawingCache = holder.itemView.getDrawingCache();
-                    if (drawingCache != null) {
-                        bitmaCache.put(String.valueOf(i), drawingCache);
+                    width += viewWidth;
+                    RectF src = new RectF(finallyLeft, finallyTop, finallyRight, finallyBottom);
+                    canvas.drawBitmap(picBitmap, null, src, null);
+                    if (!picBitmap.isRecycled()) {
+                        picBitmap.recycle();
                     }
-                    width += holder.itemView.getMeasuredWidth();
+                    bitmapCache.put(String.valueOf(i), bitmap);
                 }
-                bigBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight() / 2, Bitmap.Config.ARGB_8888);
-                Canvas bigCanvas = new Canvas(bigBitmap);
-                Drawable lBackground = view.getBackground();
-                if (lBackground instanceof ColorDrawable) {
-                    ColorDrawable lColorDrawable = (ColorDrawable) lBackground;
-                    int lColor = lColorDrawable.getColor();
-                    bigCanvas.drawColor(lColor);
+                finallyBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight() / 2, Bitmap.Config.ARGB_8888);
+                Canvas bigCanvas = new Canvas(finallyBitmap);
+                for (int i = 0; i < picInfos.size(); i++) {
+                    Bitmap bitmap = bitmapCache.get(String.valueOf(i));
+                    if (bitmap != null) {
+                        bigCanvas.drawBitmap(bitmap, iWidth, 0f, null);
+                        iWidth += bitmap.getWidth();
+                        bitmap.recycle();
+                    }
                 }
-                for (int i = 0; i < viewHolders.size(); i++) {
-                    Bitmap bitmap = bitmaCache.get(String.valueOf(i));
-                    bigCanvas.drawBitmap(bitmap, iWidth, 0, paint);
-                    iWidth += bitmap.getWidth();
-                    bitmap.recycle();
-                }
-                String filePath = FileUtil.saveScreenShot(bigBitmap, System.currentTimeMillis() + "");
-                return Observable.just(filePath);
+                String filePath = FileUtil.saveScreenShot(finallyBitmap, System.currentTimeMillis() + "");
+                emitter.onNext(filePath);
             }
-        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(Disposable d) {
                 mDisposable.add(d);
             }
 
             @Override
-            public void onNext(String s) {
+            public void onNext(String filePath) {
                 hideProcessDialog();
-                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(s,"横拼");
+                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(filePath, "长拼");
                 start(puzzleLpAdjustFragment);
             }
 
@@ -281,12 +276,14 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
 
             @Override
             public void onComplete() {
+
             }
         });
     }
 
+
     private void doOnBackGround() {
-        shotScrollView(mRvLP);
+        shotScrollView(picInfos);
     }
 
     @Override

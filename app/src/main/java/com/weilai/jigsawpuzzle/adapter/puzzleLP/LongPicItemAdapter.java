@@ -3,7 +3,12 @@ package com.weilai.jigsawpuzzle.adapter.puzzleLP;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,10 +19,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -27,11 +35,14 @@ import com.weilai.jigsawpuzzle.bean.PicInfo;
 import com.weilai.jigsawpuzzle.util.BitmapUtils;
 import com.weilai.jigsawpuzzle.util.DimenUtil;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,6 +55,7 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
     private List<PicInfo> bitmaps;
     private int viewWidth;
     private int viewHeight;
+
     public LongPicItemAdapter(Context context, List<PicInfo> bitmaps) {
         this.mContext = context;
         this.bitmaps = bitmaps;
@@ -65,38 +77,42 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         /*计算一次图片大小适配一下控件*/
         Bitmap bitmap = null;
         String path = bitmaps.get(position).path;
-        if (!TextUtils.isEmpty(path)) {
-            Uri srcUri = BitmapUtils.pathToUri(path);
-            if (srcUri != null) {
-                InputStream stream = null;
-                try {
-                    stream = mContext.getContentResolver().openInputStream(srcUri);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+        if (bitmaps.get(position).shouldLoad) {
+            if (!TextUtils.isEmpty(path)) {
+                Uri srcUri = BitmapUtils.pathToUri(path);
+                if (srcUri != null) {
+                    InputStream stream = null;
+                    try {
+                        stream = mContext.getContentResolver().openInputStream(srcUri);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    bitmap = BitmapFactory.decodeStream(stream);
                 }
-                bitmap = BitmapFactory.decodeStream(stream);
             }
+        } else {
+            bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.icon_long_replace);
         }
         if (bitmap == null) {
             return;
         }
         int bitMapWidth = bitmap.getWidth();
         BigDecimal bitMapWidthBig = new BigDecimal(bitMapWidth);
-        int viewWidth = DimenUtil.getScreenWidth() * 5/7;
+        int viewWidth = DimenUtil.getScreenWidth() * 5 / 7;
         BigDecimal viewWidthBig = new BigDecimal(viewWidth);
         float value = viewWidthBig.divide(bitMapWidthBig, 2, RoundingMode.HALF_DOWN).floatValue();
         BigDecimal valueBig = new BigDecimal(value);
         int bigMapHeight = bitmap.getHeight();
         int viewHeight = valueBig.multiply(new BigDecimal(bigMapHeight)).intValue();
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(viewWidth,viewHeight);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(viewWidth, viewHeight);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         holder.layoutContent.setLayoutParams(layoutParams);
         ViewGroup.LayoutParams layoutParams1 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, viewHeight);
         holder.itemView.setLayoutParams(layoutParams1);
-        FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth,viewHeight);
+        FrameLayout.LayoutParams relayout = new FrameLayout.LayoutParams(viewWidth, viewHeight);
         ImageView image = holder.ivImage;
         image.setLayoutParams(relayout);
-        image.setImageBitmap(bitmap);
+        Glide.with(mContext).load(bitmap).into(image);
 //        Glide.with(mContext).load(bitmap).into(image);
 //        image.setImage(ImageSource.bitmap(bitmap));
 //        image.setImage(ImageSource.bitmap(bitmap));
@@ -104,11 +120,11 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
         ImageView place = holder.ivPlace;
         place.setLayoutParams(relayout);
         if (mLastSelectedPosition == -1) {
-            holder. ivPlace.setSelected(false);
+            holder.ivPlace.setSelected(false);
         } else {
-            holder. ivPlace.setSelected(position == mLastSelectedPosition);
+            holder.ivPlace.setSelected(position == mLastSelectedPosition);
         }
-        holder. ivPlace.setOnClickListener(v -> {
+        holder.ivPlace.setOnClickListener(v -> {
             if (canSelected) {
                 if (mLastSelectedView != null) {
                     if (mLastSelectedView != v) {
@@ -133,7 +149,7 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
                     mLastSelectedView = v;
                     mLastSelectedPosition = holder.getAdapterPosition();
                 }
-                mOnItemClickedListener.onItemClicked(holder.itemView,position);
+                mOnItemClickedListener.onItemClicked(holder.itemView, position);
             }
             //弹出多功能模块
 
@@ -143,21 +159,26 @@ public class LongPicItemAdapter extends RecyclerView.Adapter<LongPicItemAdapter.
 
     private boolean canSelected = true;
     private OnItemClickedListener mOnItemClickedListener;
+
     public final void setCanSelected() {
         canSelected = false;
     }
-    public interface OnItemClickedListener{
-        void onItemClicked(View itemView,int position);
+
+    public interface OnItemClickedListener {
+        void onItemClicked(View itemView, int position);
     }
-    public final void setOnItemClickedListener(OnItemClickedListener onItemClickedListener){
+
+    public final void setOnItemClickedListener(OnItemClickedListener onItemClickedListener) {
         this.mOnItemClickedListener = onItemClickedListener;
     }
-    public final void resetItem(){
-        if (mLastSelectedView != null){
+
+    public final void resetItem() {
+        if (mLastSelectedView != null) {
             mLastSelectedView.setSelected(false);
             mLastSelectedPosition = -1;
         }
     }
+
     @Override
     public int getItemCount() {
         return bitmaps.size();

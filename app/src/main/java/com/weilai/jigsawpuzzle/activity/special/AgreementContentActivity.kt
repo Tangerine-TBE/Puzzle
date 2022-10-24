@@ -118,7 +118,7 @@ class AgreementContentActivity:AppCompatActivity() {
 //            }
         }
         //加载网络资源
-        webView.loadUrl("https://catapi.aisou.club/android/privacy_policy.html?app_name=${packageManager.getApplicationLabel(applicationInfo)}&pack_name=${BaseConstant.packageName}")
+        webView.loadUrl("http://test.aisou.club/privacy_policy/_other/weilai_matting_privacy_policy.html")
     }
 
     override fun onResume() {

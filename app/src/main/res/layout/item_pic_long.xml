@@ -20,7 +20,7 @@
                 android:layout_height="match_parent"
                 android:cropToPadding="true"
                 android:scaleType="fitXY"
-                android:src="@mipmap/icon_splash" />
+                />
 
             <ImageView
                 android:id="@+id/iv_place"

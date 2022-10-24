@@ -76,12 +76,12 @@ public class PaddingHirItemDecoration  extends RecyclerView.ItemDecoration{
                 if (parent.getChildCount() == 1) {
                     ivImg.setPadding(process, process, process, process);
                 } else {
-                    ivImg.setPadding(process, process, process, 0);
+                    ivImg.setPadding(process, process, 0, process);
                 }
             } else if (i == parent.getChildCount() - 1) {
                 ivImg.setPadding(process, process, process, process);
             } else {
-                ivImg.setPadding(process, process, process, 0);
+                ivImg.setPadding(process, process, 0, process);
             }
         }
     }

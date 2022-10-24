@@ -6,8 +6,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
+import com.weilai.jigsawpuzzle.BaseConstant;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
+import com.weilai.jigsawpuzzle.net.base.NetConfig;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  ** DATE: 2022/10/18
@@ -40,10 +52,10 @@ public class ClientReportFragment extends BaseFragment {
         view.findViewById(R.id.layout_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pop();
+                _mActivity.finish();
             }
         });
-        view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String text = etPros.getText().toString();
@@ -57,7 +69,33 @@ public class ClientReportFragment extends BaseFragment {
                     return;
                 }
                 //发送
-                pop();
+                Map<String,String> map = new HashMap<>();
+                map.put("user_id","111");
+                map.put("content",text);
+                map.put("user_system","1");
+                map.put("user_package", _mActivity.getPackageName());
+                map.put("package_chn","拼图抠图");
+                NetConfig.getInstance().getINetService().clientReport("https://catapi.aisou.club/usercenter/public/feedback",map)
+                        .observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<ResponseBody>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+                                mDisposable.add(d);
+                            }
+
+                            @Override
+                            public void onNext(ResponseBody responseBody) {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
 
             }
         });
