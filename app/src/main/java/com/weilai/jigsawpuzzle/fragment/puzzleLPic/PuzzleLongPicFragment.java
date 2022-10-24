@@ -477,10 +477,6 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                     int size = list.size();
                     if (size > 0) {
                         for (LocalMedia localMedia : list) {
-                            if (localMedia.getSize() > 10368000) {
-                                ToastUtil.showToast(localMedia.getFileName() + ",这个文件太大了");
-                                return;
-                            }
                             String path = localMedia.getAvailablePath();
                             PicInfo picInfo = new PicInfo();
                             picInfo.path = path;
