@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android-extensions'
-    id  'kotlin-android'
+    id 'kotlin-android'
     id 'AndResGuard'
     id 'org.greenrobot.greendao'
 
@@ -26,17 +26,35 @@ android {
             abiFilters 'arm64-v8a', 'armeabi-v7a'//, 'x86'
         }
     }
-
+    signingConfigs{
+        release {
+            storeFile file("../cn.yuntk.reader.jks")
+            storePassword "ltreader888"
+            keyAlias "reader"
+            keyPassword "ltreader888"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+        debug {
+            storeFile file("../cn.yuntk.reader.jks")
+            storePassword "ltreader888"
+            keyAlias "reader"
+            keyPassword "ltreader888"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             debuggable false
             buildConfigField("String", "AD_HOST", rootProject.ext.host.ad)
             buildConfigField("String", "CONTENT_HOST", rootProject.ext.host.content)
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             buildConfigField("String", "AD_HOST", rootProject.ext.host.ad)
             buildConfigField("String", "CONTENT_HOST", rootProject.ext.host.content)
             debuggable true  //可以debug
@@ -66,36 +84,36 @@ android {
 
             applicationId rootProject.ext.versions.applicationId
             manifestPlaceholders = [app_name_channel: "拼图抠图1",
-                                    CHANNEL_VALUE:"_oppo"]
+                                    CHANNEL_VALUE   : "_oppo"]
         }
         _xiaomi {
 
             applicationId rootProject.ext.versions.applicationId
             manifestPlaceholders = [app_name_channel: "拼图抠图",
-                                    CHANNEL_VALUE:"_xiaomi"]
+                                    CHANNEL_VALUE   : "_xiaomi"]
         }
         _huawei {
 
             applicationId rootProject.ext.versions.applicationId
             manifestPlaceholders = [app_name_channel: "拼图抠图",
-                                    CHANNEL_VALUE:"_huawei"]
+                                    CHANNEL_VALUE   : "_huawei"]
         }
         _vivo {
             applicationId rootProject.ext.versions.applicationId
             manifestPlaceholders = [app_name_channel: "拼图抠图",
-                                    CHANNEL_VALUE:"_vivo"]
+                                    CHANNEL_VALUE   : "_vivo"]
         }
         _360 {
 
             applicationId rootProject.ext.versions.applicationId
             manifestPlaceholders = [app_name_channel: "拼图抠图",
-                                    CHANNEL_VALUE:"_360"]
+                                    CHANNEL_VALUE   : "_360"]
         }
         _yingyongbao {
 
             applicationId rootProject.ext.versions.applicationId
             manifestPlaceholders = [app_name_channel: "拼图抠图",
-                                    CHANNEL_VALUE:"_yingyongbao"]
+                                    CHANNEL_VALUE   : "_yingyongbao"]
         }
 //        _anzhi {
 //            applicationId rootProject.ext.versions.applicationId
@@ -112,7 +130,7 @@ android {
 
             applicationId rootProject.ext.versions.applicationId
             manifestPlaceholders = [app_name_channel: "拼图抠图",
-                                    CHANNEL_VALUE:"_baidu"]
+                                    CHANNEL_VALUE   : "_baidu"]
         }
 //        _meizu {
 //
@@ -187,8 +205,8 @@ dependencies {
     /*Refresh*/
     implementation 'io.github.scwang90:refresh-layout-kernel:2.0.5'      //核心必须依赖
     implementation 'io.github.scwang90:refresh-footer-classics:2.0.5'
-    implementation  'io.github.scwang90:refresh-header-material:2.0.5'
-    implementation  'io.github.scwang90:refresh-header-classics:2.0.5'
+    implementation 'io.github.scwang90:refresh-header-material:2.0.5'
+    implementation 'io.github.scwang90:refresh-header-classics:2.0.5'
     /*event bus*/
     implementation 'org.greenrobot:eventbus:3.1.1'
     /*popup view*/
@@ -199,10 +217,10 @@ dependencies {
     implementation "com.gyf.immersionbar:immersionbar:3.0.0"
 //    implementation 'com.just.agentweb:agentweb:4.1.5'
 
-    implementation  'com.umeng.umsdk:common:9.5.2'// 必选
-    implementation  'com.umeng.umsdk:asms:1.6.3'// 必选
+    implementation 'com.umeng.umsdk:common:9.5.2'// 必选
+    implementation 'com.umeng.umsdk:asms:1.6.3'// 必选
     implementation 'com.umeng.umsdk:apm:1.7.0' // 错误分析升级为独立产品U-APM可按需集成，可选
-    implementation  'com.umeng.umsdk:abtest:1.0.0'//使用U-App中ABTest能力，可选
+    implementation 'com.umeng.umsdk:abtest:1.0.0'//使用U-App中ABTest能力，可选
 
     implementation 'org.greenrobot:greendao:3.2.2'
 }

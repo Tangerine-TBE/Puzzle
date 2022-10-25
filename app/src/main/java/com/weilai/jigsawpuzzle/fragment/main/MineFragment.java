@@ -19,6 +19,7 @@ import com.weilai.jigsawpuzzle.activity.special.AgreementContentActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.util.AppStoreUtil;
 import com.weilai.jigsawpuzzle.util.UriUtil;
+import com.weilai.jigsawpuzzle.util.maputils.DataCleanManager;
 
 /**
  ** DATE: 2022/9/26
@@ -60,6 +61,7 @@ public class MineFragment  extends BaseFragment {
         view.findViewById(R.id.ll_clean_template).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Toast.makeText(_mActivity, "清空完毕~", Toast.LENGTH_SHORT).show();
             }
         });
@@ -67,6 +69,7 @@ public class MineFragment  extends BaseFragment {
             @Override
             public void onClick(View v) {
                 //删除缓存
+               DataCleanManager.clearAllCache();
                 Toast.makeText(_mActivity, "清空完毕~", Toast.LENGTH_SHORT).show();
             }
         });
