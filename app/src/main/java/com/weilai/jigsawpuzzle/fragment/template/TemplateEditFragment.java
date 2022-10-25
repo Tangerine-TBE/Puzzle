@@ -13,11 +13,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.Crop;
@@ -28,6 +31,7 @@ import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.manager.SelectedManager;
 import com.luck.picture.lib.utils.DateUtils;
+import com.weilai.jigsawpuzzle.BuildConfig;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
@@ -41,6 +45,7 @@ import com.weilai.jigsawpuzzle.net.netInfo.BitMapInfo;
 import com.weilai.jigsawpuzzle.util.L;
 import com.weilai.jigsawpuzzle.weight.template.TemplateView;
 import com.weilai.jigsawpuzzle.weight.template.TemplateViewInfo;
+import com.xinlan.imageeditlibrary.editimage.utils.AssetsUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -89,9 +94,14 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
     @Override
     protected void initView(View view) {
         assert getArguments() != null;
-        String json = getArguments().getString("bitmapInfo");
+        String json;
+        json = AssetsUtil.getAssertString(_mActivity, "bitmap.json");
+//        json = getArguments().getString("bitmapInfo");
         if (!TextUtils.isEmpty(json)) {
-            bitMapInfo = JSONObject.parseObject(json, BitMapInfo.class);
+
+            JSONArray o = (JSONArray) JSON.parse(json);
+            bitMapInfo = o.toJavaList(BitMapInfo.class).get(17);
+//            bitMapInfo = JSONObject.parseObject(json, BitMapInfo.class);
         }
         mSelector = PictureSelector
                 .create(this);
@@ -125,8 +135,8 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             @Override
             public void onNext(ResponseBody responseBody) {
                 if (responseBody != null) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream()) ;
-                    templateEditView.setTemplateBitmap(bitMapInfo,bitmap);
+                    Bitmap bitmap = BitmapFactory.decodeStream(responseBody.byteStream());
+                    templateEditView.setTemplateBitmap(bitMapInfo, bitmap);
                 }
             }
 
@@ -288,8 +298,6 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
     }
 
 
-
-
     private void doOnBackGround(Bitmap bitmap) {
         showProcessDialog();
         Observable.create(new ObservableOnSubscribe<String>() {
@@ -315,7 +323,7 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
             @Override
             public void onNext(String s) {
                 hideProcessDialog();
-                SaveFragment saveFragment = SaveFragment.getInstance(s,"模板");
+                SaveFragment saveFragment = SaveFragment.getInstance(s, "模板");
                 start(saveFragment);
             }
 
@@ -338,10 +346,9 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
         bitmap = Bitmap.createBitmap(templateEditView.getWidth(), templateEditView.getHeight(), Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         templateEditView.draw(canvas);
-        bitmap = Bitmap.createBitmap(bitmap, (int)x, (int)y, (int)width, (int)height);
+        bitmap = Bitmap.createBitmap(bitmap, (int) x, (int) y, (int) width, (int) height);
         return bitmap;
     }
-
 
 
     @Override

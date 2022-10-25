@@ -14,6 +14,7 @@ public class BitMapInfo implements IBean {
     private String bitmap;
     private String name;
     private String template;
+    private List<Size> sizeInfos;
 
     public String getTemplate() {
         return template;
@@ -23,7 +24,6 @@ public class BitMapInfo implements IBean {
         this.template = template;
     }
 
-    private List<Size> sizeInfos;
 
     public String getName() {
         return name;

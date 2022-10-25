@@ -208,7 +208,7 @@ class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
                     return@runOnUiThread
                 }
                 val intent = Intent(this, SaveBaseActivity::class.java)
-                val fileName = "${BaseConstant.savePath}/${System.currentTimeMillis()}.jpg";
+                val fileName = FileUtil.getAnPicPath("${System.currentTimeMillis()}}")
                 saveBitmap(url, fileName, object : DownloadUtils.RequestCallback {
                     override fun onSuccess(response: String?) {
                         runOnUiThread {
@@ -255,7 +255,8 @@ class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
                 if (url.isEmpty()) {
                     return@runOnUiThread
                 }
-                val fileName = "${BaseConstant.savePath}/${System.currentTimeMillis()}.jpg";
+                val fileName = FileUtil.getAnPicPath("${System.currentTimeMillis()}}")
+
                 val intent = Intent(this, SaveBaseActivity::class.java)
                 saveBitmap(url, fileName, object : DownloadUtils.RequestCallback {
                     override fun onSuccess(response: String?) {
@@ -303,7 +304,8 @@ class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
                     return@runOnUiThread
                 }
                 val intent = Intent(this, SaveBaseActivity::class.java)
-                val fileName = "${BaseConstant.savePath}/${System.currentTimeMillis()}.jpg";
+                val fileName = FileUtil.getAnPicPath("${System.currentTimeMillis()}}")
+
                 saveBitmap(url, fileName, object : DownloadUtils.RequestCallback {
                     override fun onSuccess(response: String?) {
                         runOnUiThread {

@@ -1,7 +1,7 @@
 [
   {
-    "bitmap": "From Service",
-    "template": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水墨画.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水墨画镂空.png",
     "name": "水墨画",
     "size": [
       {
@@ -34,69 +34,69 @@
     ]
   },
   {
-    "bitmap": "From Service",
-    "template": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%96%B0%E5%B9%B4%E5%BF%AB%E4%B9%90.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%96%B0%E5%B9%B4%E5%BF%AB%E4%B9%90%E9%95%82%E7%A9%BA.png ",
     "name": "新年快乐",
     "size": [
       {
-        "x": 0.1043,
-        "y": 0.1557,
+        "x": 0.10,
+        "y": 0.15,
         "angle": 0,
-        "center_y": 0.24795,
-        "center_x": 0.288343,
+        "center_y": 0.248,
+        "center_x": 0.289,
         "ratio_width": 4,
         "ratio_height": 3
       },
       {
-        "x": 0.5337,
-        "y": 0.1557,
+        "x": 0.53,
+        "y": 0.15,
         "angle": 0,
-        "center_y": 0.24795,
-        "center_x": 0.717791,
+        "center_y": 0.248,
+        "center_x": 0.718,
         "ratio_width": 4,
         "ratio_height": 3
       },
       {
-        "x": 0.1043,
-        "y": 0.3975,
+        "x": 0.10,
+        "y": 0.39,
         "angle": 0,
         "center_y": 0.489754,
-        "center_x": 0.288343,
+        "center_x": 0.289,
         "ratio_width": 4,
         "ratio_height": 3
       },
       {
-        "x": 0.5337,
-        "y": 0.3975,
+        "x": 0.53,
+        "y": 0.39,
         "angle": 0,
         "center_y": 0.489754,
-        "center_x": 0.717791,
+        "center_x": 0.718,
         "ratio_width": 4,
         "ratio_height": 3
       },
       {
-        "x": 0.1043,
-        "y": 0.6434,
+        "x": 0.10,
+        "y": 0.64,
         "angle": 0,
-        "center_y": 0.735655,
-        "center_x": 0.288343,
+        "center_y": 0.736,
+        "center_x": 0.289,
         "ratio_width": 4,
         "ratio_height": 3
       },
       {
-        "x": 0.5337,
-        "y": 0.6434,
+        "x": 0.53,
+        "y": 0.64,
         "angle": 0,
-        "center_y": 0.735655,
-        "center_x": 0.717791,
+        "center_y": 0.736,
+        "center_x": 0.718,
         "ratio_width": 4,
         "ratio_height": 3
       }
     ]
   },
   {
-    "bitmap": "From Service",
-    "template": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水波.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水波镂空.png",
     "name": "水波",
     "size": [
       {
@@ -129,9 +129,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/美食不可辜负.png",
     "name": "美食不可辜负",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/美食不可辜负镂空.png",
     "size": [
       {
         "x": 0.0368,
@@ -145,9 +145,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/黄色.png",
     "name": "黄色",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/黄色镂空.png",
     "size": [
       {
         "x": 0.092,
@@ -188,15 +188,15 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/夏日.png",
     "name": "夏日",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/夏日镂空.png",
     "size": [
       {
         "x": 0.0552,
-        "y": 0.1104,
+        "y": 0.11,
         "angle": 0,
-        "center_y": 0.441717,
+        "center_y": 0.442,
         "center_x": 0.5,
         "ratio_width": 4,
         "ratio_height": 3
@@ -204,9 +204,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/蓝色.png",
     "name": "蓝色",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/蓝色镂空.png",
     "size": [
       {
         "x": 0.092,
@@ -247,9 +247,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩.png",
     "name": "水彩",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩镂空.png",
     "size": [
       {
         "x": 0.184,
@@ -263,9 +263,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/兰花.png",
     "name": "蓝花",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/兰花镂空.png",
     "size": [
       {
         "x": 0.0245,
@@ -288,21 +288,21 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/春天.png",
     "name": "春天色卡",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/春天镂空.png",
     "size": [
       {
-        "x": 0.0552,
+        "x": 0.05,
         "y": 0.0794,
         "angle": 0,
         "center_y": 0.523809,
-        "center_x": 0.269938,
+        "center_x": 0.27,
         "ratio_width": 4,
         "ratio_height": 3
       },
       {
-        "x": 0.5153,
+        "x": 0.5,
         "y": 0.0794,
         "angle": 0,
         "center_y": 0.523809,
@@ -313,9 +313,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/绿色.png",
     "name": "绿色",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/绿色镂空.png",
     "size": [
       {
         "x": 0.0675,
@@ -329,58 +329,58 @@
     ]
   },
   {
-    "bitmap": "From Service",
-    "name": "橙色卡",
-    "template": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%A9%99%E8%89%B2.png",
+    "name": "橙色",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%A9%99%E8%89%B2%E9%95%82%E7%A9%BA.png",
     "size": [
       {
+        "x": 0.09,
+        "y": 0.22,
+        "angle": 0,
+        "center_y": 0.345,
+        "center_x": 0.277,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.54,
+        "y": 0.22,
+        "angle": 0,
+        "center_y": 0.345,
+        "center_x": 0.731,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
         "x": 0.092,
-        "y": 0.2213,
+        "y": 0.52,
         "angle": 0,
-        "center_y": 0.344262,
-        "center_x": 0.276073,
+        "center_y": 0.652,
+        "center_x": 0.277,
         "ratio_width": 1,
         "ratio_height": 1
       },
       {
-        "x": 0.546,
-        "y": 0.2213,
+        "x": 0.54,
+        "y": 0.52,
         "angle": 0,
-        "center_y": 0.344262,
-        "center_x": 0.730061,
-        "ratio_width": 1,
-        "ratio_height": 1
-      },
-      {
-        "x": 0.092 ,
-        "y": 0.5287,
-        "angle": 0,
-        "center_y": 0.651639,
-        "center_x": 0.276073,
-        "ratio_width": 1,
-        "ratio_height": 1
-      },
-      {
-        "x": 0.546,
-        "y": 0.5287,
-        "angle": 0,
-        "center_y": 0.651639,
-        "center_x": 0.730061,
+        "center_y": 0.652,
+        "center_x": 0.731,
         "ratio_width": 1,
         "ratio_height": 1
       }
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/莫兰迪色.png",
     "name": "莫兰迪色",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/莫兰迪色镂空.png",
     "size": [
       {
-        "x": 0.0552,
-        "y": 0.0675,
+        "x": 0.05,
+        "y": 0.06,
         "angle": 0,
-        "center_y": 0.512269,
+        "center_y": 0.513,
         "center_x": 0.5,
         "ratio_width": 1,
         "ratio_height": 1
@@ -388,9 +388,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花蝴蝶.png",
     "name": "花蝴蝶",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花蝴蝶镂空.png",
     "size": [
       {
         "x": 0.0552,
@@ -404,9 +404,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩.png",
     "name": "水彩",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩镂空.png",
     "size": [
       {
         "x": 0.0552,
@@ -420,9 +420,9 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/小美好.png",
     "name": "小美好",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/小美好镂空.png",
     "size": [
       {
         "x": 0.4233,
@@ -462,11 +462,10 @@
       }
     ]
   },
-
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花花.png",
     "name": "花花",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花花镂空.png",
     "size": [
       {
         "x": 0.0613,
@@ -498,25 +497,25 @@
     ]
   },
   {
-    "bitmap": "From Service",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/卡通.png",
     "name": "卡通",
-    "template": "From Service",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/卡通镂空.png",
     "size": [
       {
-        "x": 0.205582,
-        "y": 0.09504,
+        "x": 0.20,
+        "y": 0.09,
         "angle": -15,
-        "center_x": 0.4723926,
-        "center_y": 0.1393442,
+        "center_y": 0.140,
+        "center_x": 0.473,
         "ratio_width": 16,
         "ratio_height": 9
       },
       {
-        "x": 0.276993,
-        "y": 0.281352,
+        "x": 0.27,
+        "y": 0.28,
         "angle": 15,
-        "center_x": 0.472392,
-        "center_y": 0.409836,
+        "center_y": 0.410,
+        "center_x": 0.473,
         "ratio_width": 16,
         "ratio_height": 9
       },
@@ -524,12 +523,11 @@
         "x": 0.205582,
         "y": 0.633237,
         "angle": -15,
-        "center_x": 0.472392,
         "center_y": 0.6803278,
+        "center_x": 0.472392,
         "ratio_width": 16,
         "ratio_height": 9
       }
     ]
   }
-
 ]
