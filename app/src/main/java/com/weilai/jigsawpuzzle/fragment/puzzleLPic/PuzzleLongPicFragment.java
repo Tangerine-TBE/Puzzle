@@ -366,7 +366,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
             case 2:
                 //编辑
                 PicInfo picOne = picInfos.get(selectedPosition);
-                if (BitmapUtils.shouldLoadBitmap(picOne.path, true)) {
+                if (!BitmapUtils.shouldLoadBitmap(picOne.path, true)) {
                     Toast.makeText(_mActivity, "图片暂时无法进行编辑!", Toast.LENGTH_SHORT).show();
                     return;
                 }
