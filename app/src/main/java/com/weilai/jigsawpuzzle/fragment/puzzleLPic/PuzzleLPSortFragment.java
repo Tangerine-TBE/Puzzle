@@ -24,15 +24,16 @@ import java.util.ArrayList;
  * * Description:
  **/
 public class PuzzleLPSortFragment extends BaseFragment {
-    public static PuzzleLPSortFragment getInstance(ArrayList<PicInfo> bitmaps) {
+    public static PuzzleLPSortFragment getInstance(ArrayList<PicInfo> bitmaps,int type) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("data", bitmaps);
+        bundle.putInt("type",type);
         PuzzleLPSortFragment puzzleLPSortFragment = new PuzzleLPSortFragment();
         puzzleLPSortFragment.setArguments(bundle);
         return puzzleLPSortFragment;
     }
 
-
+    private int type ;
     private RecyclerView mRvSort;
 
     private PuzzleLPSortFragment() {
@@ -49,13 +50,19 @@ public class PuzzleLPSortFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         picInfos = getArguments().getParcelableArrayList("data");
+        type = getArguments().getInt("type");
         mRvSort = view.findViewById(R.id.rv_sort);
         AppCompatTextView title = view.findViewById(R.id.tv_title);
         title.setText("排序");
         view.findViewById(R.id.tv_save).setVisibility(View.VISIBLE);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(_mActivity);
+        LinearLayoutManager linearLayoutManager = null;
+        if (type == 0){
+             linearLayoutManager = new LinearLayoutManager(_mActivity);
+        }else if (type == 1){
+            linearLayoutManager = new LinearLayoutManager(_mActivity,RecyclerView.HORIZONTAL,false);
+        }
         mRvSort.setLayoutManager(linearLayoutManager);
-        LongPicItemSortAdapter longPicItemAdapter = new LongPicItemSortAdapter(_mActivity, picInfos);
+        LongPicItemSortAdapter longPicItemAdapter = new LongPicItemSortAdapter(_mActivity, picInfos,type);
         mRvSort.setAdapter(longPicItemAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemDrag(picInfos, longPicItemAdapter));
         touchHelper.attachToRecyclerView(mRvSort);

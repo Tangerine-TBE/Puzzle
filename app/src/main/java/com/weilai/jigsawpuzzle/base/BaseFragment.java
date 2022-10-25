@@ -56,12 +56,14 @@ public abstract class BaseFragment extends SupportFragment {
     }
 
     public final void hideProcessDialog() {
-        if (mProcessDialog.isShowing()) {
-            mProcessDialog.dismiss();
-            mProcessDialog.cancel();
-            mProcessDialog = null;
-
+        if (mProcessDialog != null){
+            if (mProcessDialog.isShowing()) {
+                mProcessDialog.dismiss();
+                mProcessDialog.cancel();
+                mProcessDialog = null;
+            }
         }
+
     }
 
     public SupportActivity getBaseActivity() {

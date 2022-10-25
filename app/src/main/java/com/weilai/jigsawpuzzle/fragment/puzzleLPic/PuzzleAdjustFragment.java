@@ -252,7 +252,6 @@ public class PuzzleAdjustFragment extends BaseFragment {
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
-        showProcessDialog();
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
             public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
@@ -302,7 +301,6 @@ public class PuzzleAdjustFragment extends BaseFragment {
             @Override
             public void onNext(Integer o) {
                 if (type == 1) {
-                    hideProcessDialog();
                     mBitmapWidth = DimenUtil.getScreenWidth() * 5 / 7;
                     mBitmapHeight = o;
                     mAdjustSeekBar.setProgress(100);
@@ -311,7 +309,6 @@ public class PuzzleAdjustFragment extends BaseFragment {
                     mBitmapWidth = o;
                     mAdjustSeekBar.setProgress(100);
                 }
-
                 //查找最佳输出大小
                 //太大的图片无法更新至图库,此处实际为压缩图片操作
                 //1.原图大小

@@ -59,6 +59,7 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -187,105 +188,10 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PuzzleAdjustFragment puzzleAdjustFragment = PuzzleAdjustFragment.getInstance(paddingItemDecoration.getBackgroundColor(), paddingItemDecoration.getProcess(),picInfos,0);
+                PuzzleAdjustFragment puzzleAdjustFragment = PuzzleAdjustFragment.getInstance(paddingItemDecoration.getBackgroundColor(), paddingItemDecoration.getProcess(), picInfos, 0);
                 start(puzzleAdjustFragment);
             }
         });
-    }
-
-    private void shotScrollView(List<PicInfo> picInfos) {
-        showProcessDialog();
-        Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-                final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-                LruCache<String, Bitmap> bitmapCache = new LruCache<>(maxMemory);
-                Bitmap finallyBitmap;
-                int width = 0;
-                int iWidth = 0;
-                for (int i = 0; i < picInfos.size(); i++) {
-                    Bitmap picBitmap = BitmapFactory.decodeStream(_mActivity.getContentResolver().openInputStream(BitmapUtils.pathToUri(picInfos.get(i).path)));
-                    int bitMapHeight = picBitmap.getHeight();
-                    BigDecimal bitMapHeightBig = new BigDecimal(bitMapHeight);
-                    int viewHeight = DimenUtil.getScreenHeight() / 2;
-                    BigDecimal viewHeightBig = new BigDecimal(viewHeight);
-                    float value = viewHeightBig.divide(bitMapHeightBig, 2, RoundingMode.HALF_DOWN).floatValue();
-                    BigDecimal valueBig = new BigDecimal(value);
-                    int bigMapWidth = picBitmap.getWidth();
-                    int viewWidth = valueBig.multiply(new BigDecimal(bigMapWidth)).intValue();
-                    Bitmap bitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(bitmap);
-                    canvas.drawColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
-                    int finallyLeft;
-                    int finallyTop;
-                    int finallyRight = canvas.getWidth();
-                    int finallyBottom;
-                    if (i == 0) {
-                        finallyTop = paddingItemDecoration.getProcess();
-                        finallyLeft = paddingItemDecoration.getProcess();
-                        finallyBottom = canvas.getHeight() - paddingItemDecoration.getProcess();
-                        if (picInfos.size() == 1) {
-                            finallyRight = canvas.getWidth() - paddingItemDecoration.getProcess();
-                        }
-                    } else if (i == picInfos.size() - 1) {
-                        finallyTop = paddingItemDecoration.getProcess();
-                        finallyLeft = paddingItemDecoration.getProcess();
-                        finallyRight = canvas.getWidth() - paddingItemDecoration.getProcess();
-                        finallyBottom = canvas.getHeight() - paddingItemDecoration.getProcess();
-                    } else {
-                        finallyTop = paddingItemDecoration.getProcess();
-                        finallyLeft = paddingItemDecoration.getProcess();
-                        finallyBottom = canvas.getHeight() - paddingItemDecoration.getProcess();
-                    }
-                    width += viewWidth;
-                    RectF src = new RectF(finallyLeft, finallyTop, finallyRight, finallyBottom);
-                    canvas.drawBitmap(picBitmap, null, src, null);
-                    if (!picBitmap.isRecycled()) {
-                        picBitmap.recycle();
-                    }
-                    bitmapCache.put(String.valueOf(i), bitmap);
-                }
-                finallyBitmap = Bitmap.createBitmap(width, DimenUtil.getScreenHeight() / 2, Bitmap.Config.ARGB_8888);
-                Canvas bigCanvas = new Canvas(finallyBitmap);
-                for (int i = 0; i < picInfos.size(); i++) {
-                    Bitmap bitmap = bitmapCache.get(String.valueOf(i));
-                    if (bitmap != null) {
-                        bigCanvas.drawBitmap(bitmap, iWidth, 0f, null);
-                        iWidth += bitmap.getWidth();
-                        bitmap.recycle();
-                    }
-                }
-                String filePath = FileUtil.saveScreenShot(finallyBitmap, System.currentTimeMillis() + "");
-                emitter.onNext(filePath);
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                mDisposable.add(d);
-            }
-
-            @Override
-            public void onNext(String filePath) {
-                hideProcessDialog();
-                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(filePath, "横拼图");
-                start(puzzleLpAdjustFragment);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-    }
-
-
-    private void doOnBackGround() {
-        shotScrollView(picInfos);
     }
 
     @Override
@@ -305,7 +211,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
 
                 break;
             case 2:
-                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(picInfos);
+                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(picInfos,1);
                 start(puzzleLPSortFragment);
                 break;
             default:
@@ -429,26 +335,65 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         hLongPicItemAdapter.resetItem();
         mPuzzleLpPopUp.dismiss();
         ArrayList<PicInfo> bitmapsInfo = new ArrayList<>();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
         switch (view.getId()) {
             case 0:
                 //裁顶
                 if (selectedPosition == 0) {
+                    //长图无法进行编辑
+
                     bitmapsInfo.add(picInfos.get(selectedPosition));
+                    for (PicInfo picInfo : bitmapsInfo){
+                        Uri uri = BitmapUtils.pathToUri(picInfo.path);
+                        InputStream inputStream = null;
+                        try {
+                            inputStream = _mActivity.getContentResolver().openInputStream(uri);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        BitmapFactory.decodeStream(inputStream, null, options);
+                        if (options.outHeight > options.outWidth && options.outHeight > DimenUtil.getScreenWidth() * 6) {
+                            ToastUtil.showToast("过长的长图无法进行横向编辑");
+                            return;
+                        }
+                    }
                     puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 1, 2);
                     start(puzzleLpSplitFragment);
                 }
                 break;
             case 1:
+                //过长的长图无法进行编辑
+
                 bitmapsInfo.add(picInfos.get(selectedPosition));
                 if (selectedPosition + 1 < picInfos.size()) {
                     bitmapsInfo.add(picInfos.get(selectedPosition + 1));
                 }
-                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2, 1);
+                for (PicInfo picInfo : bitmapsInfo){
+                    Uri uri = BitmapUtils.pathToUri(picInfo.path);
+                    InputStream inputStream = null;
+                    try {
+                        inputStream = _mActivity.getContentResolver().openInputStream(uri);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    BitmapFactory.decodeStream(inputStream, null, options);
+                    if (options.outHeight > options.outWidth && options.outHeight > DimenUtil.getScreenWidth() * 6) {
+                        ToastUtil.showToast("过长的长图无法进行横向编辑");
+                        return;
+                    }
+                }
+                puzzleLpSplitFragment = PuzzleLpSplitFragment.getInstance(bitmapsInfo, 2, 2);
                 start(puzzleLpSplitFragment);
                 //裁底
                 break;
             case 2:
                 //编辑
+                PicInfo picOne = picInfos.get(selectedPosition);
+                if (BitmapUtils.shouldLoadBitmap(picOne.path, true)) {
+                    Toast.makeText(_mActivity, "图片暂时无法进行编辑!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent it = new Intent(getContext(), EditImageActivity.class);
                 it.putExtra(EditImageActivity.FILE_PATH, picInfos.get(selectedPosition));
                 it.putExtra(EditImageActivity.EXTRA_OUTPUT, FileUtil.getAnPicPath(System.currentTimeMillis() + "_editor"));

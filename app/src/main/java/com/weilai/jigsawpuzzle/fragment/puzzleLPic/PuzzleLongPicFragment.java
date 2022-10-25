@@ -225,7 +225,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                         .forResult(FILTER_PUZZLE_LP_CODE);
                 break;
             case 2:
-                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(picInfos);
+                puzzleLPSortFragment = PuzzleLPSortFragment.getInstance(picInfos,0);
                 start(puzzleLPSortFragment);
                 break;
             default:

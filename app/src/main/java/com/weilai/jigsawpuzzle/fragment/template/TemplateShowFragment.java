@@ -58,6 +58,7 @@ public class TemplateShowFragment extends BaseFragment {
         view.findViewById(R.id.tv_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pop();
                 TemplateEditFragment templateEditFragment = TemplateEditFragment.newInstance(getArguments().getString("bitmapInfo"));
                 start(templateEditFragment);
             }

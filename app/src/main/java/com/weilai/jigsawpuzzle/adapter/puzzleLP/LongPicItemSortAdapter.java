@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -37,17 +38,25 @@ public class LongPicItemSortAdapter extends RecyclerView.Adapter<LongPicItemSort
 
     private Context mContext;
     private List<PicInfo> bitmaps;
-
-    public LongPicItemSortAdapter(Context context, List<PicInfo> bitmaps) {
+    private int type = -1;
+    public LongPicItemSortAdapter(Context context, List<PicInfo> bitmaps,int type) {
         this.mContext = context;
         this.bitmaps = bitmaps;
+        this.type = type;
     }
 
 
     @NonNull
     @Override
     public LongPicItemSortAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(mContext).inflate(R.layout.item_long_pic_sort, parent, false);
+        View view = null;
+        if (type == 0){
+
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_long_pic_sort, parent, false);
+        }else if (type == 1){
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_hlong_pic_sort, parent, false);
+
+        }
         return new ViewHolder(view);
     }
 
@@ -84,10 +93,17 @@ public class LongPicItemSortAdapter extends RecyclerView.Adapter<LongPicItemSort
         BigDecimal targetBigDecimal = new BigDecimal(targetWidth);
         float scaleSize = targetBigDecimal.divide(new BigDecimal(bitmapWidth),2, RoundingMode.HALF_DOWN).floatValue();
         int targetHeight = (int) (bitmapHeight * scaleSize);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetWidth,targetHeight);
-       layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        image.setLayoutParams(layoutParams);
-        Glide.with(mContext).load(bitmap).into(image);
+        if (type == 0){
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(targetWidth,targetHeight);
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+            image.setLayoutParams(layoutParams);
+            Glide.with(mContext).load(bitmap).into(image);
+        }else{
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(targetWidth,targetHeight);
+            image.setLayoutParams(layoutParams);
+            Glide.with(mContext).load(bitmap).into(image);
+        }
+
 
     }
 
