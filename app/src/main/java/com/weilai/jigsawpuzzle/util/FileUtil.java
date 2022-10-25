@@ -34,11 +34,11 @@ import java.util.Objects;
  * * Description:
  **/
 public class FileUtil {
-    private static final String BASE_PATH = getApplicationContext().getDatabasePath("template").getAbsolutePath();
+    private static final String BASE_CACHE_PATH = getApplicationContext().getDatabasePath("puzzle").getAbsolutePath();
 
     public static String saveBitmapToCache(String fileName, Bitmap bitmap) {
 
-        File file = new File(BASE_PATH);
+        File file = new File(BASE_CACHE_PATH);
         if (!file.exists() || !file.isDirectory()) {
             file.mkdir();
         }
@@ -54,11 +54,11 @@ public class FileUtil {
 
     public static Bitmap getBitmapFromCache(String fileName) {
         Bitmap bitmap = null;
-        File file = new File(BASE_PATH);
+        File file = new File(BASE_CACHE_PATH);
         if (!file.exists() || !file.isDirectory()) {
             return null;
         }
-        File bitmapFile = new File(BASE_PATH, fileName);
+        File bitmapFile = new File(BASE_CACHE_PATH, fileName);
         if (bitmapFile.exists()) {
             try {
                 bitmap = BitmapFactory.decodeStream(new FileInputStream(bitmapFile));

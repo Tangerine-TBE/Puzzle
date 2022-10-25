@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/layout_title_back" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="16dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_type"
+            android:layout_width="70dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:text="图片宽度:"
+             />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/adjust_seekBar"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:max="50"
+            android:maxHeight="4dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/seek_bar_progress"
+            android:splitTrack="false"
+            android:thumb="@drawable/seek_bar_thumb"
+            android:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/frame_text"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/sel_text_main_color"
+            android:textSize="12sp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <LinearLayout
+        android:background="@color/gray"
+        android:layout_margin="12dp"
+        android:padding="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="12sp"
+            android:id="@+id/text"
+            android:text="输出的尺寸为:1080*3840"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_marginTop="22dp"
+        android:layout_gravity="center"
+        android:text="保存"
+        android:id="@+id/btn_save"
+        android:textColor="@color/white"
+        android:background="@drawable/bg_button_template"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

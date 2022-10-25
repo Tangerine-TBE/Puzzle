@@ -39,6 +39,7 @@ import com.weilai.jigsawpuzzle.dialog.puzzleLP.PuzzleLpPopUp;
 import com.weilai.jigsawpuzzle.event.LpSortEvent;
 import com.weilai.jigsawpuzzle.event.LpSplitEvent;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
+import com.weilai.jigsawpuzzle.fragment.puzzleLPic.PuzzleAdjustFragment;
 import com.weilai.jigsawpuzzle.fragment.puzzleLPic.PuzzleLPSortFragment;
 import com.weilai.jigsawpuzzle.fragment.puzzleLPic.PuzzleLongPicFragment;
 import com.weilai.jigsawpuzzle.fragment.puzzleLPic.PuzzleLpSplitFragment;
@@ -186,7 +187,8 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
         view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doOnBackGround();
+                PuzzleAdjustFragment puzzleAdjustFragment = PuzzleAdjustFragment.getInstance(paddingItemDecoration.getBackgroundColor(), paddingItemDecoration.getProcess(),picInfos,0);
+                start(puzzleAdjustFragment);
             }
         });
     }
@@ -265,7 +267,7 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
             @Override
             public void onNext(String filePath) {
                 hideProcessDialog();
-                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(filePath, "长拼");
+                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(filePath, "横拼图");
                 start(puzzleLpAdjustFragment);
             }
 

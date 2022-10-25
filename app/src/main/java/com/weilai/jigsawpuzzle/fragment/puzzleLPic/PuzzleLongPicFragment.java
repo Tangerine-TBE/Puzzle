@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
@@ -57,6 +58,7 @@ import com.xinlan.imageeditlibrary.editimage.EditImageActivity;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -198,209 +200,14 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
         view.findViewById(R.id.tv_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shotScrollView();
-            }
-        });
-    }
-
-    private void shotScrollViewByProcessBar(RecyclerView view) {
-
-    }
-
-
-    private void shotScrollView() {
-        showProcessDialog();
-        Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-
-                final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-                LruCache<String, Bitmap> bitmapCache = new LruCache<>(maxMemory);
-                Bitmap finallyBitmap;
-                int height = 0;
-                int iHeight = 0;
-                for (int i = 0; i < picInfos.size(); i++) {
-                    Bitmap picBitmap = BitmapFactory.decodeStream(_mActivity.getContentResolver().openInputStream(BitmapUtils.pathToUri(picInfos.get(i).path)));
-                    int bitMapWidth = picBitmap.getWidth();
-                    BigDecimal bitMapWidthBig = new BigDecimal(bitMapWidth);
-                    int viewWidth = DimenUtil.getScreenWidth() * 5 / 7;
-                    BigDecimal viewWidthBig = new BigDecimal(viewWidth);
-                    float value = viewWidthBig.divide(bitMapWidthBig, 2, RoundingMode.HALF_DOWN).floatValue();
-                    BigDecimal valueBig = new BigDecimal(value);
-                    int bigMapHeight = picBitmap.getHeight();
-                    int viewHeight = valueBig.multiply(new BigDecimal(bigMapHeight)).intValue();
-                    Bitmap bitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(bitmap);
-                    canvas.drawColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
-                    int finallyLeft;
-                    int finallyTop;
-                    int finallyRight ;
-                    int finallyBottom= canvas.getHeight();
-                    if (i == 0) {
-                        finallyTop = paddingItemDecoration.getProcess();
-                        finallyLeft = paddingItemDecoration.getProcess();
-                        finallyRight = canvas.getWidth() - paddingItemDecoration.getProcess();
-                        if (picInfos.size() == 1) {
-                            finallyBottom   = canvas.getHeight() - paddingItemDecoration.getProcess();
-                        }
-                    } else if (i == picInfos.size() - 1) {
-                        finallyTop = paddingItemDecoration.getProcess();
-                        finallyLeft = paddingItemDecoration.getProcess();
-                        finallyBottom = canvas.getHeight() - paddingItemDecoration.getProcess();
-                        finallyRight   = canvas.getWidth() - paddingItemDecoration.getProcess();
-                    } else {
-                        finallyTop = paddingItemDecoration.getProcess();
-                        finallyLeft = paddingItemDecoration.getProcess();
-                        finallyRight = canvas.getWidth() - paddingItemDecoration.getProcess();
-                    }
-                    height += viewHeight;
-                    RectF src = new RectF(finallyLeft, finallyTop, finallyRight, finallyBottom);
-                    canvas.drawBitmap(picBitmap, null, src, null);
-                    if (!picBitmap.isRecycled()) {
-                        picBitmap.recycle();
-                    }
-                    bitmapCache.put(String.valueOf(i), bitmap);
-                }
-                finallyBitmap = Bitmap.createBitmap(DimenUtil.getScreenWidth() * 5 / 7, height, Bitmap.Config.ARGB_8888);
-                Canvas bigCanvas = new Canvas(finallyBitmap);
-                for (int i = 0; i < picInfos.size(); i++) {
-                    Bitmap bitmap = bitmapCache.get(String.valueOf(i));
-                    if (bitmap != null) {
-                        bigCanvas.drawBitmap(bitmap,  0f,iHeight, null);
-                        iHeight += bitmap.getHeight();
-                        bitmap.recycle();
-                    }
-                }
-                String filePath = FileUtil.saveScreenShot(finallyBitmap, System.currentTimeMillis() + "");
-                emitter.onNext(filePath);
-            }
-
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                mDisposable.add(d);
-            }
-
-            @Override
-            public void onNext(String filePath) {
-                hideProcessDialog();
-                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(filePath, "长拼");
-                start(puzzleLpAdjustFragment);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onComplete() {
-
+                start(PuzzleAdjustFragment.getInstance(paddingItemDecoration.getBackgroundColor(),paddingItemDecoration.getProcess(),picInfos,1));
             }
         });
     }
 
 
-//    private void shotScrollView(RecyclerView view) {
-//        Observable.create((ObservableOnSubscribe<ArrayList<RecyclerView.ViewHolder>>) emitter -> {
-//            showProcessDialog();
-//            RecyclerView.Adapter adapter = view.getAdapter();
-//            ArrayList<RecyclerView.ViewHolder> arrayList = new ArrayList<>();
-//            if (adapter != null) {
-//                int size = adapter.getItemCount();
-//                // Use 1/8th of the available memory for this memory cache.
-//                for (int i = 0; i < size; i++) {
-//                    RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
-//                    adapter.onBindViewHolder(holder, i);
-//                    RelativeLayout relativeLayout = holder.itemView.findViewById(R.id.item_adjust);
-//                    relativeLayout.measure(
-//                            View.MeasureSpec.makeMeasureSpec(DimenUtil.getScreenWidth() * 5 / 7, View.MeasureSpec.EXACTLY),
-//                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-//                    relativeLayout.layout(0, 0, DimenUtil.getScreenWidth() * 5 / 7,
-//                            relativeLayout.getMeasuredHeight());
-//                    ImageView itemView = relativeLayout.findViewById(R.id.iv_img);
-//
-//                    int padding = paddingItemDecoration.getProcess();
-//                    if (i == 0) {
-//                        if (size == 1) {
-//                            itemView.setPadding(padding, padding, padding, padding);
-//                        } else {
-//                            itemView.setPadding(padding, padding, padding, 0);
-//                        }
-//                    } else if (i == size - 1) {
-//                        itemView.setPadding(padding, padding, padding, padding);
-//                    } else {
-//                        itemView.setPadding(padding, padding, padding, 0);
-//                    }
-//                    relativeLayout.setBackgroundColor(Color.parseColor(paddingItemDecoration.getBackgroundColor()));
-//                    arrayList.add(holder);
-//                }
-//
-//            }
-//            emitter.onNext(arrayList);
-//        }).observeOn(Schedulers.newThread()).flatMap(new Function<ArrayList<RecyclerView.ViewHolder>, ObservableSource<String>>() {
-//            @Override
-//            public ObservableSource<String> apply(ArrayList<RecyclerView.ViewHolder> viewHolders) throws Exception {
-//                Bitmap bigBitmap;
-//                int height = 0;
-//                Paint paint = new Paint();
-//                int iHeight = 0;
-//                final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-//                LruCache<String, Bitmap> bitmaCache = new LruCache<>(maxMemory);
-//                for (int i = 0; i < viewHolders.size(); i++) {
-//                    L.e(i + "");
-//                    RecyclerView.ViewHolder holder = viewHolders.get(i);
-//                    RelativeLayout relativeLayout = holder.itemView.findViewById(R.id.item_adjust);
-//                    Bitmap bitmap = Bitmap.createBitmap(relativeLayout.getWidth(), relativeLayout.getHeight(), Bitmap.Config.ARGB_8888);
-//                    Canvas canvas = new Canvas(bitmap);
-//                    relativeLayout.draw(canvas);
-//                    if (bitmap != null) {
-//                        bitmaCache.put(String.valueOf(i), bitmap);
-//                    }
-//                    height += relativeLayout.getMeasuredHeight();
-//                }
-//                bigBitmap = Bitmap.createBitmap(DimenUtil.getScreenWidth() * 5 / 7, height, Bitmap.Config.ARGB_8888);
-//                Canvas bigCanvas = new Canvas(bigBitmap);
-//                Drawable lBackground = view.getBackground();
-//                if (lBackground instanceof ColorDrawable) {
-//                    ColorDrawable lColorDrawable = (ColorDrawable) lBackground;
-//                    int lColor = lColorDrawable.getColor();
-//                    bigCanvas.drawColor(lColor);
-//                }
-//                for (int i = 0; i < viewHolders.size(); i++) {
-//                    Bitmap bitmap = bitmaCache.get(String.valueOf(i));
-//                    if (bitmap != null) {
-//                        bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
-//                        iHeight += bitmap.getHeight();
-//                        bitmap.recycle();
-//                    }
-//                }
-//                String filePath = FileUtil.saveScreenShot(bigBitmap, System.currentTimeMillis() + "");
-//                return Observable.just(filePath);
-//            }
-//        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
-//            @Override
-//            public void onSubscribe(Disposable d) {
-//                mDisposable.add(d);
-//            }
-//
-//            @Override
-//            public void onNext(String s) {
-//                hideProcessDialog();
-//                SaveFragment puzzleLpAdjustFragment = SaveFragment.getInstance(s, "长拼");
-//                start(puzzleLpAdjustFragment);
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                e.printStackTrace();
-//            }
-//
-//            @Override
-//            public void onComplete() {
-//            }
-//        });
-//    }
+
+
 
     @Override
     public void onTabSelect(int position) {

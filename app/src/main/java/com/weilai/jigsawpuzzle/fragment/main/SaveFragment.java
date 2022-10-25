@@ -170,6 +170,11 @@ public class SaveFragment extends BaseFragment {
         imageView = view.findViewById(R.id.iv_img);
     }
 
+    @Override
+    public boolean onBackPressedSupport() {
+        _mActivity.finish();
+        return true;
+    }
 
     private String path;
     private SubsamplingScaleImageView imageView;

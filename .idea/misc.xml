@@ -271,7 +271,9 @@
         <entry key="..\:/puzzle-p/app/src/main/res/layout/fragment_cross_dress.xml" value="0.2484375" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/fragment_data.xml" value="0.34791666666666665" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/fragment_edit_image.xml" value="0.1962962962962963" />
+        <entry key="..\:/puzzle-p/app/src/main/res/layout/fragment_lp_ajust.xml" value="0.278125" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/fragment_mine.xml" value="0.33" />
+        <entry key="..\:/puzzle-p/app/src/main/res/layout/fragment_puzzle_adjust.xml" value="0.33425925925925926" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/fragment_puzzle_lp.xml" value="0.3" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/ic_arrow_back_white_24dp.xml" value="0.34791666666666665" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/ic_zw.xml" value="0.34791666666666665" />
@@ -288,6 +290,7 @@
         <entry key="..\:/puzzle-p/app/src/main/res/layout/item_text.xml" value="0.34791666666666665" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/item_vip_price.xml" value="0.34791666666666665" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/item_vip_privilege.xml" value="0.34791666666666665" />
+        <entry key="..\:/puzzle-p/app/src/main/res/layout/layout_edit_color.xml" value="0.278125" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/layout_title_back.xml" value="0.19947916666666668" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/native_item_app_download.xml" value="0.27447916666666666" />
         <entry key="..\:/puzzle-p/app/src/main/res/layout/native_item_group_image.xml" value="0.1" />
