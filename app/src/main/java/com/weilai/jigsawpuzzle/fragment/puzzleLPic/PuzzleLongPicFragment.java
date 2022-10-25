@@ -371,7 +371,7 @@ public class PuzzleLongPicFragment extends BaseFragment implements OnTabSelectLi
                     return;
                 }
                 Intent it = new Intent(getContext(), EditImageActivity.class);
-                it.putExtra(EditImageActivity.FILE_PATH, picOne);
+                it.putExtra(EditImageActivity.FILE_PATH, picOne.path);
                 it.putExtra(EditImageActivity.EXTRA_OUTPUT, FileUtil.getAnPicPath(System.currentTimeMillis() + "_editor"));
                 startActivityForResult(it, FILTER_PUZZLE_LP_EDIT);
                 break;
