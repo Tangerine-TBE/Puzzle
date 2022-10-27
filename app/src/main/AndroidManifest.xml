@@ -18,7 +18,6 @@
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="${app_name_channel}"
-
         android:name=".application.PuzzleApplication"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
