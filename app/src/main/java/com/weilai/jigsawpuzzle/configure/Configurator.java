@@ -49,10 +49,7 @@ public class Configurator {
     }
 
     public final Configurator withUMeng(Context context) {
-        if (!BuildConfig.DEBUG) {
-            UMConfigure.init(Config.getApplicationContext(), "6347dfe288ccdf4b7e4876e9",
-                    PackageUtils.getAppMetaData(context, "CHANNEL"), UMConfigure.DEVICE_TYPE_PHONE, null);
-        }
+        UMConfigure.preInit(context,"6347dfe288ccdf4b7e4876e9",PackageUtils.getAppMetaData(context,"CHANNEL"));
         return this;
     }
 

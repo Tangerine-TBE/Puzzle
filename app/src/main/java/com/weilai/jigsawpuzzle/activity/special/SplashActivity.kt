@@ -59,7 +59,14 @@ class SplashActivity : AppCompatActivity() {
                     SPUtil.getInstance().putBoolean(AgreementActivity.key, true)  //是否展示用户服务协议和隐私政策弹窗
                             .putLong("time", System.currentTimeMillis())
                     //友盟初始化配置
-
+                    UMConfigure.init(Config.getApplicationContext(), "6347dfe288ccdf4b7e4876e9",
+                        BaseConstant.channel, UMConfigure.DEVICE_TYPE_PHONE, null)
+                    /**
+                     *设置组件化的Log开关
+                     *参数: boolean 默认为false，如需查看LOG设置为true
+                     */
+                    UMConfigure.setLogEnabled(BuildConfig.DEBUG)
+                    MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
                     dialog.dismiss()
                     checkIn()
 //                    askPermissions()
@@ -71,7 +78,6 @@ class SplashActivity : AppCompatActivity() {
             })
         }else{
             //友盟初始化配置
-            if (!BuildConfig.DEBUG){
                 UMConfigure.init(Config.getApplicationContext(), "6347dfe288ccdf4b7e4876e9",
                     BaseConstant.channel, UMConfigure.DEVICE_TYPE_PHONE, null)
                 /**
@@ -80,7 +86,6 @@ class SplashActivity : AppCompatActivity() {
                  */
                 UMConfigure.setLogEnabled(BuildConfig.DEBUG)
                 MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
-            }
 //            GDTAdSdk.init(BaseApplication.application,ADConstants.kGDTMobSDKAppKey)
 //            askPermissions()
             PuzzleApplication.handler.postDelayed({  checkIn() },2000)
