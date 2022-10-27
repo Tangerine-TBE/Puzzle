@@ -390,12 +390,12 @@ public class PuzzleHLPFragment extends BaseFragment implements OnTabSelectListen
             case 2:
                 //编辑
                 PicInfo picOne = picInfos.get(selectedPosition);
-                if (!BitmapUtils.shouldLoadBitmap(picOne.path, true)) {
+                if (!BitmapUtils.shouldLoadBitmap(picOne.path, false)) {
                     Toast.makeText(_mActivity, "图片暂时无法进行编辑!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent it = new Intent(getContext(), EditImageActivity.class);
-                it.putExtra(EditImageActivity.FILE_PATH, picInfos.get(selectedPosition));
+                it.putExtra(EditImageActivity.FILE_PATH, picOne.path);
                 it.putExtra(EditImageActivity.EXTRA_OUTPUT, FileUtil.getAnPicPath(System.currentTimeMillis() + "_editor"));
                 startActivityForResult(it, FILTER_PUZZLE_LP_EDIT);
                 break;

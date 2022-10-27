@@ -17,8 +17,10 @@ import androidx.annotation.Nullable;
 
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.adapter.data.RecordAdapter;
 import com.weilai.jigsawpuzzle.bean.PicInfo;
 import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.weilai.jigsawpuzzle.util.L;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -164,18 +166,24 @@ public class PuzzleLpEditView extends View {
                         }
                     } else if (TOP == scrollDirection) {
                         if (mDecoder != null) {
-                            Rect rect = new Rect(0, (int) Math.abs(mMoveY), templateBitmapWidth, (int) (templateBitmapHeight + mMoveY));
+                            Rect rect = new Rect(0, (int) Math.abs(mMoveY), templateBitmapWidth, (int) (templateBitmapHeight ));
                             bitmap = mDecoder.decodeRegion(rect, null);
+
+
                         }
                     } else if (RIGHT == scrollDirection) {
                         if (mDecoder != null) {
                             Rect rect = new Rect(0, 0, (int) (templateBitmapWidth - mMoveX), templateBitmapHeight);
                             bitmap = mDecoder.decodeRegion(rect, null);
+                            L.e(Math.abs(mMoveY)+"......" +(templateBitmapHeight + mMoveY)+"");
+                            L.e("RIGHT..." +bitmap );
                         }
                     } else if (LEFT == scrollDirection) {
                         if (mDecoder != null) {
-                            Rect rect = new Rect((int) Math.abs(mMoveX), 0, (int) (templateBitmapWidth + mMoveX), templateBitmapHeight);
+                            Rect rect = new Rect((int) Math.abs(mMoveX), 0, (int) (templateBitmapWidth ), templateBitmapHeight);
                             bitmap = mDecoder.decodeRegion(rect, null);
+                            L.e("LEFT..." +bitmap );
+
                         }
                     }
                     emitter.onNext(FileUtil.saveScreenShot(bitmap, System.currentTimeMillis() + ""));

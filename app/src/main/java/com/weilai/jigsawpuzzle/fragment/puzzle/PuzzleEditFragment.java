@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -42,6 +45,7 @@ import com.weilai.jigsawpuzzle.util.DimenUtil;
 import com.weilai.jigsawpuzzle.util.FileUtil;
 import com.weilai.jigsawpuzzle.util.GlideEngine;
 import com.weilai.jigsawpuzzle.util.PuzzleUtil;
+import com.weilai.jigsawpuzzle.weight.MyRecyclerView;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.slant.ThreeSlantLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.slant.TwoSlantLayout;
@@ -55,6 +59,7 @@ import com.weilai.jigsawpuzzle.weight.puzzle.straight.ThreeStraightLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.TwoStraightLayout;
 import com.weilai.library.listener.CustomTabEntity;
 import com.weilai.library.listener.OnTabSelectListener;
+import com.xiaopo.flying.puzzle.Area;
 import com.xiaopo.flying.puzzle.PuzzleLayout;
 import com.xiaopo.flying.puzzle.PuzzlePiece;
 import com.xiaopo.flying.puzzle.PuzzleView;
@@ -75,13 +80,16 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     private final String[] title = new String[]{"布局", "边框"};
     private final int[] integers = new int[]{R.mipmap.icon_replace, R.mipmap.icon_rorate, R.mipmap.icon_lr_flip, R.mipmap.icon_tb_flip};
     private PuzzleView mPuzzleView;
-    private RecyclerView recyclerView;
+    private MyRecyclerView recyclerView;
     private AppCompatSeekBar mBorderSeekBar;
     private AppCompatSeekBar mConnerSeekBar;
+  private LinearLayout mBarSetting;
     private int picSize = 0;
     private static final int FILTER_CODE = 1;
     private PuzzleLpPopUp puzzleLpPopUp;
     private PuzzleSizeAdapter puzzleSizeAdapter;
+    private TextView conner_text;
+    private TextView frame_text;
 
     private PuzzleEditFragment() {
 
@@ -114,6 +122,9 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
             TabEntity tabEntity = new TabEntity(tile);
             arrayList.add(tabEntity);
         }
+        conner_text = view.findViewById(R.id.conner_text);
+        frame_text = view.findViewById(R.id.frame_text);
+        mBarSetting = view.findViewById(R.id.barSetting);
         FlyTabLayout flyTabLayout = view.findViewById(R.id.tabLayout);
         flyTabLayout.setTabData(arrayList);
         flyTabLayout.setCurrentTab(0);
@@ -448,15 +459,16 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     public void onTabSelect(int position) {
         switch (position) {
             case 0:
+                puzzleSizeAdapter.setCanDraw(true);
                 recyclerView.setVisibility(View.VISIBLE);
-                mBorderSeekBar.setVisibility(View.GONE);
-                mConnerSeekBar.setVisibility(View.GONE);
+                mBarSetting.setVisibility(View.INVISIBLE);
                 break;
             case 1:
                 puzzleLpPopUp.dismiss();
-                recyclerView.setVisibility(View.GONE);
-                mBorderSeekBar.setVisibility(View.VISIBLE);
-                mConnerSeekBar.setVisibility(View.VISIBLE);
+                recyclerView.setCanDraw(false);
+                recyclerView.setVisibility(View.INVISIBLE);
+                mBarSetting.setVisibility(View.VISIBLE);
+
                 break;
             default:
                 break;
@@ -472,7 +484,9 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (mBorderSeekBar == seekBar) {
             mPuzzleView.setPiecePadding(progress);
+            frame_text.setText(String.valueOf(progress));
         } else if (mConnerSeekBar == seekBar) {
+            conner_text.setText(String.valueOf(progress));
             mPuzzleView.setPieceRadian(progress);
         }
         puzzleSizeAdapter.notifyDataSetChanged();
@@ -513,10 +527,10 @@ public class PuzzleEditFragment extends BaseFragment implements PuzzleSizeAdapte
         } else if (view.getId() == 1) {
             mPuzzleView.rotate(90f);
         } else if (view.getId() == 2) {
+            mPuzzleView.flipHorizontally();
+        } else if (view.getId() == 3) {
             mPuzzleView.flipVertically();
 
-        } else if (view.getId() == 3) {
-            mPuzzleView.flipHorizontally();
         }
     }
 

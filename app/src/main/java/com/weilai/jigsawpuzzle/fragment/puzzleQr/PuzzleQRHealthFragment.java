@@ -23,6 +23,8 @@ import com.weilai.jigsawpuzzle.bean.TabEntity;
 import com.weilai.jigsawpuzzle.dialog.template.TemplateConfirmDialog;
 import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.util.FileUtil;
+import com.weilai.jigsawpuzzle.util.L;
+import com.weilai.jigsawpuzzle.util.ToastUtil;
 import com.weilai.jigsawpuzzle.weight.main.FlyTabLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.FourStraightLayout;
 import com.weilai.library.listener.CustomTabEntity;
@@ -104,8 +106,8 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Bitmap>>() {
             @Override
-            public void onSubscribe( Disposable d) {
-                mDisposable .add(d) ;
+            public void onSubscribe(Disposable d) {
+                mDisposable.add(d);
             }
 
             @Override
@@ -198,13 +200,13 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
         view.findViewById(R.id.hz_mirror).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPuzzleView.flipVertically();
+                mPuzzleView.flipHorizontally();
             }
         });
         view.findViewById(R.id.vt_mirror).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            mPuzzleView.flipHorizontally();
+                mPuzzleView.flipVertically();
             }
         });
         view.findViewById(R.id.reset).setOnClickListener(new View.OnClickListener() {
@@ -219,6 +221,10 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
                 PuzzleLayout puzzleLayout = mPuzzleView.getPuzzleLayout();
                 mPuzzleView.reset();
                 mPuzzleView.setPuzzleLayout(puzzleLayout);
+                rorateSeekBar.setProgress(90);
+                currentAngle = 90;
+                rightAngle = 0;
+                mTvRoRate.setText(rightAngle + "");
                 mPuzzleView.addPieces(bitmaps);
             }
         });
@@ -252,7 +258,7 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
             @Override
             public void onNext(@NonNull String s) {
                 hideProcessDialog();
-                SaveFragment saveFragment = SaveFragment.getInstance(s,"拼健康码");
+                SaveFragment saveFragment = SaveFragment.getInstance(s, "拼健康码");
                 start(saveFragment);
             }
 
@@ -270,7 +276,10 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
 
     @Override
     public void onPieceUnSelected() {
-
+        rorateSeekBar.setProgress(90);
+        currentAngle = 90;
+        rightAngle = 0;
+        mTvRoRate.setText(rightAngle + "");
     }
 
     private int currentAngle = 90;
@@ -280,14 +289,22 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
     public void onPieceSelected(PuzzlePiece piece, int position) {
         if (position != currentPosition) {
             currentPosition = position;
-            rorateSeekBar.setProgress(90);
-            currentAngle = 90;
-            rightAngle = 0;
+            int rotateDegree = (int) piece.getRotateDegree();
+            int processOffset = rotateDegree / 3;
+            if (processOffset == 0) {
+                rorateSeekBar.setProgress(90);
+                currentAngle = 90;
+                rightAngle = 0;
+            } else {
+                rorateSeekBar.setProgress(90 + processOffset);
+                currentAngle = 90 + processOffset;
+                rightAngle = rotateDegree;
+            }
+            currentPosition = position;
             mTvRoRate.setText(rightAngle + "");
         }
 
     }
-
 
 
     @Override
@@ -326,6 +343,10 @@ public class PuzzleQRHealthFragment extends BaseFragment implements PuzzleView.O
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (!fromUser) {
+            return;
+        }
+        if (mPuzzleView.getHandlingPiece() == null) {
+            seekBar.setProgress(90);
             return;
         }
         int id = seekBar.getId();

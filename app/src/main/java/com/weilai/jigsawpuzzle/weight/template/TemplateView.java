@@ -508,8 +508,8 @@ public class TemplateView extends View {
                         if (event.getAction() == MotionEvent.ACTION_UP && hasTarget) {
                             hasTarget = false;
                             if (listener != null) {
-                                listener.onRectClick(templateViewInfo.hasPic());
                                 mSettingPosition = templateViewInfo.getPosition();
+                                listener.onRectClick(templateViewInfo.hasPic());
                                 break;
                             }
                         } else if (event.getAction() == MotionEvent.ACTION_DOWN) {

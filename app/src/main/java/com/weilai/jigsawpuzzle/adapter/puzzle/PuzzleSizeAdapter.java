@@ -6,13 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.weight.puzzle.slant.NumberSlantLayout;
 import com.weilai.jigsawpuzzle.weight.puzzle.straight.NumberStraightLayout;
 import com.xiaopo.flying.puzzle.PuzzleLayout;
 import com.xiaopo.flying.puzzle.PuzzleView;
+
 import java.util.List;
 
 /**
@@ -46,25 +49,26 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         PuzzleLayout puzzleLayout = mPuzzleLayouts.get(position);
         holder.puzzleView.setPuzzleLayout(puzzleLayout);
         holder.puzzleView.addPieces(pics);
         holder.puzzleView.setPiecePadding(20);
         holder.puzzleView.setLineSize(6);
         holder.puzzleView.setLineColor(mContext.getResources().getColor(R.color.sel_text_main_color));
-        if (holder.puzzleView.isTouchEnable()){
+        if (holder.puzzleView.isTouchEnable()) {
             holder.puzzleView.setTouchEnable(false);
-        }else{
+        } else {
             holder.puzzleView.setTouchEnable(false);
         }
-        if (holder.puzzleView.isNeedDrawLine()){
+        if (holder.puzzleView.isNeedDrawLine()) {
             holder.puzzleView.setNeedDrawLine(true);
-        }else{
+        } else {
             holder.puzzleView.setNeedDrawLine(true);
         }
-        if (holder.puzzleView.isNeedDrawOuterLine()){
+        if (holder.puzzleView.isNeedDrawOuterLine()) {
             holder.puzzleView.setNeedDrawOuterLine(true);
-        }else{
+        } else {
             holder.puzzleView.setNeedDrawOuterLine(true);
         }
         if (puzzleLayout instanceof NumberSlantLayout && mCurrentPuzzleLayout instanceof NumberSlantLayout) {
@@ -108,6 +112,12 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
         });
     }
 
+    public final void setCanDraw(boolean canDraw) {
+        this.canDraw = canDraw;
+    }
+
+    private boolean canDraw;
+
     @Override
     public int getItemCount() {
         return mPuzzleLayouts.size();
@@ -116,6 +126,7 @@ public class PuzzleSizeAdapter extends RecyclerView.Adapter<PuzzleSizeAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         PuzzleView puzzleView;
         FrameLayout frameLayout;
+
         ViewHolder(View itemView) {
             super(itemView);
             frameLayout = itemView.findViewById(R.id.layout_content);

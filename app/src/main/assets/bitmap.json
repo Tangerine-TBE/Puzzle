@@ -1,41 +1,44 @@
 [
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水墨画.png",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水墨画镂空.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水墨画.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/shuimohua.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/shuimohua_.png",
     "name": "水墨画",
     "size": [
       {
-        "x": 0.0736,
-        "y": 0.1905,
+        "x": 0.07,
+        "y": 0.18,
         "angle": 0,
-        "center_y": 0.507936,
-        "center_x": 0.196319,
+        "center_y": 0.51,
+        "center_x": 0.2,
         "ratio_width": 1,
         "ratio_height": 1
       },
       {
-        "x": 0.3742,
-        "y": 0.1905,
+        "x": 0.37,
+        "y": 0.18,
         "angle": 0,
-        "center_y": 0.507936,
-        "center_x": 0.4969332,
+        "center_y": 0.51,
+        "center_x": 0.5,
         "ratio_width": 1,
         "ratio_height": 1
       },
       {
-        "x": 0.6748,
-        "y": 0.1905,
+        "x": 0.67,
+        "y": 0.18,
         "angle": 0,
-        "center_y": 0.507936,
-        "center_x": 0.797546,
+        "center_y": 0.51,
+        "center_x": 0.8,
         "ratio_width": 1,
         "ratio_height": 1
       }
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%96%B0%E5%B9%B4%E5%BF%AB%E4%B9%90.png",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%96%B0%E5%B9%B4%E5%BF%AB%E4%B9%90%E9%95%82%E7%A9%BA.png ",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%96%B0%E5%B9%B4%E5%BF%AB%E4%B9%90.png",
+
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/xinniankauaile.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/xinniankauaile_.png",
     "name": "新年快乐",
     "size": [
       {
@@ -95,8 +98,9 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水波.png",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水波镂空.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水波.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/shuibo.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/shuibo_.png",
     "name": "水波",
     "size": [
       {
@@ -129,9 +133,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/美食不可辜负.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/美食不可辜负.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/meishibukegufu.png",
     "name": "美食不可辜负",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/美食不可辜负镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/meishibukegufu_.png",
     "size": [
       {
         "x": 0.0368,
@@ -145,9 +150,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/黄色.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/黄色.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/huangse.png",
     "name": "黄色",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/黄色镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/huangse_.png",
     "size": [
       {
         "x": 0.092,
@@ -188,9 +194,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/夏日.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/夏日.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/xiari.png",
     "name": "夏日",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/夏日镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/xiari_.png",
     "size": [
       {
         "x": 0.0552,
@@ -204,9 +211,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/蓝色.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/蓝色.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/lanse.png",
     "name": "蓝色",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/蓝色镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/lanse_.png",
     "size": [
       {
         "x": 0.092,
@@ -247,9 +255,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩2.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/shuicai2.png",
     "name": "水彩",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/shuicai2_.png",
     "size": [
       {
         "x": 0.184,
@@ -263,9 +272,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/兰花.png",
-    "name": "蓝花",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/兰花镂空.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/兰花.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/lanhua.png",
+    "name": "兰花",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/lanhua_.png",
     "size": [
       {
         "x": 0.0245,
@@ -288,9 +298,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/春天.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/春天.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/chuntianseka.png",
     "name": "春天色卡",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/春天镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/chuntianseka_.png",
     "size": [
       {
         "x": 0.05,
@@ -313,9 +324,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/绿色.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/绿色.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/lvse.png",
     "name": "绿色",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/绿色镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/lvse_.png",
     "size": [
       {
         "x": 0.0675,
@@ -329,9 +341,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%A9%99%E8%89%B2.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%A9%99%E8%89%B2.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/chengse.png",
     "name": "橙色",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%A9%99%E8%89%B2%E9%95%82%E7%A9%BA.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/chengse_.png",
     "size": [
       {
         "x": 0.09,
@@ -372,9 +385,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/莫兰迪色.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/莫兰迪色.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/molandise.png",
     "name": "莫兰迪色",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/莫兰迪色镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/molandise_.png",
     "size": [
       {
         "x": 0.05,
@@ -388,9 +402,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花蝴蝶.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花蝴蝶.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/huahudie.png",
     "name": "花蝴蝶",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花蝴蝶镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/huahudie_.png",
     "size": [
       {
         "x": 0.0552,
@@ -404,6 +419,8 @@
     ]
   },
   {
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩.png",
+
     "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩.png",
     "name": "水彩",
     "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/水彩镂空.png",
@@ -420,9 +437,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/小美好.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/小美好.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/xiaomeihao.png",
     "name": "小美好",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/小美好镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/xiaomeihao_.png",
     "size": [
       {
         "x": 0.4233,
@@ -463,9 +481,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花花.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花花.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/huahua.png",
     "name": "花花",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/花花镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/huahua_.png",
     "size": [
       {
         "x": 0.0613,
@@ -497,9 +516,10 @@
     ]
   },
   {
-    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/卡通.png",
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/卡通.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/katong.png",
     "name": "卡通",
-    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/卡通镂空.png",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/katong_.png",
     "size": [
       {
         "x": 0.20,
@@ -529,5 +549,102 @@
         "ratio_height": 9
       }
     ]
+  },
+  {
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E5%87%A0%E4%BD%95%E5%9B%BE%E5%BD%A2.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/jihe.png",
+    "name": "几何",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/jihe_.png",
+    "size": [
+      {
+        "x": 0.12,
+        "y": 0.09,
+        "angle": 15,
+        "center_y": 0.246,
+        "center_x": 0.2083,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.59,
+        "y": 0.072,
+        "angle": 15,
+        "center_y": 0.25,
+        "center_x": 0.77,
+        "ratio_width": 16,
+        "ratio_height": 9
+      },
+      {
+        "x": 0.28,
+        "y": 0.44,
+        "angle": 15,
+        "center_y": 0.632,
+        "center_x": 0.393,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
+  },
+  {
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E6%B0%B4%E5%BD%A9%E9%A3%8E%E6%99%AF.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/shuicai2.png",
+    "name": "水彩",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/shuicai2_.png",
+    "size": [
+      {
+        "x": 0.0552,
+        "y": 0.1656,
+        "angle": 0,
+        "center_y": 0.5,
+        "center_x": 0.5,
+        "ratio_width": 4,
+        "ratio_height": 3
+      }
+    ]
+  },
+  {
+    "smallbitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/%E7%BE%8E%E9%A3%9F.png",
+    "bitmap": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/meishi.png",
+    "name": "美食",
+    "template": "https://xiaotupian.oss-cn-beijing.aliyuncs.com/picTemp/meishi_.png",
+    "size": [
+      {
+        "x": 0.17,
+        "y": 0.16,
+        "angle": 0,
+        "center_y": 0.297,
+        "center_x": 0.335,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.61,
+        "y":  0.22,
+        "angle": 15,
+        "center_y": 0.346,
+        "center_x": 0.697,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.07,
+        "y": 0.57,
+        "angle": -15,
+        "center_y": 0.678,
+        "center_x": 0.296,
+        "ratio_width": 1,
+        "ratio_height": 1
+      },
+      {
+        "x": 0.54,
+        "y": 0.56,
+        "angle": 0,
+        "center_y": 0.722,
+        "center_x": 0.737,
+        "ratio_width": 1,
+        "ratio_height": 1
+      }
+    ]
   }
+
 ]

@@ -10,8 +10,25 @@ import java.util.List;
  * * Description:
  **/
 public class BitMapInfo implements IBean {
-
+    private String smallbitmap;
     private String bitmap;
+
+    public String getSmallbitmap() {
+        return smallbitmap;
+    }
+
+    public void setSmallbitmap(String smallbitmap) {
+        this.smallbitmap = smallbitmap;
+    }
+
+    public List<Size> getSizeInfos() {
+        return sizeInfos;
+    }
+
+    public void setSizeInfos(List<Size> sizeInfos) {
+        this.sizeInfos = sizeInfos;
+    }
+
     private String name;
     private String template;
     private List<Size> sizeInfos;

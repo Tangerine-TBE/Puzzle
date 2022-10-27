@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.weilai.jigsawpuzzle.DaoMaster;
 import com.weilai.jigsawpuzzle.DaoSession;
 import com.weilai.jigsawpuzzle.db.RecordInfo;
+import com.weilai.jigsawpuzzle.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,21 @@ public class DaoTool {
     public static void insertRecord(RecordInfo recordInfo) {
         sDaoSession.getRecordInfoDao().insert(recordInfo);
     }
-    public static void deleteRecord(RecordInfo recordInfo){
+
+    public static void deleteRecord(RecordInfo recordInfo) {
         sDaoSession.getRecordInfoDao().delete(recordInfo);
+    }
+
+    public static String getDateWithPath(String path) {
+        long time = 0;
+        String sql = "select r.TIME from RECORD_INFO r where r.FILE_PATH == ?";
+        Cursor cursor = sDaoSession.getDatabase().rawQuery(sql, new String[]{path});
+        if (cursor != null){
+            if (cursor.moveToFirst()){
+                time = cursor.getLong(0);
+            }
+        }
+        return DateUtil.unixTimeToDateTimeString(time /1000);
     }
 
     public static void clearDataBase() {

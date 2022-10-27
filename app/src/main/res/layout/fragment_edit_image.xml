@@ -16,8 +16,6 @@
             android:layout_height="wrap_content"/>
     </androidx.appcompat.widget.Toolbar>
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:paddingStart="22dp"
-        android:paddingEnd="22dp"
         android:orientation="vertical"
         android:layout_marginTop="26dp"
         android:layout_width="match_parent"

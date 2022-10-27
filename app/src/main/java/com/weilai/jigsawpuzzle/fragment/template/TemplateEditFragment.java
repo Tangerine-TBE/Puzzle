@@ -95,13 +95,12 @@ public class TemplateEditFragment extends BaseFragment implements TemplateView.O
     protected void initView(View view) {
         assert getArguments() != null;
         String json;
-        json = AssetsUtil.getAssertString(_mActivity, "bitmap.json");
-//        json = getArguments().getString("bitmapInfo");
+//        json = AssetsUtil.getAssertString(_mActivity, "bitmap.json");
+        json = getArguments().getString("bitmapInfo");
         if (!TextUtils.isEmpty(json)) {
-
-            JSONArray o = (JSONArray) JSON.parse(json);
-            bitMapInfo = o.toJavaList(BitMapInfo.class).get(17);
-//            bitMapInfo = JSONObject.parseObject(json, BitMapInfo.class);
+//            JSONArray o = (JSONArray) JSON.parse(json);
+//            bitMapInfo = o.toJavaList(BitMapInfo.class).get(0);
+            bitMapInfo = JSONObject.parseObject(json, BitMapInfo.class);
         }
         mSelector = PictureSelector
                 .create(this);

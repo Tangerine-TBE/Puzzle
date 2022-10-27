@@ -115,7 +115,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
                         json = responseBody.string();
                         bitMapInfos = new ArrayList<>(JSONArray.parseArray(json, BitMapInfo.class));
                         for (BitMapInfo bitMapInfo : bitMapInfos) {
-                            Response<ResponseBody> responseBitmap = NetConfig.getInstance().getINetService().getPhoto(bitMapInfo.getBitmap()).execute();
+                            Response<ResponseBody> responseBitmap = NetConfig.getInstance().getINetService().getPhoto(bitMapInfo.getSmallbitmap()).execute();
                             assert responseBitmap.body() != null;
                             Bitmap bitmapBitmap = BitmapFactory.decodeStream(responseBitmap.body().byteStream());
                             String bitmapPath = FileUtil.saveBitmapToCache(bitMapInfo.getName() + "bitmap", bitmapBitmap);

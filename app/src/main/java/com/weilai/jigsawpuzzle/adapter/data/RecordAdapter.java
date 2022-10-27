@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.base.BaseSimpleActivity;
 import com.weilai.jigsawpuzzle.db.RecordInfo;
+import com.weilai.jigsawpuzzle.fragment.main.SaveFragment;
 import com.weilai.jigsawpuzzle.util.BitmapUtils;
 import com.weilai.jigsawpuzzle.util.DateUtil;
 import com.weilai.jigsawpuzzle.util.dao.DaoTool;
@@ -31,6 +33,9 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.ViewHolder
         this.mContext = context;
         this.onAllCleanListener = onAllCleanListener;
     }
+    public final void setOnItemClickedListener(OnItemClickedListener onItemClickedListener){
+        this.clickedListener = onItemClickedListener;
+    }
 
     private List<RecordInfo> list;
 
@@ -40,12 +45,21 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.ViewHolder
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_record, parent, false);
         return new ViewHolder(view);
     }
-
+    public interface  OnItemClickedListener{
+        void onItemCLicked(String path);
+    }
+    private OnItemClickedListener clickedListener;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecordInfo recordInfo = list.get(position);
         holder.tvDate.setText(DateUtil.unixTimeToDateTimeString(recordInfo.getTime() / 1000));
         holder.tvTitle.setText(recordInfo.getFileName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickedListener.onItemCLicked(recordInfo.getFilePath());
+            }
+        });
         Glide.with(mContext).load(BitmapUtils.pathToUri(recordInfo.getFilePath())).placeholder(R.mipmap.icon_replace).into(holder.ivRecord);
         holder.cbEdit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

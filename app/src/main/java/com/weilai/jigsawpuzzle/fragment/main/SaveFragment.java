@@ -28,6 +28,7 @@ import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.db.RecordInfo;
 import com.weilai.jigsawpuzzle.util.AppStoreUtil;
 import com.weilai.jigsawpuzzle.util.DateUtil;
+import com.weilai.jigsawpuzzle.util.ToastUtil;
 import com.weilai.jigsawpuzzle.util.UriUtil;
 import com.weilai.jigsawpuzzle.util.dao.DaoTool;
 
@@ -53,15 +54,16 @@ public class SaveFragment extends BaseFragment {
     private TextView tvDate;
     private TextView tvPath;
     private boolean isOpen;
+
     private SaveFragment() {
 
     }
 
-    public static SaveFragment getInstance(String s,String type) {
+    public static SaveFragment getInstance(String s, String type) {
         SaveFragment saveFragment = new SaveFragment();
         Bundle bundle = new Bundle();
         bundle.putString("filePath", s);
-        bundle.putString("type",type);
+        bundle.putString("type", type);
         saveFragment.setArguments(bundle);
         return saveFragment;
     }
@@ -86,7 +88,10 @@ public class SaveFragment extends BaseFragment {
                             e.printStackTrace();
                         }
                         Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                        Object [] objects = new Object[2];
+                        if (bitmap == null){
+                            throw new RuntimeException("图片不存在或已损坏");
+                        }
+                        Object[] objects = new Object[2];
                         objects[0] = bitmap;
                         objects[1] = path;
                         emitter.onNext(objects);
@@ -94,33 +99,40 @@ public class SaveFragment extends BaseFragment {
                 }
 
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<Object []>() {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<Object[]>() {
             @Override
             public void onSubscribe(Disposable d) {
                 mDisposable.add(d);
             }
 
             @Override
-            public void onNext(Object [] objects) {
+            public void onNext(Object[] objects) {
                 Bitmap bitmap = (Bitmap) objects[0];
                 String path = (String) objects[1];
                 if (bitmap != null) {
                     tvSize.setText(String.format("%d*%d", bitmap.getWidth(), bitmap.getHeight()));
-                    tvDate.setText(DateUtil.unixTimeToDateTimeString(System.currentTimeMillis() /1000));
                     tvPath.setText(path.trim());
+                    imageView.setImage(ImageSource.bitmap(bitmap));
+                    String type = getArguments().getString("type");
+                    if ("图片信息".equals(type)) {
+                        tvDate.setText(DaoTool.getDateWithPath(path));
+                        return;
+                    }
+                    tvDate.setText(DateUtil.unixTimeToDateTimeString(System.currentTimeMillis() / 1000));
                     RecordInfo recordInfo = new RecordInfo();
                     recordInfo.setTime(System.currentTimeMillis());
                     recordInfo.setFilePath(path.trim());
-                    recordInfo.setFileName(getArguments().getString("type"));
+                    recordInfo.setFileName(type);
                     DaoTool.insertRecord(recordInfo);
                     Toast.makeText(_mActivity, "图片已经保存到相册", Toast.LENGTH_SHORT).show();
-                    imageView.setImage(ImageSource.bitmap(bitmap));
 
                 }
             }
 
             @Override
             public void onError(Throwable e) {
+                ToastUtil.showToast(e.getMessage());
+                _mActivity.finish();
                 e.printStackTrace();
             }
 
@@ -200,7 +212,7 @@ public class SaveFragment extends BaseFragment {
 
             }
         });
-       view.findViewById(R.id.iv_open) .setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.iv_open).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isOpen) {

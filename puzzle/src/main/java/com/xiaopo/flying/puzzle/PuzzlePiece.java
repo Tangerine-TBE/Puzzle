@@ -28,7 +28,7 @@ import static com.xiaopo.flying.puzzle.MatrixUtils.judgeIsImageContainsBorder;
 @SuppressWarnings("WeakerAccess")
 public class PuzzlePiece {
   private static final Xfermode SRC_IN = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
-
+  private float mRotateDegree;
   private Drawable drawable;
   private Matrix matrix;
   private Matrix previousMatrix;
@@ -48,7 +48,12 @@ public class PuzzlePiece {
   private int duration = 300;
   private Matrix tempMatrix;
   private String path = "";
-
+  public final void setRotateDegree(float degree){
+    this.mRotateDegree += degree;
+  }
+  public final float getRotateDegree(){
+    return mRotateDegree;
+  }
   PuzzlePiece(Drawable drawable, Area area, Matrix matrix) {
     this.drawable = drawable;
     this.area = area;

@@ -577,7 +577,7 @@ public class PuzzleView extends View {
         if (handlingPiece == null) {
             return;
         }
-
+        handlingPiece.setRotateDegree(degree);
         handlingPiece.postRotate(degree);
         handlingPiece.record();
 

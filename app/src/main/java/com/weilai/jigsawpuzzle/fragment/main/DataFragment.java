@@ -1,5 +1,6 @@
 package com.weilai.jigsawpuzzle.fragment.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -12,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.umeng.commonsdk.debug.I;
 import com.weilai.jigsawpuzzle.R;
+import com.weilai.jigsawpuzzle.activity.main.SaveBaseActivity;
 import com.weilai.jigsawpuzzle.adapter.data.RecordAdapter;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.db.RecordInfo;
@@ -26,7 +29,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class DataFragment extends BaseFragment implements RecordAdapter.OnAllCleanListener {
+public class DataFragment extends BaseFragment implements RecordAdapter.OnAllCleanListener ,RecordAdapter.OnItemClickedListener {
     private RecordAdapter mRecordAdapter;
     private boolean isEditing;
     private CheckBox checkbox;
@@ -97,6 +100,7 @@ public class DataFragment extends BaseFragment implements RecordAdapter.OnAllCle
             @Override
             public void onNext(List<RecordInfo> recordInfos) {
                 mRecordAdapter = new RecordAdapter(recordInfos, _mActivity, DataFragment.this);
+                mRecordAdapter.setOnItemClickedListener(DataFragment.this);
                 recyclerView.setAdapter(mRecordAdapter);
             }
 
@@ -139,5 +143,14 @@ public class DataFragment extends BaseFragment implements RecordAdapter.OnAllCle
         isEditing = false;
         mRecordAdapter.setMode(false);
         linearLayoutCompat.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onItemCLicked(String path) {
+        Intent intent = new Intent();
+        intent.putExtra("data",path);
+        intent.putExtra("type","图片信息");
+        intent.setClass(_mActivity, SaveBaseActivity.class);
+        startActivity(intent);
     }
 }
