@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.umeng.commonsdk.debug.I;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.activity.main.ClientReportBaseActivity;
 import com.weilai.jigsawpuzzle.activity.main.DataBaseActivity;
@@ -90,7 +91,10 @@ public class MineFragment  extends BaseFragment {
         view.findViewById(R.id.ll_secret).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(_mActivity,AgreementContentActivity.class));
+                Intent intent = new Intent();
+                intent.putExtra("agreement_flag","yisi");
+                intent.setClass(_mActivity,AgreementContentActivity.class);
+                startActivity(intent);
             }
         });
         view.findViewById(R.id.ll_permissions).setOnClickListener(new View.OnClickListener() {
@@ -101,6 +105,16 @@ public class MineFragment  extends BaseFragment {
                 localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
                 localIntent.setData(Uri.fromParts("package", _mActivity.getPackageName(), null));
                 startActivity(localIntent);
+            }
+        });
+        view.findViewById(R.id.ll_client).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("agreement_flag","fuwu");
+                intent.setClass(_mActivity,AgreementContentActivity.class);
+                startActivity(intent);
+
             }
         });
     }

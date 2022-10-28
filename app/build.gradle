@@ -214,7 +214,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 //    implementation 'com.pangle.cn:ads-sdk-pro:4.8.0.8'
-    implementation "com.gyf.immersionbar:immersionbar:3.0.0"
+    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
 //    implementation 'com.just.agentweb:agentweb:4.1.5'
 
     implementation 'com.umeng.umsdk:common:9.5.2'// 必选

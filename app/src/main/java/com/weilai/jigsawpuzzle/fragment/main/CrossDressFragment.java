@@ -137,59 +137,163 @@ public class CrossDressFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tv_template) {
-            startActivity(new Intent(getContext(), TemplateBaseActivity.class));
+            XXPermissions.with(this).permission(new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA}).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        startActivity(new Intent(getContext(), TemplateBaseActivity.class));
+                    }
+                }
+
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    XXPermissions.startPermissionActivity(getContext(),permissions);
+                }
+            });
         } else if (view.getId() == R.id.tv_pic) {
-            startActivity(new Intent(getContext(), PuzzleBaseActivity.class));
+            XXPermissions.with(this).permission(new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA}).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        startActivity(new Intent(getContext(), PuzzleBaseActivity.class));
+                    }
+                }
+
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    XXPermissions.startPermissionActivity(getContext(),permissions);
+                }
+            });
         } else if (view.getId() == R.id.tv_splic_health) {
-            PictureSelector.create(this)
-                    .openGallery(SelectMimeType.ofImage())
-                    .isDisplayCamera(true)
-                    .setMinSelectNum(4)
-                    .setMaxSelectNum(4)
-                    .setImageEngine(GlideEngine.createGlideEngine())
-                    .isPreviewImage(true)
-                    .setSelectionMode(SelectModeConfig.MULTIPLE)
-                    .forResult(FILTER_PUZZLE_QR_CODE);
+            XXPermissions.with(this).permission(new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA}).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        PictureSelector.create(CrossDressFragment.this)
+                                .openGallery(SelectMimeType.ofImage())
+                                .isDisplayCamera(true)
+                                .setMinSelectNum(4)
+                                .setMaxSelectNum(4)
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .isPreviewImage(true)
+                                .setSelectionMode(SelectModeConfig.MULTIPLE)
+                                .forResult(FILTER_PUZZLE_QR_CODE);
+                    }
+                }
+
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    XXPermissions.startPermissionActivity(getContext(),permissions);
+                }
+            });
+
         } else if (view.getId() == R.id.tv_splic_hori) {
-            PictureSelector.create(this)
-                    .openGallery(SelectMimeType.ofImage())
-                    .isDisplayCamera(true)
-                    .setMinSelectNum(1)
-                    .setMaxSelectNum(10)
-                    .setImageEngine(GlideEngine.createGlideEngine())
-                    .isPreviewImage(true)
-                    .setSelectionMode(SelectModeConfig.MULTIPLE)
-                    .forResult(FILTER_PUZZLE_HLP_CODE);
+            XXPermissions.with(this).permission(new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA}).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        PictureSelector.create(CrossDressFragment.this)
+                                .openGallery(SelectMimeType.ofImage())
+                                .isDisplayCamera(true)
+                                .setMinSelectNum(1)
+                                .setMaxSelectNum(10)
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .isPreviewImage(true)
+                                .setSelectionMode(SelectModeConfig.MULTIPLE)
+                                .forResult(FILTER_PUZZLE_HLP_CODE);
+                    }
+                }
+
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    XXPermissions.startPermissionActivity(getContext(),permissions);
+                }
+            });
+
         } else if (view.getId() == R.id.tv_l_pic) {
-            PictureSelector.create(this)
-                    .openGallery(SelectMimeType.ofImage())
-                    .isDisplayCamera(true)
-                    .setMinSelectNum(1)
-                    .setMaxSelectNum(10)
-                    .setImageEngine(GlideEngine.createGlideEngine())
-                    .isPreviewImage(true)
-                    .setSelectionMode(SelectModeConfig.MULTIPLE)
-                    .forResult(FILTER_PUZZLE_LP_CODE);
+            XXPermissions.with(this).permission(new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA}).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        PictureSelector.create(CrossDressFragment.this)
+                                .openGallery(SelectMimeType.ofImage())
+                                .isDisplayCamera(true)
+                                .setMinSelectNum(1)
+                                .setMaxSelectNum(10)
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .isPreviewImage(true)
+                                .setSelectionMode(SelectModeConfig.MULTIPLE)
+                                .forResult(FILTER_PUZZLE_LP_CODE);
+                    }
+                }
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    XXPermissions.startPermissionActivity(getContext(),permissions);
+                }
+            });
+
+
         } else if (view.getId() == R.id.tv_lines) {
-            PictureSelector.create(this)
-                    .openGallery(SelectMimeType.ofImage())
-                    .isDisplayCamera(true)
-                    .setMinSelectNum(1)
-                    .setMaxSelectNum(10)
-                    .setImageEngine(GlideEngine.createGlideEngine())
-                    .isPreviewImage(true)
-                    .setSelectionMode(SelectModeConfig.MULTIPLE)
-                    .forResult(FILTER_PUZZLE_LP_CODE);
+            XXPermissions.with(this).permission(new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA}).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        PictureSelector.create(CrossDressFragment.this)
+                                .openGallery(SelectMimeType.ofImage())
+                                .isDisplayCamera(true)
+                                .setMinSelectNum(1)
+                                .setMaxSelectNum(10)
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .isPreviewImage(true)
+                                .setSelectionMode(SelectModeConfig.MULTIPLE)
+                                .forResult(FILTER_PUZZLE_LP_CODE);
+                    }
+                }
+
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    XXPermissions.startPermissionActivity(getContext(),permissions);
+                }
+            });
+
+
         } else if (view.getId() == R.id.tv_lattice) {
-            PictureSelector.create(this)
-                    .openGallery(SelectMimeType.ofImage())
-                    .isDisplayCamera(true)
-                    .setSelectionMode(SelectModeConfig.SINGLE)
-                    .setImageEngine(GlideEngine.createGlideEngine())
-                    .setCropEngine(new ImageCropEngine(1,1))
-                    .forResult(FILTER_PUZZLE_9P_CODE);
+            XXPermissions.with(this).permission(new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA}).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+
+                        PictureSelector.create(CrossDressFragment.this)
+                                .openGallery(SelectMimeType.ofImage())
+                                .isDisplayCamera(true)
+                                .setSelectionMode(SelectModeConfig.SINGLE)
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .setCropEngine(new ImageCropEngine(1,1))
+                                .forResult(FILTER_PUZZLE_9P_CODE);
+                    }
+                }
+
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    XXPermissions.startPermissionActivity(getContext(),permissions);
+                }
+            });
+
         } else if (view.getId() == R.id.tv_screen_shot) {
-            startActivity(new Intent(getActivity(), PuzzleSShotBaseActivity.class));
+            XXPermissions.with(this).permission(new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA}).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        startActivity(new Intent(getActivity(), PuzzleSShotBaseActivity.class));
+                    }
+                }
+
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    XXPermissions.startPermissionActivity(getContext(),permissions);
+                }
+            });
+
         }else if (view .getId() == R.id.iv_ai){
             XXPermissions.with(this).permission(Permission.CAMERA).request(new OnPermissionCallback() {
                 @Override
@@ -229,12 +333,27 @@ public class CrossDressFragment extends BaseFragment implements View.OnClickList
             });
 
         }else if (view.getId() == R.id.iv_toning){
-            PictureSelector.create(this)
-                    .openGallery(SelectMimeType.ofImage())
-                    .isDisplayCamera(true)
-                    .setSelectionMode(SelectModeConfig.SINGLE)
-                    .setImageEngine(GlideEngine.createGlideEngine())
-                    .forResult(FILTER_PUZZLE_FITTER_CODE);
+            XXPermissions.with(this).permission(Permission.CAMERA).request(new OnPermissionCallback() {
+                @Override
+                public void onGranted(List<String> permissions, boolean all) {
+                    if (all){
+                        PictureSelector.create(CrossDressFragment.this)
+                                .openGallery(SelectMimeType.ofImage())
+                                .isDisplayCamera(true)
+                                .setSelectionMode(SelectModeConfig.SINGLE)
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .forResult(FILTER_PUZZLE_FITTER_CODE);
+                    }
+                }
+                @Override
+                public void onDenied(List<String> permissions, boolean never) {
+                    if(never){
+                        XXPermissions.startPermissionActivity(getContext(),permissions);
+                    }
+                }
+            });
+
+
 
         }
     }
