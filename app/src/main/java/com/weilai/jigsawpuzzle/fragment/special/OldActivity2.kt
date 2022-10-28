@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.hardware.camera2.CameraCharacteristics
+import androidx.annotation.MainThread
 import com.abc.matting.ui.activity.EffectEndActivity
 import com.abc.matting.ui.dialog.SelectAgeDialog
 import com.abc.matting.ui.dialog.SelectSexDialog
@@ -19,10 +20,14 @@ import com.weilai.jigsawpuzzle.base.BaseActivity
 import com.weilai.jigsawpuzzle.util.*
 import com.weilai.jigsawpuzzle.util.camera.Camera2Loader
 import com.weilai.jigsawpuzzle.util.camera.CameraLoader
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import jp.co.cyberagent.android.gpuimage.GPUImageView
 import jp.co.cyberagent.android.gpuimage.util.Rotation
 import kotlinx.android.synthetic.main.activity_old2.*
+import org.greenrobot.eventbus.MainThreadSupport
 import org.json.JSONObject
+import java.util.*
 
 class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
     SelectSexDialog.SelectSexCallback {
@@ -173,10 +178,15 @@ class OldActivity2 : BaseActivity(), SelectAgeDialog.SelectAgeCallback,
                     }
                     return
                 }
-                bitmap = BitmapFactory.decodeFile(path)
-                invisible(shutter, album, transition)
-                visible(img, over, remake)
-                img.setImageBitmap(bitmap)
+                BitmapUtils.loadBitmapWithSize(path).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io())
+                    .subscribe {
+                            bitmap = it
+                            invisible(shutter, album, transition)
+                            visible(img, over, remake)
+                            img.setImageBitmap(bitmap)
+
+                    }
+
             }
         }
     }
