@@ -2,8 +2,10 @@ package com.weilai.jigsawpuzzle.fragment.portrait;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.TextUtils;
@@ -53,6 +55,8 @@ import com.xiaopo.flying.sticker.TextSticker;
 import com.xinlan.imageeditlibrary.editimage.EditTextDialog;
 import com.xinlan.imageeditlibrary.editimage.utils.AssetsUtil;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,6 +70,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import top.zibin.luban.Luban;
 
 /**
  * * DATE: 2022/10/19
@@ -613,13 +618,30 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
             }
         });
     }
-
-    private Bitmap adjust(Bitmap bitmap) {
+    private Bitmap adjust(Bitmap bitmap){
         float bitW = bitmap.getWidth();
         float bitH = bitmap.getHeight();
         float cenW = centerView.getWidth();
         float cenH = centerView.getHeight();
         float scale = bitW > bitH ? cenW / bitW : cenH / bitH;
+        return BitmapUtils.bitMapScale(bitmap, scale);
+    }
+    private Bitmap adjust(Uri uri) {
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(_mActivity.getContentResolver().openInputStream(uri));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (bitmap == null) {
+            return null;
+        }
+        float bitW = bitmap.getWidth();
+        float bitH = bitmap.getHeight();
+        float cenW = centerView.getWidth();
+        float cenH = centerView.getHeight();
+        float scale = bitW > bitH ? cenW / bitW : cenH / bitH;
+
         return BitmapUtils.bitMapScale(bitmap, scale);
     }
 
@@ -719,7 +741,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
 
                     @Override
                     public void onNext(String s) {
-                        start(SaveFragment.getInstance(s,"抠图"));
+                        start(SaveFragment.getInstance(s, "抠图"));
                     }
 
                     @Override
@@ -819,7 +841,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
                 if (list != null) {
                     int size = list.size();
                     if (size > 0) {
-                        String path = list.get(0).getAvailablePath();
+                        String path = list.get(0).getRealPath();
                         showProcessDialog();
                         BitmapUtils.loadBitmapWithSize(path)
                                 .flatMap((Function<Bitmap, ObservableSource<Object[]>>) bitmap -> {
@@ -895,7 +917,7 @@ public class PortraitFragment extends BaseFragment implements StickerView.OnStic
                 if (list != null) {
                     int size = list.size();
                     if (size > 0) {
-                        String path = list.get(0).getAvailablePath();
+                        String path = list.get(0).getRealPath();
                         BitmapUtils.loadBitmapWithSize(path).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<Bitmap>() {
                             @Override
                             public void onSubscribe(Disposable d) {

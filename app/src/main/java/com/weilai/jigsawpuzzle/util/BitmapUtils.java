@@ -25,12 +25,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import top.zibin.luban.InputStreamProvider;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 /**
  * * DATE: 2022/9/19
@@ -177,13 +181,11 @@ public class BitmapUtils {
         return Observable.create(new ObservableOnSubscribe<Bitmap>() {
             @Override
             public void subscribe(ObservableEmitter<Bitmap> emitter) throws Exception {
-                if (!TextUtils.isEmpty(path)) {
+                    File file   = Luban.with(Config.getApplicationContext()).load(path).get().get(0);
+
+                if (!TextUtils.isEmpty(file.getAbsolutePath())) {
                     Uri srcUri;
-                    if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
-                        srcUri = Uri.parse(path);
-                    } else {
-                        srcUri = Uri.fromFile(new File(path));
-                    }
+                        srcUri = Uri.fromFile(file);
                     if (srcUri != null) {
                         InputStream stream = null;
                         try {
@@ -193,16 +195,7 @@ public class BitmapUtils {
                         }
                         BitmapFactory.Options options = new BitmapFactory.Options();
                         Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
-                        int size = bitmap.getByteCount();
-                        //最多加载5000kb的图片
-                        if (size > 1080 * 1080 * 50L) {
-                            if (!bitmap.isRecycled()) {
-                                bitmap.recycle();
-                            }
-                            throw new RuntimeException("图片过大!");
-                        } else {
-                            emitter.onNext(bitmap);
-                        }
+                        emitter.onNext(bitmap);
                     }
                 }
             }
@@ -246,7 +239,8 @@ public class BitmapUtils {
 //        }
         return bitmap;
     }
-    public static Uri pathToUri(String path){
+
+    public static Uri pathToUri(String path) {
         Uri srcUri;
         if (PictureMimeType.isContent(path) || PictureMimeType.isHasHttp(path)) {
             srcUri = Uri.parse(path);
@@ -255,6 +249,7 @@ public class BitmapUtils {
         }
         return srcUri;
     }
+
     public static Bitmap bitMapScale(Bitmap bitmap, float scale) {
         Matrix matrix = new Matrix();
         matrix.postScale(scale, scale); //长和宽放大缩小的比例
