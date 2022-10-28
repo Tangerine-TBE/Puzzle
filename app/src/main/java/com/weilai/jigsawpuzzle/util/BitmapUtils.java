@@ -194,7 +194,8 @@ public class BitmapUtils {
                         BitmapFactory.Options options = new BitmapFactory.Options();
                         Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
                         int size = bitmap.getByteCount();
-                        if (size > 1080 * 1080 * 5L) {
+                        //最多加载5000kb的图片
+                        if (size > 1080 * 1080 * 50L) {
                             if (!bitmap.isRecycled()) {
                                 bitmap.recycle();
                             }

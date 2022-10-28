@@ -295,7 +295,7 @@ public class CrossDressFragment extends BaseFragment implements View.OnClickList
             });
 
         }else if (view .getId() == R.id.iv_ai){
-            XXPermissions.with(this).permission(Permission.CAMERA).request(new OnPermissionCallback() {
+            XXPermissions.with(this).permission(Permission.MANAGE_EXTERNAL_STORAGE,Permission.CAMERA).request(new OnPermissionCallback() {
                 @Override
                 public void onGranted(List<String> permissions, boolean all) {
                     if (all){
