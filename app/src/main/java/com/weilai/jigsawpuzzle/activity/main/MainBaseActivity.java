@@ -1,6 +1,8 @@
 package com.weilai.jigsawpuzzle.activity.main;
 
 import android.Manifest;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -105,6 +107,20 @@ public class MainBaseActivity extends BaseSimpleActivity {
      * * Description: Here need @String file
      **/
     private void initTabLayout() {
+        String channel = "";
+        try{
+            ApplicationInfo info = getPackageManager().
+                    getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            if(info != null && info.metaData != null){
+                String metaData = info.metaData.getString("CHANNEL_VALUE");
+                if(!metaData.isEmpty()){
+                    channel = metaData;
+                }
+            }
+        }catch (PackageManager.NameNotFoundException e){
+            e.printStackTrace();
+        }
+
         mTabLayout.setSelectedTabIndicator(0);
         String[] tableString = {getString(R.string.cross_tab),
                 getString(R.string.edit_image_tab),
@@ -115,11 +131,15 @@ public class MainBaseActivity extends BaseSimpleActivity {
             final View view = LayoutInflater.from(this).inflate(R.layout.item_main_tab, mTabLayout, false);
             ImageView imageView = view.findViewById(R.id.image);
             TextView textView = view.findViewById(R.id.text);
+            if ("_xiaomi".equals(channel)){
+                return;
+            }
             textView.setText(tableString[i]);
             if (i == 0) {
                 imageView.setImageResource(tableSelectedIcon[0]);
                 textView.setTextColor(getResources().getColor(R.color.sel_text_main_color));
             } else {
+
                 imageView.setImageResource(tableUnSelectedIcon[i]);
                 textView.setTextColor(getResources().getColor(R.color.unl_text_main_color));
 

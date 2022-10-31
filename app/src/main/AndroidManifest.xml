@@ -1,74 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.weilai.jigsawpuzzle">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <!--App需要读取本机相册对应的照片以提供服务内容-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--App需要输出用户编辑好的照片以提供内容-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--提供App相机拍照功能-->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!--允许应用程序联网和发送统计数据的权限，以便提供统计分析服务-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--友盟权限-->
+    <!--检测联网方式，在网络异常状态下避免数据发送，节省流量和电量-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--获取用户设备的IMEI，通过IMEI对用户进行唯一标识，以便提供统计分析服务。-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--获取WIFI mac地址，在平板设备或电视盒子上，无法通过IMEI标识设备，我们会将WIFI mac地址作为用户的唯一标识，以便正常提供统计分析服务。-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
     <application
+        android:name=".application.PuzzleApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="${app_name_channel}"
-        android:name=".application.PuzzleApplication"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
-        android:theme="@style/Theme.Puzzle">
-        <activity android:name=".activity.special.SplashActivity"
+        android:theme="@style/Theme.Puzzle"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".activity.special.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.main.MainBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.template.TemplateBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.puzzle.PuzzleBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.puzzleQr.PuzzleQrBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.puzzleLP.PuzzleLPBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.puzzle9P.Puzzle9PBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.puzzleHLp.PuzzleHLPBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.puzzleLine.PuzzleLineBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.puzzleSS.PuzzleSShotBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.portrait.PortraitBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.special.OldActivity2" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".activity.special.SplashActivityAD" android:exported="true"  android:screenOrientation="portrait"/>
-        <activity android:name=".activity.main.SaveBaseActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.special.MagicCameraActivity" android:exported="true" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.special.AdjustActivity" android:exported="true"/>
-        <activity android:name=".fragment.special.AddTextActivity" android:exported="true"/>
-        <activity android:name=".fragment.special.BeautyActivity" android:exported="true"/>
-        <activity android:name=".fragment.special.CropActivity" android:exported="true"/>
-        <activity android:name=".fragment.special.DoodleActivity" android:exported="true"/>
-        <activity android:name="com.abc.matting.ui.activity.EffectEndActivity" android:exported="true"/>
-        <activity android:name=".fragment.special.ScaleActivity" android:exported="true"/>
-        <activity android:name=".fragment.special.StickerActivity" android:exported="true"/>
-        <activity android:name=".fragment.special.FilterActivity" android:exported="true"/>
-        <activity android:name=".activity.special.AgreementContentActivity" android:exported="true"/>
-        <activity android:name="com.xinlan.imageeditlibrary.editimage.EditImageActivity" android:exported="true"/>
-        <activity android:name=".activity.main.ClientReportBaseActivity" android:exported="true"/>
-        <activity android:name=".activity.main.DataBaseActivity" android:exported="true"/>
+        <activity
+            android:name=".activity.main.MainBaseActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.template.TemplateBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.puzzle.PuzzleBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.puzzleQr.PuzzleQrBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.puzzleLP.PuzzleLPBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.puzzle9P.Puzzle9PBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.puzzleHLp.PuzzleHLPBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.puzzleLine.PuzzleLineBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.puzzleSS.PuzzleSShotBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.portrait.PortraitBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.special.OldActivity2"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.special.SplashActivityAD"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.main.SaveBaseActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.special.MagicCameraActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.special.AdjustActivity"
+            android:exported="true" />
+        <activity
+            android:name=".fragment.special.AddTextActivity"
+            android:exported="true" />
+        <activity
+            android:name=".fragment.special.BeautyActivity"
+            android:exported="true" />
+        <activity
+            android:name=".fragment.special.CropActivity"
+            android:exported="true" />
+        <activity
+            android:name=".fragment.special.DoodleActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.abc.matting.ui.activity.EffectEndActivity"
+            android:exported="true" />
+        <activity
+            android:name=".fragment.special.ScaleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".fragment.special.StickerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".fragment.special.FilterActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.special.AgreementContentActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.xinlan.imageeditlibrary.editimage.EditImageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.main.ClientReportBaseActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.main.DataBaseActivity"
+            android:exported="true" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.weilai.jigsawpuzzle.fileprovider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
-
+        <meta-data
+            android:name="app_name_channel"
+            android:value="${app_name_channel}"/>
+        <meta-data
+            android:name="CHANNEL_VALUE"
+            android:value="${CHANNEL_VALUE}"/>
     </application>
 
 </manifest>

@@ -36,7 +36,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
  * Date : 2018/10/25
  * QQ : 464955343
  */
-class SplashActivity : AppCompatActivity() {
+class   SplashActivity : AppCompatActivity() {
 
     private var canJump = false
     private var channel: String? = null

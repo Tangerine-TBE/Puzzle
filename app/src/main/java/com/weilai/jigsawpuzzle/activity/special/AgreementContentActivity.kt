@@ -1,24 +1,12 @@
 package com.weilai.jigsawpuzzle.activity.special
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.UnderlineSpan
 import android.view.View
 import android.webkit.*
 import androidx.appcompat.app.AppCompatActivity
 import com.gyf.immersionbar.ImmersionBar
-import com.weilai.jigsawpuzzle.BaseConstant
 import com.weilai.jigsawpuzzle.R
 import kotlinx.android.synthetic.main.activity_agreement_content_base.*
 
@@ -93,6 +81,7 @@ class AgreementContentActivity:AppCompatActivity() {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP){
             webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         }
+        WebView.setWebContentsDebuggingEnabled(true)
         webSettings.setSupportZoom(true)
         webSettings.builtInZoomControls = true
         webSettings.displayZoomControls = false
@@ -118,7 +107,19 @@ class AgreementContentActivity:AppCompatActivity() {
 //            }
         }
         //加载网络资源
-        webView.loadUrl("http://test.aisou.club/privacy_policy/_other/weilai_matting_privacy_policy.html")
+        var channel: String? = ""
+        try {
+            val info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+            if (info.metaData != null) {
+                val metaData = info.metaData.getString("app_name_channel")
+                if (metaData!!.isNotEmpty()) {
+                    channel = metaData
+                }
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        webView.loadUrl("https://catapi.aisou.club/android/privacy_policy.html?app_name=$channel&pack_name=com.weilai.jigsawpuzzle")
     }
 
     override fun onResume() {
