@@ -74,14 +74,14 @@ public class MineFragment  extends BaseFragment {
                 Toast.makeText(_mActivity, "清空完毕~", Toast.LENGTH_SHORT).show();
             }
         });
-        view.findViewById(R.id.ll_great).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //跳去商店
-                startActivity( AppStoreUtil.getAppStoreIntent());
-
-            }
-        });
+//        view.findViewById(R.id.ll_great).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //跳去商店
+//                startActivity( AppStoreUtil.getAppStoreIntent());
+//
+//            }
+//        });
         view.findViewById(R.id.ll_advice).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

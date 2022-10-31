@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.blankj.utilcode.util.AppUtils;
@@ -64,6 +65,10 @@ public class AppStoreUtil {
             Intent leecoAppStoreIntent = getLeecoAppStoreIntent(packageName);
             if (leecoAppStoreIntent != null) return leecoAppStoreIntent;
         }
+        if (RomUtils.isHuawei()){
+            Intent huaweiAppStoreIntent =getHuaWeiAppStoreIntent(packageName);
+            if (huaweiAppStoreIntent != null)return huaweiAppStoreIntent;
+        }
 
         Uri uri = Uri.parse("market://details?id=" + packageName);
         Intent intent = new Intent();
@@ -117,6 +122,13 @@ public class AppStoreUtil {
             return intent;
         }
         return null;
+    }
+    private static Intent getHuaWeiAppStoreIntent(final String packageName){
+        Uri uri = Uri.parse("market://details?id="+packageName);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setPackage("com.huawei.appmarket");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
     private static int getAvailableIntentSize(final Intent intent) {

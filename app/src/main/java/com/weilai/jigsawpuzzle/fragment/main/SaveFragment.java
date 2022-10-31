@@ -197,7 +197,8 @@ public class SaveFragment extends BaseFragment {
         view.findViewById(R.id.ll_great).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(AppStoreUtil.getAppStoreIntent());
+                ToastUtil.showToast("评价稍后才有哦");
+//                startActivity(AppStoreUtil.getAppStoreIntent());
             }
         });
         view.findViewById(R.id.not_better).setOnClickListener(new View.OnClickListener() {
