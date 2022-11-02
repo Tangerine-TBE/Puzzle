@@ -8,6 +8,8 @@ import android.view.WindowManager
 import com.feisukj.ad.manager.AdController
 import com.feisukj.base.BaseApplication
 import com.feisukj.base.bean.ad.ADConstants
+import com.gyf.immersionbar.BarHide
+import com.gyf.immersionbar.ImmersionBar
 import kotlinx.android.synthetic.main.activity_splash.*
 
 /**
@@ -23,7 +25,7 @@ class SplashActivityAD : AppCompatActivity() {
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         this.requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_splash_ad)
-
+        initTopTheme()
         BaseApplication.isFromStart=true
         builder = AdController.Builder(this,ADConstants.START_PAGE)
                 .setContainer(splash_container)
@@ -32,7 +34,14 @@ class SplashActivityAD : AppCompatActivity() {
         builder.show()
 
     }
-
+    private fun initTopTheme() {
+        ImmersionBar.with(this)
+            .statusBarColor(android.R.color.transparent)
+            .statusBarDarkFont(true)
+            .hideBar(BarHide.FLAG_HIDE_BAR)
+            .navigationBarColor(com.feisukj.base.R.color.white)
+            .init()
+    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         return if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {

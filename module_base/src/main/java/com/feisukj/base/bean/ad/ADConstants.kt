@@ -54,10 +54,10 @@ object ADConstants {
     val kTouTiaoSeniorKey by lazy { SPUtil.getInstance().getString("kTouTiaoSeniorKey","950192209")?:"950192209" }
     val kTouTiaoSmallSeniorKey by lazy { SPUtil.getInstance().getString("ktouTiaoFullscreenvideoKey","946558276")?:"946558276" }
 
-    val kWaiAppKey by lazy { SPUtil.getInstance().getString("kGDTMobSDKAppKey","887200008")?:"887200008" }
-    val kWaiKaiPing by lazy { SPUtil.getInstance().getString("kGDTMobSDKChaPingKey","7042622198217197")?:"7042622198217197" }
-    val kWaiBannerKey by lazy { SPUtil.getInstance().getString("kGDTMobSDKKaiPingKey","3002822148516113")?:"3002822148516113" }
-    val kWaiChaPingKey by lazy { SPUtil.getInstance().getString("kGDTMobSDKBannerKey","2062728188517126")?:"2062728188517126" }
-    val kWaiJiLiKey by lazy { SPUtil.getInstance().getString("kGDTMobSDKNativeKey","6072925118019134")?:"6072925118019134" }
-    val kWaiSeniorKey by lazy { SPUtil.getInstance().getString("kGDTMobSDKJiLiKey","9082025128710195")?:"9082025128710195" }
+    val kWaiAppKey by lazy { SPUtil.getInstance().getString("kWaiAppKey","887200008")?:"887200008" }
+    val kWaiKaiPing by lazy { SPUtil.getInstance().getString("kWaiKaiPing","7042622198217197")?:"7042622198217197" }
+    val kWaiBannerKey by lazy { SPUtil.getInstance().getString("kWaiBannerKey","3002822148516113")?:"3002822148516113" }
+    val kWaiChaPingKey by lazy { SPUtil.getInstance().getString("kWaiChaPingKey","2062728188517126")?:"2062728188517126" }
+    val kWaiJiLiKey by lazy { SPUtil.getInstance().getString("kWaiJiLiKey","6072925118019134")?:"6072925118019134" }
+    val kWaiSeniorKey by lazy { SPUtil.getInstance().getString("kWaiSeniorKey","9082025128710195")?:"9082025128710195" }
 }

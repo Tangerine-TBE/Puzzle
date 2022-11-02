@@ -3,6 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/activity_splash.xml" value="0.1875" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/activity_splash_ad.xml" value="0.2234375" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/app/src/main/res/layout/item_record.xml" value="0.3453703703703704" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_ad/src/main/res/drawable/shape_splash_bg.xml" value="0.2755" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_ad/src/main/res/layout/activity_splash.xml" value="0.1875" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_ad/src/main/res/layout/activity_splash_ad.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/drawable/ic_agreen_cunchu.xml" value="0.2755" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/drawable/ic_agreen_location.xml" value="0.2755" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/drawable/ic_arrow_back_black_24dp.xml" value="0.2755" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/drawable/ic_select_n.xml" value="0.2755" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/drawable/ic_select_y.xml" value="0.2755" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/drawable/ic_splash_bg.xml" value="0.2755" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/layout/activity_base.xml" value="0.165625" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/layout/activity_splash.xml" value="0.165625" />
+        <entry key="..\:/Users/Administrator.SXCSXC-C9SC9CEG/AndroidStudioProjects/puzzle-p/module_base/src/main/res/layout/dialog_display_launch_tip.xml" value="0.36614583333333334" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_down.xml" value="0.325" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_item.xml" value="0.1365" />
         <entry key="..\:/luojl/TestProject/Puzzle/app/src/main/res/drawable/bg_background_puzzle_selected.xml" value="0.1365" />

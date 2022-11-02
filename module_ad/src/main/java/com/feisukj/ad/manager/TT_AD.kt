@@ -153,8 +153,8 @@ class TT_AD : AbsADParent() {
             AdSlot.Builder()
                 .setCodeId(ADConstants.kTouTiaoKaiPing)
                 .setSupportDeepLink(true)
-                .setImageAcceptedSize(        container!!.width
-                        , container!!.height)
+                .setImageAcceptedSize(        BaseConstant.application.resources.displayMetrics.widthPixels
+                        , BaseConstant.application.resources.displayMetrics.heightPixels)
                 .build()
         }
         //step4:请求广告，调用开屏广告异步请求接口，对请求回调的广告作渲染处理
