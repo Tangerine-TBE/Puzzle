@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 这个下载路径不可以修改，必须是 GDTDOWNLOAD -->
+    <external-path name="gdt_sdk_download_path" path="GDTDOWNLOAD" />
+    <!--    这个标签对应Context.getExternalCacheDir()这个路径-->
+    <external-cache-path name="external-cache" path="/" />
+    <files-path
+        name="files"
+        path="."/>
+    <root-path
+        name="root"
+        path="" />
+
+</paths>

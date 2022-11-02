@@ -12,11 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.feisukj.base.AgreementContentActivity;
 import com.umeng.commonsdk.debug.I;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.activity.main.ClientReportBaseActivity;
 import com.weilai.jigsawpuzzle.activity.main.DataBaseActivity;
-import com.weilai.jigsawpuzzle.activity.special.AgreementContentActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.util.AppStoreUtil;
 import com.weilai.jigsawpuzzle.util.UriUtil;
@@ -93,7 +93,7 @@ public class MineFragment  extends BaseFragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putExtra("agreement_flag","yisi");
-                intent.setClass(_mActivity,AgreementContentActivity.class);
+                intent.setClass(_mActivity, AgreementContentActivity.class);
                 startActivity(intent);
             }
         });

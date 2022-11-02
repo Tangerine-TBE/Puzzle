@@ -7,6 +7,11 @@ import android.os.Looper;
 
 import androidx.multidex.MultiDexApplication;
 
+import com.feisukj.ad.SplashActivity;
+import com.feisukj.ad.SplashActivityAD;
+import com.feisukj.base.ActivityEntrance;
+import com.feisukj.base.BaseApplication;
+import com.weilai.jigsawpuzzle.activity.main.MainBaseActivity;
 import com.weilai.jigsawpuzzle.configure.Config;
 
 /**
@@ -14,7 +19,7 @@ import com.weilai.jigsawpuzzle.configure.Config;
  ** Author:tangerine
  ** Description:For Application AndroidManifest
  **/
-public class PuzzleApplication  extends MultiDexApplication {
+public class PuzzleApplication  extends BaseApplication {
     public static Handler handler;
     public static boolean isForeground;
     public static boolean isFromStart;
@@ -22,6 +27,9 @@ public class PuzzleApplication  extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        ActivityEntrance.HomeActivity.setCls(MainBaseActivity.class);
+        ActivityEntrance.SplashActivityAD.setCls(SplashActivityAD.class);
+        ActivityEntrance.SplashActivity.setCls(SplashActivity.class);
         handler = new Handler(Looper.getMainLooper());
         Config.init(this).withSp(this).withDao(this).withApplication(this).withUMeng(this).Configure();
     }

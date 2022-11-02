@@ -26,7 +26,9 @@ allprojects {
         maven { url "https://www.jitpack.io" }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
-
+        maven {
+            url 'https://artifact.bytedance.com/repository/pangle'
+        }
     }
 }
 

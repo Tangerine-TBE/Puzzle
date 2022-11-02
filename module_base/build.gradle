@@ -1,0 +1,125 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion rootProject.ext.versions.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.versions.minSdkVersion
+        targetSdkVersion rootProject.ext.versions.targetSdkVersion
+        versionCode rootProject.ext.versions.versionCode
+        versionName rootProject.ext.versions.versionName
+
+        //MultiDex分包方法
+        multiDexEnabled true
+
+        //防止编译的时候oom、GC
+        dexOptions {
+            javaMaxHeapSize "4g"
+        }
+    }
+
+    buildTypes {
+        release {
+            buildConfigField("String", "AD_HOST", rootProject.ext.host.ad)
+            buildConfigField("String", "CONTENT_HOST", rootProject.ext.host.content)
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField("String", "AD_HOST", rootProject.ext.host.ad)
+            buildConfigField("String", "CONTENT_HOST", rootProject.ext.host.content)
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dependencies {
+        api fileTree(dir: 'libs', include: ['*.jar'])
+//        api fileTree(dir: 'libs', include: ['*.aar'])
+        /********基础依赖:所有module通用依赖*********/
+
+        api 'com.android.support:design:28.0.0'
+        //把implementation 用api代替,它是对外部公开的, 所有其他的module就不需要添加该依赖
+        api "com.android.support:recyclerview-v7:28.0.0"
+        api "com.android.support.constraint:constraint-layout:2.0.4"
+        //MultiDex分包方法
+        api "com.android.support:multidex:1.0.3"
+
+        //eventbus 发布/订阅事件总线
+        api "org.greenrobot:eventbus:3.2.0"
+        //沉浸栏
+        api "com.gyf.immersionbar:immersionbar:3.0.0"
+        //图片加载
+        api "com.github.bumptech.glide:glide:4.13.0"
+        //万能Adapter
+//        api rootProject.ext.dependencies["superAdapter"]
+        //BaseRecyclerView
+//        api rootProject.ext.dependencies["BaseRecyclerView"]
+        //下拉刷新下拉加载
+//        api rootProject.ext.dependencies["smartRefresh"]
+//        api rootProject.ext.dependencies["smartRefreshHeader"]
+        //GreenDao
+        api "org.greenrobot:greendao:3.3.0"
+        //kotlin
+        api rootProject.ext.dependencies["kotlin"]
+        //retrofit
+//        api rootProject.ext.dependencies["retrofit"]
+//        api rootProject.ext.dependencies["retrofitConverter"]
+//        api rootProject.ext.dependencies["retrofitAdapter"]
+        api 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+        api 'com.squareup.retrofit2:converter-gson:2.9.0'
+        api 'com.squareup.retrofit2:retrofit:2.9.0'
+        //rxlifecycle
+        api rootProject.ext.dependencies["rxlifecycle"]
+        api rootProject.ext.dependencies["rxlifecycleComponents"]
+        //rxjava
+        api "io.reactivex.rxjava2:rxandroid:2.1.1"
+        api "io.reactivex.rxjava2:rxjava:2.2.14"
+        //Gson
+        api "com.google.code.gson:gson:2.9.0"
+        //设置内项目按下的效果
+//        api rootProject.ext.dependencies["ripple"]
+
+//        api 'com.coder.command:ffmpeg:1.2.0-beta3'
+
+        api 'com.just.agentweb:agentweb:4.1.4'
+        api 'com.android.volley:volley:1.1.1'
+
+        /********基础依赖:所有module通用依赖*********/
+
+        /********第三方依赖:在需要单独调用的module添加即可，如果放开的话，所有module都可以调用*********/
+
+        //下载
+//    api rootProject.ext.dependencies["filedownloader"]
+
+        //友盟统计
+        api  'com.umeng.umsdk:common:9.5.2'// 必选
+        api  'com.umeng.umsdk:asms:1.6.3'// 必选
+        api 'com.umeng.umsdk:apm:1.7.0' // 错误分析升级为独立产品U-APM可按需集成，可选
+        api  'com.umeng.umsdk:abtest:1.0.0'//使用U-App中ABTest能力，可选
+
+        api 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.15'
+
+//        api 'com.tencentcloudapi:tencentcloud-sdk-java-common:3.1.305'
+//        api 'com.tencentcloudapi:tencentcloud-sdk-java-ft:3.1.305'
+        api "javax.xml.bind:jaxb-api:2.3.1"
+//        api "com.sun.xml.bind:jaxb-core:2.2.11"
+//        api "com.sun.xml.bind:jaxb-impl:2.2.11"
+        api group: 'xerces', name: 'xercesImpl', version: '2.12.0'
+
+        api 'com.pangle.cn:ads-sdk-pro:4.8.0.8'
+        api 'com.qq.e.union:union:4.491.1361'
+
+
+        /********第三方依赖:在需要单独调用的module添加即可，如果放开的话，所有module都可以调用*********/
+
+    }
+
+    /***********数据库**********/
+    //在需要用数据的lib，依赖module_dao即可，在module_dao内新建文件夹，存放其他lib的entity,每个lib新建一个文件夹，便于管理
+    //关于Daosession初始化，把BaseApplication内的initDao()方法，放到主activity，然后初始化完成设置给BaseApplication内的daosession
+}
+

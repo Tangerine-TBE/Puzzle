@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.feisukj.base" >
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application>
+        <activity android:name=".AgreementActivity"/>
+        <activity android:name=".AgreementContentActivity"/>
+        <activity android:name=".WebViewActivity"/>
+    </application>
+</manifest>

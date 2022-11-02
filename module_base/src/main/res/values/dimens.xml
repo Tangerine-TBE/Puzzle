@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="font9">9sp</dimen>
+    <dimen name="font10">10sp</dimen>
+    <dimen name="font11">11sp</dimen>
+    <dimen name="font12">12sp</dimen>
+    <dimen name="font13">13sp</dimen>
+    <dimen name="font14">14sp</dimen>
+    <dimen name="font15">15sp</dimen>
+    <dimen name="font16">16sp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+    <dimen name="padding_100">100dp</dimen>
+    <dimen name="padding_40">40dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_20">20dp</dimen>
+    <dimen name="padding_30">30dp</dimen>
+</resources>

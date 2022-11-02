@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.weilai.jigsawpuzzle">
     <!--App需要读取本机相册对应的照片以提供服务内容-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -17,10 +18,18 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--获取WIFI mac地址，在平板设备或电视盒子上，无法通过IMEI标识设备，我们会将WIFI mac地址作为用户的唯一标识，以便正常提供统计分析服务。-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!--快手-->
+    <!--安装应⽤权限-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!--建议添加“query_all_package”权限，SDK将通过此权限在AndroidR系统上判定⼴告对应的应⽤
+    是否在⽤户的app上安装，避免投放错误的⼴告，以此提⾼⽤户的⼴告体验。若添加此权限，需要在您的⽤
+    户隐私⽂档中声明-->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
 
     <application
         android:name=".application.PuzzleApplication"
-        android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="${app_name_channel}"
         android:requestLegacyExternalStorage="true"
@@ -28,14 +37,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Puzzle"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".activity.special.SplashActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".activity.main.MainBaseActivity"
             android:exported="true" />
@@ -138,7 +139,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/gdt_file_path" />
         </provider>
         <meta-data
             android:name="app_name_channel"

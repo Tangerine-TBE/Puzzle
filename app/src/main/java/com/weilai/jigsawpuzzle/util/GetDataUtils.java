@@ -2,10 +2,10 @@ package com.weilai.jigsawpuzzle.util;
 
 import android.text.TextUtils;
 
+import com.feisukj.base.bean.UserBean;
 import com.feisukj.base.bean.ad.ADConstants;
 import com.feisukj.base.bean.ad.TypeBean;
 import com.weilai.jigsawpuzzle.Constants;
-import com.weilai.jigsawpuzzle.ad.UserBean;
 
 public class GetDataUtils {
 

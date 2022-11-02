@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import com.weilai.jigsawpuzzle.activity.special.AgreementActivity
+import com.feisukj.base.AgreementActivity
 import com.weilai.jigsawpuzzle.configure.Config
 import com.weilai.jigsawpuzzle.configure.ConfigureType
 import com.weilai.jigsawpuzzle.util.PackageUtils

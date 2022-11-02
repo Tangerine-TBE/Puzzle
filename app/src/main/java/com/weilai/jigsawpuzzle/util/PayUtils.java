@@ -3,8 +3,8 @@ package com.weilai.jigsawpuzzle.util;
 import android.content.Context;
 import android.widget.LinearLayout;
 
+import com.feisukj.base.bean.UserBean;
 import com.weilai.jigsawpuzzle.Constants;
-import com.weilai.jigsawpuzzle.ad.UserBean;
 import com.weilai.jigsawpuzzle.bean.PayBean;
 import com.weilai.jigsawpuzzle.configure.Config;
 

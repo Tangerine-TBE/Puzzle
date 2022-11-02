@@ -4,7 +4,7 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="PLATFORM" />
+        <option name="testRunner" value="GRADLE" />
         <option name="disableWrapperSourceDistributionNotification" value="true" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -18,6 +18,8 @@
             <option value="$PROJECT_DIR$/imageeditlibrary" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/mapping" />
+            <option value="$PROJECT_DIR$/module_ad" />
+            <option value="$PROJECT_DIR$/module_base" />
             <option value="$PROJECT_DIR$/module_gpuimage" />
             <option value="$PROJECT_DIR$/puzzle" />
             <option value="$PROJECT_DIR$/selector" />
@@ -25,8 +27,6 @@
             <option value="$PROJECT_DIR$/ucrop" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
-        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

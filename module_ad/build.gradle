@@ -1,0 +1,87 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion rootProject.ext.versions.compileSdkVersion
+
+
+    defaultConfig {
+//        applicationId 'com.feisushouyj2019.app' //单独Module运行时，测试广告用，正常要注释掉
+        minSdkVersion rootProject.ext.versions.minSdkVersion
+        targetSdkVersion rootProject.ext.versions.targetSdkVersion
+        versionCode rootProject.ext.versions.versionCode
+        versionName rootProject.ext.versions.versionName
+        //MultiDex分包方法
+        multiDexEnabled true
+
+        //Arouter路由配置
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+            }
+        }
+        //提供给广点通provider authorities字段
+
+        manifestPlaceholders = [name : rootProject.ext.versions.applicationId]
+    }
+//单独Module运行时，测试广告用，正常要注释掉
+//    signingConfigs {
+//        release {
+//            storeFile file(KEY_STORE)
+//            storePassword KEY_STORE_PASSWORD
+//            keyAlias KEY_ALIAS
+//            keyPassword KEY_ALIAS_PASSWORD
+//
+//            v1SigningEnabled true
+//            v2SigningEnabled true
+//        }
+//
+//        debug {
+//            v1SigningEnabled true
+//            v2SigningEnabled true
+//        }
+//    }
+
+    buildTypes {
+        release {
+
+//            signingConfig signingConfigs.release //单独Module运行时，测试广告用，正常要注释掉
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+
+//            signingConfig signingConfigs.release //单独Module运行时，测试广告用，正常要注释掉
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //java插件引入了一个概念叫做SourceSets，通过修改SourceSets中的属性，可以指定哪些源文件
+    //（ 或文件夹下的源文件 ） 要被编译 ， 哪些源文件要被排除 。
+    sourceSets {
+        main {
+
+            if (Boolean.valueOf(rootProject.ext.isModule)) {
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+                java {
+                    //排除java/debug文件夹下的所有文件
+                    exclude '*module'
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.aar'])
+    api project(path: ':module_base')
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+    //一点资讯
+//    implementation 'com.yidian.android:feeds:1.1.1'
+}

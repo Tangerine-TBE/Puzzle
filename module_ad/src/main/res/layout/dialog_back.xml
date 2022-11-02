@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+    <FrameLayout
+        android:id="@+id/frameAd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+    <RelativeLayout
+        android:layout_below="@id/frameAd"
+        android:layout_marginTop="-25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="@string/askExit"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="#000"/>
+        <LinearLayout
+            android:layout_below="@id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_height="40dp">
+            <Button
+                android:id="@+id/no"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_exit_n"
+                android:text="@string/cancel"
+                android:textColor="#FFD23D"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/yes"
+                android:layout_width="0dp"
+                android:layout_marginStart="5dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_exit_y"
+                android:text="@string/resume"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

@@ -193,6 +193,8 @@ dependencies {
     implementation project(path: ':cropping')
     implementation project(path: ':cropper')
     implementation "org.greenrobot:greendao:3.3.0"
+    implementation project(path: ':module_ad')
+    implementation project(path: ':module_base')
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
 //    implementation 'io.github.lucksiege:ucrop:v3.10.6'
     implementation 'me.yokeyword:fragmentationx:1.0.2'
@@ -214,7 +216,6 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 //    implementation 'com.pangle.cn:ads-sdk-pro:4.8.0.8'
-    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
 //    implementation 'com.just.agentweb:agentweb:4.1.5'
 
     implementation 'com.umeng.umsdk:common:9.5.2'// 必选

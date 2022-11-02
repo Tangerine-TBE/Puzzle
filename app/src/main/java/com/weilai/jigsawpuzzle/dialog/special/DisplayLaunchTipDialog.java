@@ -22,8 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.feisukj.base.AgreementContentActivity;
 import com.weilai.jigsawpuzzle.R;
-import com.weilai.jigsawpuzzle.activity.special.AgreementContentActivity;
 import com.weilai.jigsawpuzzle.util.PackageUtils;
 
 public class DisplayLaunchTipDialog extends DialogFragment implements View.OnClickListener {
