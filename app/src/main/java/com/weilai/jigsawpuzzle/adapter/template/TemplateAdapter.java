@@ -58,12 +58,10 @@ public class TemplateAdapter extends BaseAdAdapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType){
-            case VIEW_TYPE_ONE:
-                return new TwoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ad, parent, false));
-            default:
-                return new OneViewHolder( LayoutInflater.from(parent.getContext()).inflate(R.layout.item_template, parent, false));
+        if (viewType == VIEW_TYPE_ONE) {
+            return new TwoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ad, parent, false));
         }
+        return new OneViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_template, parent, false));
 
 
     }
@@ -101,6 +99,8 @@ public class TemplateAdapter extends BaseAdAdapter {
                 });
                 break;
             case VIEW_TYPE_ONE:
+                //这里布局要提前指定宽高，喊凯哥去开一下原生自渲染信息流，然后自定义几套布局，就可以了，不然布局会混乱，一般都是没有提前指定宽高导致的。
+
                 TwoViewHolder twoViewHolder = (TwoViewHolder) holder;
                 Object object = mapInfos.get(position);
                 if (object instanceof TTNativeExpressAd) {
