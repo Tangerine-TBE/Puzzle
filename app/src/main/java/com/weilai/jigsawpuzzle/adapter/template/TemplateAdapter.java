@@ -100,6 +100,7 @@ public class TemplateAdapter extends BaseAdAdapter {
                 break;
             case VIEW_TYPE_ONE:
                 //这里布局要提前指定宽高，喊凯哥去开一下原生自渲染信息流，然后自定义几套布局，就可以了，不然布局会混乱，一般都是没有提前指定宽高导致的。
+                //并且要额外注意留白，重排序的问题，这在瀑布流会经常发生。
 
                 TwoViewHolder twoViewHolder = (TwoViewHolder) holder;
                 Object object = mapInfos.get(position);
