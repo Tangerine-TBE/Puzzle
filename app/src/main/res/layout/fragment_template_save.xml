@@ -33,15 +33,16 @@
             android:gravity="center"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
-            android:text="APP体验如何"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:text="--- APP体验如何 ---"
+            android:textSize="14sp"
+            android:textStyle="bold"
+             />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/ll_great"
@@ -60,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="挺好"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -80,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="一般"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -100,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="鼓励"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 

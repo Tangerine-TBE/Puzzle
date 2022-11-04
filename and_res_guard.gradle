@@ -60,7 +60,30 @@ andResGuard {
             "R.id.rc_*",
             "R.style.rc_*",
             "R.dimen.rc_*",
-            "R.array.rc_*"
+            "R.array.rc_*",
+            //tt
+            "R.string.tt*",
+            "R.string.appdownload*",
+            "R.drawable.tt*",
+            "R.drawable.appdownload*",
+            "R.color.tt*",
+            "R.id.tt*",
+            "R.id.appdownload*",
+            "R.color.appdownload*",
+            "R.style.Theme*",
+            "R.style.tt*",
+            "R.style.appdownload*",
+            "R.anim.tt*",
+            "R.layout.appdownload*",
+            "R.layout.tt*",
+            "R.inetger.tt*",
+            "R.inetger.appdownload*",
+            "R.dimen.tt*",
+            "R.integer.tt*",
+            //ks
+            "R.drawable.ksad*",
+            "R.id.ksad*",
+            "R.layout.ksad*",
     ]
     compressFilePattern = [
             "*.png",

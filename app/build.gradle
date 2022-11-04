@@ -100,7 +100,7 @@ android {
         }
         _vivo {
             applicationId rootProject.ext.versions.applicationId
-            manifestPlaceholders = [app_name_channel: "拼图P图助手",
+            manifestPlaceholders = [app_name_channel: "拼图P图大师",
                                     CHANNEL_VALUE   : "_vivo"]
         }
         _360 {

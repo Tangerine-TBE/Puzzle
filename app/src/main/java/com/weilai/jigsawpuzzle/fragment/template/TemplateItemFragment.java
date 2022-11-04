@@ -138,7 +138,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
             public void onNext(List<Object> bitMapInfos) {
                 if (bitMapInfos != null) {
                     templateAdapter.setMapInfos(bitMapInfos);
-//                    new AdController.Builder(_mActivity, ADConstants.TEMPLATELIST_PAGE).setAdAdapter(templateAdapter).create().getList();
+                    new AdController.Builder(_mActivity, ADConstants.TEMPLATELIST_PAGE).setAdAdapter(templateAdapter).create().getList();
 
                 }
             }

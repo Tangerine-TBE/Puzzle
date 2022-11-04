@@ -166,7 +166,7 @@ public class TemplateAdapter extends BaseAdAdapter {
             }
             mapInfos = reBuildLists;
         }
-//        notifyDataSetChanged();
+        notifyDataSetChanged();
         smartRefreshLayout.finishRefresh(true);
     }
 
@@ -175,8 +175,8 @@ public class TemplateAdapter extends BaseAdAdapter {
             mapInfos.clear();
         }
         mapInfos.addAll(list);
-                notifyDataSetChanged();
-        smartRefreshLayout.finishRefresh(true);
+//                notifyDataSetChanged();
+//        smartRefreshLayout.finishRefresh(true);
 
     }
 
