@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.feisukj.ad.manager.AdController;
+import com.feisukj.base.bean.ad.ADConstants;
 import com.google.android.material.tabs.TabLayout;
 import com.kuaishou.weapon.p0.jni.A;
 import com.weilai.jigsawpuzzle.R;
@@ -94,6 +96,7 @@ public class MainBaseActivity extends BaseSimpleActivity {
         mViewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, fragments));
         mTabLayout.setupWithViewPager(mViewPager);
         initTabLayout();
+
     }
 
 

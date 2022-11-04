@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import com.feisukj.ad.SplashActivity
 import com.feisukj.ad.SplashActivityAD
+import com.feisukj.ad.adapter.BaseAdAdapter
 import com.feisukj.base.BaseConstant
 import com.feisukj.base.util.SPUtil
 
@@ -74,6 +75,7 @@ class AdController(var activity: Activity, var page: String) {
     private var fullVideoManager: AdManager? = null
     var container: FrameLayout? = null
     private var isLoading: Boolean = false
+    private var baseAdAdapter: BaseAdAdapter? = null
     var tag_ad = ""
     var bannerContainer: FrameLayout? = null
 
@@ -98,8 +100,13 @@ class AdController(var activity: Activity, var page: String) {
             SPUtil.getInstance().putLong(SEE_VIDEO_AD_TIME_KEY,0L)
         }
         adControllerMap.put(page, arrayOf(container,bannerContainer))
-        manager = AdManager(activity, page, container, isLoading, tag_ad, bannerContainer)
+        manager = AdManager(activity, page, container, isLoading, tag_ad, bannerContainer,null)
         manager!!.show()
+    }
+    /*Adapter的list的原生广告请求，直接请求回所有的一次请求出来的广告，利用新参数Adapter进行数据更新*/
+    fun getList(){
+        manager = AdManager(activity, page, container, isLoading, tag_ad, bannerContainer,baseAdAdapter)
+        manager!!.getList()
     }
 
 //    fun showFullVideo(jiliCallback: JILICallback){
@@ -137,17 +144,24 @@ class AdController(var activity: Activity, var page: String) {
     fun setLoading(isLoading: Boolean) {
         this.isLoading = isLoading
     }
+    fun  setAdapter(adAdapter: BaseAdAdapter){
+        this.baseAdAdapter = adAdapter;
+    }
 
 
     class Builder(private val activity: Activity,private val page: String) {
         private var container: FrameLayout? = null
         private var isLoading: Boolean = false
         private var bannerContainer: FrameLayout? = null
+        private var baseAdAdapter:BaseAdAdapter? = null
 
         fun setContainer(container: FrameLayout): Builder {
             this.container = container
             return this
-
+        }
+        fun setAdAdapter(adAdapter: BaseAdAdapter):Builder{
+            this.baseAdAdapter  = adAdapter
+            return this
         }
 
         fun setLoading(isLoading: Boolean): Builder {
@@ -172,6 +186,9 @@ class AdController(var activity: Activity, var page: String) {
 
             if (bannerContainer != null) {
                 controller.bannerContainer=bannerContainer
+            }
+            if (baseAdAdapter != null){
+                controller.baseAdAdapter = baseAdAdapter
             }
 
             if (TextUtils.isEmpty(page)) {

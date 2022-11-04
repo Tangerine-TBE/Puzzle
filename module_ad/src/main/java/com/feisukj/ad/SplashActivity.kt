@@ -128,7 +128,7 @@ class SplashActivity : AppCompatActivity() {
                                     .customController(
                                             UserDataObtainController.getInstance()
                                                     .setUserAgree(true))
-                                    .appName(PackageUtils.getAppMetaData(BaseApplication.application, "app_name_channel"))
+                                    .appName("拼图P图")
                                     .debug(BuildConfig.DEBUG)
                                     .setInitCallback(object : KsInitCallback {
                                         override fun onSuccess() {

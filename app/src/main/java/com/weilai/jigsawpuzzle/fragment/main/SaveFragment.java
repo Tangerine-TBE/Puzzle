@@ -10,23 +10,18 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BaseTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.transition.Transition;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.feisukj.ad.manager.AdController;
+import com.feisukj.base.bean.ad.ADConstants;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.weilai.jigsawpuzzle.R;
 import com.weilai.jigsawpuzzle.activity.main.ClientReportBaseActivity;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.db.RecordInfo;
-import com.weilai.jigsawpuzzle.util.AppStoreUtil;
 import com.weilai.jigsawpuzzle.util.DateUtil;
 import com.weilai.jigsawpuzzle.util.ToastUtil;
 import com.weilai.jigsawpuzzle.util.UriUtil;
@@ -142,7 +137,6 @@ public class SaveFragment extends BaseFragment {
             }
         });
 
-
     }
 
     @Override
@@ -210,7 +204,7 @@ public class SaveFragment extends BaseFragment {
         view.findViewById(R.id.fantastic).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                new AdController.Builder(_mActivity, ADConstants.IMGDETAIL_PAGE).create().show();
             }
         });
         view.findViewById(R.id.iv_open).setOnClickListener(new View.OnClickListener() {

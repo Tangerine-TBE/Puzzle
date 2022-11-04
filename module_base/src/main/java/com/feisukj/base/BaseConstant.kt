@@ -50,9 +50,11 @@ object BaseConstant {
     const val SPLASH_TIME_OUT_TT="spreadTimeOut_toutiao"//开屏广告加载超时
     //头条原生
     const val NATIVE_REQUEST_TT="nativeRequest_toutiao"//请求原生广告
+    const val FEED_REQUEST_TT = "feedRequest_toutiao"//信息流广告
     const val NATIVE_REQUEST_SUCCESS_TT="nativeRequestSuccess_toutiao"//请求成功
     const val NATIVE_ERROR_TT="nativeRequestError_toutiao"//请求失败
     const val NATIVE_SHOW_TT="nativeShow_toutiao"//展示原生广告
+    const val NATIVE_NEW_INSERT = "native_new_insert"//原生模板广告
 
     /*************************************************************************************/
 

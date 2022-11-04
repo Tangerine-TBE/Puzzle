@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.alibaba.fastjson.JSONArray;
+import com.feisukj.ad.manager.AdController;
+import com.feisukj.ad.manager.AdManager;
+import com.feisukj.base.bean.ad.ADConstants;
+import com.kuaishou.weapon.p0.jni.A;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -46,7 +50,6 @@ import retrofit2.Response;
 public class TemplateItemFragment extends BaseFragment implements TemplateAdapter.ItemClickListener, OnRefreshListener {
     /*获取到BitMapInfo*/
     private RecyclerView mRvTemplate;
-    private List<BitMapInfo> list = new ArrayList<>();
     private TemplateAdapter templateAdapter;
     private StaggeredGridLayoutManager gridLayoutManager;
     private SmartRefreshLayout mRefreshLayout;
@@ -75,10 +78,11 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
         });
         mRefreshLayout = view.findViewById(R.id.smart_layout);
         mRvTemplate = view.findViewById(R.id.rv_template_data);
-        templateAdapter = new TemplateAdapter(list, getContext(), this);
+        templateAdapter = new TemplateAdapter(_mActivity, this, mRefreshLayout);
         gridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRvTemplate.setLayoutManager(gridLayoutManager);
         mRvTemplate.setAdapter(templateAdapter);
+        mRvTemplate.getItemAnimator().setChangeDuration(0);
         mRvTemplate.addItemDecoration(new SplitItemDecoration(20));
     }
 
@@ -104,12 +108,12 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        NetConfig.getInstance().getINetService().getPicTemplate().flatMap(new Function<ResponseBody, ObservableSource<List<BitMapInfo>>>() {
+        NetConfig.getInstance().getINetService().getPicTemplate().flatMap(new Function<ResponseBody, ObservableSource<List<Object>>>() {
             @Override
-            public ObservableSource<List<BitMapInfo>> apply(ResponseBody responseBody) throws Exception {
-                ArrayList<BitMapInfo> finalBitMapInfos = null;
+            public ObservableSource<List<Object>> apply(ResponseBody responseBody) throws Exception {
+                ArrayList<Object> finalBitMapInfos = new ArrayList<>();
                 try {
-                    ArrayList<BitMapInfo> bitMapInfos = null;
+                    ArrayList<BitMapInfo> bitMapInfos;
                     if (responseBody != null) {
                         String json = "";
                         json = responseBody.string();
@@ -121,28 +125,21 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
                             String bitmapPath = FileUtil.saveBitmapToCache(bitMapInfo.getName() + "bitmap", bitmapBitmap);
                             bitMapInfo.setBitmap(bitmapPath);
                         }
+                        finalBitMapInfos.addAll(bitMapInfos);
                     }
-                    finalBitMapInfos = bitMapInfos;
                 } catch (Exception e) {
-                e.printStackTrace();
+                    e.printStackTrace();
                 }
-
-                ArrayList<BitMapInfo> finalBitMapInfos1 = finalBitMapInfos;
-                return Observable.create(emitter -> emitter.onNext(finalBitMapInfos1));
+                return Observable.create(emitter -> emitter.onNext(finalBitMapInfos));
 
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<BitMapInfo>>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<Object>>() {
             @Override
-            public void onNext(List<BitMapInfo> bitMapInfos) {
+            public void onNext(List<Object> bitMapInfos) {
                 if (bitMapInfos != null) {
-                    if (list != null){
-                        if (!list.isEmpty()){
-                            list.clear();
-                        }
-                        list.addAll(bitMapInfos);
-                    }
-                    templateAdapter.notifyDataSetChanged();
-                    refreshLayout.finishRefresh(true);
+                    templateAdapter.setMapInfos(bitMapInfos);
+//                    new AdController.Builder(_mActivity, ADConstants.TEMPLATELIST_PAGE).setAdAdapter(templateAdapter).create().getList();
+
                 }
             }
 
@@ -153,7 +150,7 @@ public class TemplateItemFragment extends BaseFragment implements TemplateAdapte
 
             @Override
             public void onError(Throwable e) {
-                refreshLayout.finishRefresh(2000,false,false);
+                refreshLayout.finishRefresh(2000, false, false);
             }
 
             @Override

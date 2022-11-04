@@ -7,9 +7,11 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.feisukj.ad.SplashActivity
+import com.feisukj.ad.adapter.BaseAdAdapter
 import com.feisukj.base.BaseConstant
 import com.feisukj.base.bean.ad.*
 import com.feisukj.base.util.GsonUtils
+import com.feisukj.base.util.LogUtils
 import com.feisukj.base.util.NetworkUtils
 import com.feisukj.base.util.SPUtil
 
@@ -36,7 +38,8 @@ class AdManager(
     private var container: FrameLayout?,
     private val isLoading: Boolean,
     private val tag_ad: String,
-    private val bannerContainer: FrameLayout?
+    private val bannerContainer: FrameLayout?,
+    private val baseAdAdapter: BaseAdAdapter?
 ) : OnInsertADListener {
     //banner切换scheduledExecutorService timerTask
     private var scheduledExecutorService: ScheduledExecutorService? = null
@@ -107,11 +110,20 @@ class AdManager(
     fun show() {
         pool!!.execute {
             val string = SPUtil.getInstance().getString(page!!)
-            Log.e(TAG, "pool run page==$page,string==$string")
-
+            LogUtils.e("pool run page==$page,string==$string")
             if (!TextUtils.isEmpty(string))
                 pageBean = GsonUtils.parseObject(string, TypeBean::class.java)
-            Log.e(TAG, "pool run pageBean==" + SPUtil.getInstance().getString(page))
+            LogUtils.e("pool run pageBean==" + SPUtil.getInstance().getString(page))
+            showByType()
+        }
+    }
+    fun getList(){
+        pool!!.execute{
+            val string = SPUtil.getInstance().getString(page)
+            LogUtils.e("pool run page==$page,string==$string")
+            if (!TextUtils.isEmpty(string))
+                pageBean = GsonUtils.parseObject(string,TypeBean::class.java)
+            LogUtils.e("pool run pageBean==" + SPUtil.getInstance().getString(page))
             showByType()
         }
     }
@@ -169,25 +181,31 @@ class AdManager(
             "页面:" + page + ",读取插屏广告周期:" + period + "-" + offset + "=" + (period - offset)
         )
         Log.i(TAG, "页面:" + page + ",需要显示吗:" + (time - last >= period))
-        if (last == 0L) {
-            //第一次进入Application 记录此次显示时间
-            SPUtil.getInstance().putLong(
-                page + ADConstants.AD_INSERT_LAST_SHOW,
-                System.currentTimeMillis()
+        BaseConstant.mainHandler.post(Runnable {
+            showByOrigin(
+                getAdOriginByPercent(originList!!),
+                type
             )
-        }
-        if (last > 0 && time - last >= period) {
-            Log.e(TAG, "INSET---时间到显示")
-            Log.e(TAG, "AdManager:tag_ad:$tag_ad")
-            BaseConstant.mainHandler.post(Runnable {
-                showByOrigin(
-                    getAdOriginByPercent(originList!!),
-                    type
-                )
-            })
-        } else {
-            Log.e(TAG, "INSET---时间未到不显示")
-        }
+        })
+//        if (last == 0L) {
+//            //第一次进入Application 记录此次显示时间
+//            SPUtil.getInstance().putLong(
+//                page + ADConstants.AD_INSERT_LAST_SHOW,
+//                System.currentTimeMillis()
+//            )
+//        }
+//        if (last > 0 && time - last >= period) {
+//            Log.e(TAG, "INSET---时间到显示")
+//            Log.e(TAG, "AdManager:tag_ad:$tag_ad")
+//            BaseConstant.mainHandler.post(Runnable {
+//                showByOrigin(
+//                    getAdOriginByPercent(originList!!),
+//                    type
+//                )
+//            })
+//        } else {
+//            Log.e(TAG, "INSET---时间未到不显示")
+//        }
     }
 
     private fun getDate(time: Long): String {
@@ -260,7 +278,7 @@ class AdManager(
     }
 
     private fun executeNative(type: AD.AdType, originList: List<OriginBean>?) {
-        if (!pageBean!!.native_advertising!!.status || !NetworkUtils.isConnected(activity.applicationContext)) {
+        if ( !NetworkUtils.isConnected(activity.applicationContext)) {
             Log.e(TAG, "Native--$page---开关关闭，或者无网络不执行")
             return
         }
@@ -345,21 +363,21 @@ class AdManager(
         when (origin) {
             AD.AdOrigin.kwai -> {
                 adView = KS_AD()
-                Log.i(TAG, "AdManager showByOrigin   快手- gdt - $page ---$type")
+                Log.e(TAG, "AdManager showByOrigin   快手- gdt - $page ---$type")
             }
 //            AD.AdOrigin.bd -> {
 //                Log.i(TAG, "AdManager showByOrigin   百度-- $page ---$type")
 //                adView = GDT_AD()
 //            }
             AD.AdOrigin.toutiao -> {
-                Log.i(TAG, "AdManager showByOrigin   头条-- $page ---$type")
+                Log.e(TAG, "AdManager showByOrigin   头条-- $page ---$type")
                 adView = TT_AD()
             }
         }
         adView?.activity = activity
         adView?.container = container
         adView?.bannerContainer = bannerContainer
-
+        adView?.baseAdAdapter = baseAdAdapter
         adView?.page = page
         adView?.loading = isLoading
         //有网进入阅读页，后关闭网络，banner会显示无网络图片

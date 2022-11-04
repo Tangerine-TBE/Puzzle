@@ -48,16 +48,16 @@ object ADConstants {
     /************************原生广告 */
     val kTouTiaoAppKey by lazy { SPUtil.getInstance().getString("kTouTiaoAppKey","5346089")?:"5346089" }
     val kTouTiaoKaiPing by lazy { SPUtil.getInstance().getString("kTouTiaoKaiPing","887987502")?:"887987502" }
-    val kTouTiaoBannerKey by lazy { SPUtil.getInstance().getString("kTouTiaoBannerKey","946558273")?:"946558273" }
     val kTouTiaoChaPingKey by lazy { SPUtil.getInstance().getString("kTouTiaoChaPingKey","950192228")?:"950192228" }
-    val kTouTiaoJiLiKey by lazy { SPUtil.getInstance().getString("kTouTiaoJiLiKey","946558275")?:"946558275" }
     val kTouTiaoSeniorKey by lazy { SPUtil.getInstance().getString("kTouTiaoSeniorKey","950192209")?:"950192209" }
+    val kTouTiaoBannerKey by lazy { SPUtil.getInstance().getString("kTouTiaoBannerKey","946558273")?:"946558273" }
+    val kTouTiaoJiLiKey by lazy { SPUtil.getInstance().getString("kTouTiaoJiLiKey","946558275")?:"946558275" }
     val kTouTiaoSmallSeniorKey by lazy { SPUtil.getInstance().getString("ktouTiaoFullscreenvideoKey","946558276")?:"946558276" }
 
     val kWaiAppKey by lazy { SPUtil.getInstance().getString("kWaiAppKey","887200008")?:"887200008" }
-    val kWaiKaiPing by lazy { SPUtil.getInstance().getString("kWaiKaiPing","7042622198217197")?:"7042622198217197" }
+    val kWaiKaiPing by lazy { SPUtil.getInstance().getString("kWaiKaiPing","8872000035")?:"8872000035" }
+    val kWaiSeniorKey by lazy { SPUtil.getInstance().getString("kWaiSeniorKey","8872000036")?:"8872000036" }
+    val kWaiChaPingKey by lazy { SPUtil.getInstance().getString("kWaiChaPingKey","8872000037")?:"8872000037" }
     val kWaiBannerKey by lazy { SPUtil.getInstance().getString("kWaiBannerKey","3002822148516113")?:"3002822148516113" }
-    val kWaiChaPingKey by lazy { SPUtil.getInstance().getString("kWaiChaPingKey","2062728188517126")?:"2062728188517126" }
     val kWaiJiLiKey by lazy { SPUtil.getInstance().getString("kWaiJiLiKey","6072925118019134")?:"6072925118019134" }
-    val kWaiSeniorKey by lazy { SPUtil.getInstance().getString("kWaiSeniorKey","9082025128710195")?:"9082025128710195" }
 }

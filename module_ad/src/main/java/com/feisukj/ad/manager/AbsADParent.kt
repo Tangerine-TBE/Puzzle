@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.feisukj.ad.adapter.BaseAdAdapter
 import com.feisukj.base.bean.ad.AD
 import com.feisukj.base.bean.ad.ADConstants
 import com.feisukj.base.util.SPUtil
@@ -20,6 +21,7 @@ abstract class AbsADParent {
     var loading: Boolean = false
     var splashHolder: ImageView?=null
     var bannerContainer: FrameLayout?=null
+    var baseAdAdapter : BaseAdAdapter? = null
 
     abstract fun showAdView(type: AD.AdType)
 

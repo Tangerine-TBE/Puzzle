@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.feisukj.ad.manager.AdController;
+import com.feisukj.base.bean.ad.ADConstants;
 import com.weilai.jigsawpuzzle.Constants;
 import com.weilai.jigsawpuzzle.base.BaseFragment;
 import com.weilai.jigsawpuzzle.bean.CrossBannerEntity;
@@ -67,7 +70,7 @@ public class CrossDressFragment extends BaseFragment implements View.OnClickList
     private static final int FILTER_PUZZLE_HLP_CODE = 4;
     private static final int FILTER_PUZZLE_LINE_CODE = 5;
     private static final int FILTER_PUZZLE_FITTER_CODE = 6;
-
+    private FrameLayout frameLayout;
     @Override
     protected Object setLayout() {
         return R.layout.fragment_cross_dress;
@@ -80,11 +83,15 @@ public class CrossDressFragment extends BaseFragment implements View.OnClickList
 
     @Override
     protected void initListener(View view) {
-
+        frameLayout = view.findViewById(R.id.ad_container);
     }
 
-
-
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        new AdController.Builder(_mActivity
+                , ADConstants.HOME_PAGE).setContainer(frameLayout).create().show();
+    }
 
     private void initUi(View view) {
         Banner<CrossBannerEntity, ImageBannerAdapter> banner = view.findViewById(R.id.banner);

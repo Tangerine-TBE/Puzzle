@@ -19,6 +19,7 @@ import com.feisukj.base.BaseConstant
 import com.feisukj.base.bean.ad.AD
 import com.feisukj.base.bean.ad.ADConstants
 import com.feisukj.base.util.LogUtils
+import com.feisukj.base.util.ToastUtil
 import com.kwad.sdk.api.*
 import com.kwad.sdk.api.KsInnerAd.KsInnerAdInteractionListener
 import com.kwad.sdk.api.KsLoadManager.InterstitialAdListener
@@ -43,12 +44,15 @@ class KS_AD: AbsADParent() {
             when (type) {
                 AD.AdType.INSET -> showInsertView() //insert_screen
                 AD.AdType.SPLASH -> showSplashView() //spread_screen
-                AD.AdType.NATIVE -> showNativeView() //native_screen
+                AD.AdType.NATIVE ->
+                    if (baseAdAdapter == null){
+                        showNativeView() //native_screen
+                    }else{
+                        getNativeAdLists()
+                    }
             }
         }
     }
-
-
     private fun showInsertView(){
         val posId = try {
             ADConstants.kWaiChaPingKey.toLong()
@@ -69,8 +73,22 @@ class KS_AD: AbsADParent() {
         KsAdSDK.getLoadManager()!!.loadInterstitialAd(scene,
             object : InterstitialAdListener {
                 override fun onError(code: Int, msg: String) {
-//                    ToastUtil.showToast(mContext, "插屏广告请求失败$code$msg")
-                    isAdRequesting = false
+                    if (!isRepetitionRequest) {
+                        if (BuildConfig.DEBUG) {
+                            activity?.runOnUiThread {
+                                Toast.makeText(activity, "重新请求广告", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        TT_AD().also { ad ->
+                            ad.isRepetitionRequest = true
+                            ad.activity = activity
+                            ad.container = container
+                            ad.bannerContainer = bannerContainer
+                            ad.page = page
+                            ad.loading = loading
+                            ad.showAdView(AD.AdType.INSET)
+                        }
+                    }
                 }
 
                 override fun onRequestResult(adNumber: Int) {
@@ -79,7 +97,7 @@ class KS_AD: AbsADParent() {
 
                 override fun onInterstitialAdLoad( adList: List<KsInterstitialAd>?) {
                     isAdRequesting = false
-                    if (adList != null && adList.size > 0) {
+                    if (adList != null && adList.isNotEmpty()) {
                         mKsInterstitialAd = adList[0]
 //                        ToastUtil.showToast(mContext, "插屏广告请求成功")
                         val videoPlayConfig = KsVideoPlayConfig.Builder()
@@ -132,7 +150,8 @@ class KS_AD: AbsADParent() {
             }
 
             override fun onRequestResult(adNumber: Int) {
-//                showTips("开屏广告广告填充$adNumber")
+                LogUtils.e("快手", "onRequestResult")
+
             }
 
             override fun onSplashScreenAdLoad( splashScreenAd: KsSplashScreenAd?) {
@@ -250,9 +269,71 @@ class KS_AD: AbsADParent() {
                     }
                     return
                 }
-                val view = getAdItemView(container,adList[0])
+                val view = adList[0].getFeedView(activity)
+//                val view = getAdItemView(container,adList[0])
                 if (view!=null && view.parent== null)
                     container?.addView(view)
+            }
+        })
+
+    }
+    private fun getNativeAdLists(){
+        val posId = try {
+            ADConstants.kWaiSeniorKey.toLong()
+        }catch (e: Exception){
+            e.printStackTrace()
+            0L
+        }
+        if (posId == 0L)
+            return
+        val scene: KsScene = KsScene.Builder(posId).adNum(3).build()
+        scene.adNum = 5 // 支持返回多条广告，默认1条，最多5条，参数范围1-5
+        KsAdSDK.getLoadManager()!!.loadFeedAd(scene, object : KsLoadManager.FeedAdListener {
+            override fun onError(code: Int, msg: String) {
+                LogUtils.e("快手广告:","广告数据请求失败$code$msg")
+                if (!isRepetitionRequest){
+                    if (BuildConfig.DEBUG){
+                        activity?.runOnUiThread {
+                            Toast.makeText(activity,"重新请求广告", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    TT_AD().also { ad ->
+                        ad.isRepetitionRequest=true
+                        ad.activity = activity
+                        ad.container = container
+                        ad.bannerContainer = bannerContainer
+                        ad.page = page
+                        ad.loading = loading
+                        ad.baseAdAdapter = baseAdAdapter
+                        ad.showAdView(AD.AdType.NATIVE)
+                    }
+                }
+                baseAdAdapter?.addAdList(null)
+            }
+
+            override fun onFeedAdLoad(adList: MutableList<KsFeedAd>?) {
+                if (adList == null || adList.isEmpty()) {
+                    LogUtils.e("快手广告:","广告数据为空")
+                    if (!isRepetitionRequest){
+                        if (BuildConfig.DEBUG){
+                            activity?.runOnUiThread {
+                                Toast.makeText(activity,"重新请求广告", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        TT_AD().also { ad ->
+                            ad.isRepetitionRequest=true
+                            ad.activity = activity
+                            ad.container = container
+                            ad.bannerContainer = bannerContainer
+                            ad.page = page
+                            ad.loading = loading
+                            ad.showAdView(AD.AdType.NATIVE)
+                        }
+                    }
+                    return
+                }
+                /*11*/
+               baseAdAdapter?.addAdList(adList)
             }
         })
 
