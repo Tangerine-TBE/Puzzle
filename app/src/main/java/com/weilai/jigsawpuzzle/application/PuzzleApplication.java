@@ -30,7 +30,7 @@ public class PuzzleApplication  extends BaseApplication {
         ActivityEntrance.HomeActivity.setCls(MainBaseActivity.class);
         ActivityEntrance.SplashActivityAD.setCls(SplashActivityAD.class);
         ActivityEntrance.SplashActivity.setCls(SplashActivity.class);
-        handler = new Handler(Looper.getMainLooper());
+            handler = new Handler(Looper.getMainLooper());
         Config.init(this).withSp(this).withDao(this).withApplication(this).withUMeng(this).Configure();
     }
 

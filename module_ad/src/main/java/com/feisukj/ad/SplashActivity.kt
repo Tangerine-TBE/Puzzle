@@ -64,7 +64,6 @@ class SplashActivity : AppCompatActivity() {
                     }
                     dialog.dismiss()
                     getAdConfig()
-                    askPermissions()
                 }
 
                 override fun no() {
@@ -77,7 +76,6 @@ class SplashActivity : AppCompatActivity() {
             if (!BuildConfig.DEBUG) {
                 UMConfigure.init(BaseApplication.application, "6347dfe288ccdf4b7e4876e9", BaseConstant.channel, UMConfigure.DEVICE_TYPE_PHONE, null)
             }
-            askPermissions()
         }
     }
     private fun initTopTheme() {
@@ -132,16 +130,17 @@ class SplashActivity : AppCompatActivity() {
                                     .debug(BuildConfig.DEBUG)
                                     .setInitCallback(object : KsInitCallback {
                                         override fun onSuccess() {
-                                            LogUtils.i("快手广告：","init success")
+                                            LogUtils.e("快手广告：","init success")
                                         }
 
                                         override fun onFail(code: Int, msg: String) {
-                                            LogUtils.i("快手广告：","init fail code:${code}--msg:${msg}")
+                                            LogUtils.e("快手广告：","init fail code:${code}--msg:${msg}")
                                         }
                                     })
                                     .build())
                         }
                         //两个广告一起初始化
+                        askPermissions()
 
                     }
 

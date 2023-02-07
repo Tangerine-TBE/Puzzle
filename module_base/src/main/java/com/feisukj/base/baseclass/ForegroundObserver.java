@@ -143,8 +143,7 @@ public class ForegroundObserver implements Application.ActivityLifecycleCallback
         long gapTime = (current - background) / 1000;
         long serverTime = SPUtil.getInstance().getLong(ADConstants.AD_SPREAD_PERIOD, 5);
         LogUtils.INSTANCE.i("ForegroundObserver gapTime==" + gapTime + ",serverTime===" + serverTime);
-        boolean isNeedSplashAd =gapTime >= serverTime&& serverTime != 0 && NetworkUtils.isConnected(BaseApplication.getApplication());
-        return isNeedSplashAd ;
+        return gapTime >= serverTime && serverTime != 0 &&NetworkUtils.isConnected(BaseApplication.getApplication());
     }
     @Override
     public void onActivityPaused(final Activity activity) {
